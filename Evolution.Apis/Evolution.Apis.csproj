@@ -23,5 +23,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Evolution.Blueprints\Evolution.Blueprints.csproj" />
+  </ItemGroup>
+
 
 </Project>

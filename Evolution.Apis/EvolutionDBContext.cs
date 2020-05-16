@@ -1,4 +1,5 @@
 ﻿using System;
+using Evolution.Blueprints;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Apis
@@ -14,29 +15,23 @@ namespace Evolution.Apis
         {
         }
 
-        public virtual DbSet<Creatures> Creatures { get; set; }
+        public virtual DbSet<AnimalBlueprint> Animals { get; set; }
+        public virtual DbSet<PlantBlueprint> Plants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Creatures>(entity =>
+            modelBuilder.Entity<AnimalBlueprint>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.LocationName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.OwnsOne(typeof(LocationBlueprint), "Location");
+            });
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
+            modelBuilder.Entity<PlantBlueprint>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Speed)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Type)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.OwnsOne(typeof(LocationBlueprint), "Location");
             });
 
             OnModelCreatingPartial(modelBuilder);
@@ -44,7 +39,7 @@ namespace Evolution.Apis
 
         private void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+
         }
     }
 }
