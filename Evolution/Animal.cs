@@ -173,7 +173,7 @@ namespace Evolution
                 DeathDay = null,
                 IsAlive = true,
                 Speed = Speed, // allow mutations here
-                Location = Location.ToBlueprint()
+                Location = Location.Blueprint
             };
              
             AnimalObserver.OnReproduce(Blueprint, son);
@@ -187,10 +187,5 @@ namespace Evolution
             if (IsHungry() && IsFoodAvailable()) Eat();
             else Move();
         }
-    }
-
-    public interface ILocationService
-    {
-        ILocation GetLocation(LocationBlueprint blueprint);
     }
 }

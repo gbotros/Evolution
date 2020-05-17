@@ -2,6 +2,11 @@ namespace Evolution.Blueprints
 {
     public class LocationBlueprint
     {
+        public LocationBlueprint()
+        {
+            
+        }
+
         public LocationBlueprint(int x, int y)
         {
             X = x;

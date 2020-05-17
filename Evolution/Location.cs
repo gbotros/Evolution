@@ -15,6 +15,7 @@ namespace Evolution
         {
             X = blueprint.X;
             Y = blueprint.Y;
+            Blueprint = blueprint;
             NameHelper = nameHelper;
             Creatures = creatures;
             Neighbours = neighbours;
@@ -42,9 +43,6 @@ namespace Evolution
             return Creatures != null && !Creatures.Any();
         }
 
-        public LocationBlueprint ToBlueprint()
-        {
-            return new LocationBlueprint(X, Y);
-        }
+        public LocationBlueprint Blueprint { get; }
     }
 }

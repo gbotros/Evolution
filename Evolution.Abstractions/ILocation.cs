@@ -15,6 +15,6 @@ namespace Evolution.Abstractions
         int X { get; }
         int Y { get; }
         bool IsEmpty();
-        LocationBlueprint ToBlueprint();
+        LocationBlueprint Blueprint { get; }
     }
 }
