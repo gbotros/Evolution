@@ -12,7 +12,7 @@ namespace Evolution
         private const int MaxSpeed = 1000; // 1000 step per second
         private const int MaxEnergy = 100000; // on default speed 100K Energy is enough for 100 steps
 
-        public Animal(AnimalBlueprint blueprint, IPlantService plantService, IAnimalObserver animalObserver,
+        public Animal(AnimalBlueprint blueprint, IFoodService plantService, IAnimalObserver animalObserver,
             ILocationService locationService,
             ILogger logger)
         {
@@ -47,7 +47,7 @@ namespace Evolution
         public ILogger Logger { get; }
 
         public string Name { get; }
-        public IPlantService PlantService { get; }
+        public IFoodService PlantService { get; }
 
         public int SonsCount { get; private set; }
 
@@ -108,7 +108,7 @@ namespace Evolution
                 var eaten = PlantService.EatInto(food.Id, neededFood);
 
                 Energy += ConvertFoodToEnergy(eaten);
-                AnimalObserver.OnEat(this, food);
+                AnimalObserver.OnEat(Blueprint, food);
                 Logger.LogDebug($"Creature {Name} ate {eaten} Food - current Energy {Energy}");
                 if (!IsHungry()) break;
             }
@@ -152,7 +152,7 @@ namespace Evolution
 
             Steps++;
             Energy -= StepCost;
-            AnimalObserver.OnMove(this);
+            AnimalObserver.OnMove(Blueprint);
             Logger.LogDebug(
                 $"Creature {Name} moved to cell {Location.Name} at step number {Steps} - current Energy = {Energy}");
 
@@ -165,7 +165,7 @@ namespace Evolution
 
             SonsCount++;
             Energy /= 2; // reproduction cost 50% energy
-            var sonBluePrint = new AnimalBlueprint
+            var son= new AnimalBlueprint
             {
                 Id = Guid.NewGuid(),
                 Name = $"{Name}:s{SonsCount}",
@@ -175,9 +175,8 @@ namespace Evolution
                 Speed = Speed, // allow mutations here
                 Location = Location.ToBlueprint()
             };
-
-            var son = new Animal(sonBluePrint, PlantService, AnimalObserver, LocationService, Logger);
-            AnimalObserver.OnReproduce(this, son);
+             
+            AnimalObserver.OnReproduce(Blueprint, son);
             Logger.LogDebug($"{Name} gave birth to {son.Name}");
         }
 

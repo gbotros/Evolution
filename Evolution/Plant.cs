@@ -1,11 +1,12 @@
 using System;
 using Evolution.Abstractions;
+using Evolution.Blueprints;
 
 namespace Evolution
 {
     public class Plant : IPlant
     {
-        public Plant(PlantBlueprint blueprint, IPlantService plantService)
+        public Plant(PlantBlueprint blueprint, IFoodService plantService)
         {
             Id = blueprint.Id;
             Name = blueprint.Name;
@@ -27,7 +28,7 @@ namespace Evolution
         public ILocation Location { get; set; }
 
         public string Name { get; }
-        public IPlantService PlantService { get; }
+        public IFoodService PlantService { get; }
 
         public int Weight { get; private set; }
 

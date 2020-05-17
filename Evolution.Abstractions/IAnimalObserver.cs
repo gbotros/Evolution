@@ -1,9 +1,12 @@
+using System.Threading.Tasks;
+using Evolution.Blueprints;
+
 namespace Evolution.Abstractions
 {
     public interface IAnimalObserver
     {
-        bool OnEat(IAnimal animal, ICreature food);
-        bool OnMove(IAnimal animal);
-        bool OnReproduce(IAnimal parent, IAnimal son);
+        Task<bool> OnEat(AnimalBlueprint animal, ICreature food);
+        Task<bool> OnMove(AnimalBlueprint animal);
+        Task<bool> OnReproduce(AnimalBlueprint parent, AnimalBlueprint son);
     }
 }

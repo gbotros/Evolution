@@ -1,5 +1,4 @@
-﻿using System;
-using Evolution.Blueprints;
+﻿using Evolution.Blueprints;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Apis
@@ -39,7 +38,6 @@ namespace Evolution.Apis
 
         private void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
-
         }
     }
 }
