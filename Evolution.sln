@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Apis", "Evolution
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Abstractions", "Evolution.Abstractions\Evolution.Abstractions.csproj", "{77B62875-C342-4EEE-8B01-9CE3E0D45D99}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Dtos", "Evolution.Dtos\Evolution.Dtos.csproj", "{26DA1206-3546-467A-B9EF-1A8A009A11B6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Services.Http", "Evolution.Services.Http\Evolution.Services.Http.csproj", "{00338E2D-1707-400A-BFC4-6349D9FF1096}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Entities", "Evolution.Entities\Evolution.Entities.csproj", "{8FBB3F57-F14E-4B3C-8EE0-3C9233217B1A}"
@@ -45,10 +43,6 @@ Global
 		{77B62875-C342-4EEE-8B01-9CE3E0D45D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77B62875-C342-4EEE-8B01-9CE3E0D45D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77B62875-C342-4EEE-8B01-9CE3E0D45D99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26DA1206-3546-467A-B9EF-1A8A009A11B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26DA1206-3546-467A-B9EF-1A8A009A11B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26DA1206-3546-467A-B9EF-1A8A009A11B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26DA1206-3546-467A-B9EF-1A8A009A11B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00338E2D-1707-400A-BFC4-6349D9FF1096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00338E2D-1707-400A-BFC4-6349D9FF1096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00338E2D-1707-400A-BFC4-6349D9FF1096}.Release|Any CPU.ActiveCfg = Release|Any CPU

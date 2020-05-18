@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Evolution.Dtos\Evolution.Dtos.csproj" />
     <ProjectReference Include="..\Evolution.Entities\Evolution.Entities.csproj" />
   </ItemGroup>
 

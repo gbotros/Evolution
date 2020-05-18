@@ -2,13 +2,12 @@
 using System.Threading.Tasks;
 using Evolution.Abstractions;
 using Evolution.Blueprints;
-using Evolution.Dtos;
 
 namespace Evolution.Services.Http
 {
     public class PlantService : IPlantService
     {
-        public Task<EatIntoResult> EatInto(Guid plantId, int neededAmount)
+        public Task<EatIntoOperationResult> EatInto(Guid plantId, int neededAmount)
         {
             throw new NotImplementedException();
         }
