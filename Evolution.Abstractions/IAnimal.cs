@@ -4,8 +4,8 @@ namespace Evolution.Abstractions
 {
     public interface IAnimal : ICreature
     {
-        int Speed { get; }
         AnimalBlueprint Blueprint { get; }
+        int Speed { get; }
         int Fight(int neededAmount);
     }
 }

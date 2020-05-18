@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Evolution.Abstractions
 {
@@ -11,6 +12,7 @@ namespace Evolution.Abstractions
         ILocation Location { get; }
         string Name { get; }
         int Weight { get; }
-        void Act();
+        Task Act();
+        Task<int> EatInto(int neededAmount);
     }
 }

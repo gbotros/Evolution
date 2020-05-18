@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Evolution.Abstractions;
 using Evolution.Blueprints;
 
@@ -6,7 +7,7 @@ namespace Evolution
 {
     public class Plant : IPlant
     {
-        public Plant(PlantBlueprint blueprint, IFoodService plantService)
+        public Plant(PlantBlueprint blueprint, IPlantService plantService)
         {
             Id = blueprint.Id;
             Name = blueprint.Name;
@@ -24,22 +25,39 @@ namespace Evolution
 
         public int GrowthAmount { get; }
         public Guid Id { get; }
-        public bool IsAlive => Weight > 0;
+
+        public bool IsAlive { get; set; }
+
         public ILocation Location { get; set; }
 
         public string Name { get; }
-        public IFoodService PlantService { get; }
+        public IPlantService PlantService { get; }
 
         public int Weight { get; private set; }
 
-        public void Act()
+        public async Task Act()
         {
-            while (IsAlive) Grow();
+            while (IsAlive) await Grow();
         }
 
-        private void Grow()
+        public async Task<int> EatInto(int neededAmount)
+        {
+            var response = await PlantService.EatInto(Id, neededAmount);
+            Weight = response.CurrentWeight;
+            if (Weight <= 0) Die();
+
+            return response.Eaten;
+        }
+
+        private void Die()
+        {
+            IsAlive = false;
+        }
+
+        private async Task Grow()
         {
             Weight += Blueprint.GrowthAmount;
+            await PlantService.Update(Blueprint);
         }
     }
 }

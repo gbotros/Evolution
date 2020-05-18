@@ -4,7 +4,6 @@ namespace Evolution.Blueprints
     {
         public LocationBlueprint()
         {
-            
         }
 
         public LocationBlueprint(int x, int y)

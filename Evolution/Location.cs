@@ -22,6 +22,8 @@ namespace Evolution
         }
 
         public IEnumerable<IAnimal> Animals => Creatures.OfType<IAnimal>();
+
+        public LocationBlueprint Blueprint { get; }
         public IEnumerable<ICreature> Creatures { get; }
 
         public Guid Id { get; set; }
@@ -42,7 +44,5 @@ namespace Evolution
         {
             return Creatures != null && !Creatures.Any();
         }
-
-        public LocationBlueprint Blueprint { get; }
     }
 }

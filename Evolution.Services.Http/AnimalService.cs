@@ -4,36 +4,18 @@ using Evolution.Abstractions;
 using Evolution.Blueprints;
 using Newtonsoft.Json;
 
-namespace Evolution
+namespace Evolution.Services.Http
 {
-    public class AnimalObserver : IAnimalObserver
+    public class AnimalService : IAnimalService
     {
-        public AnimalObserver(HttpClient httpClient)
+        public AnimalService(HttpClient httpClient)
         {
             HttpClient = httpClient;
         }
 
         public HttpClient HttpClient { get; }
 
-        public async Task<bool> OnEat(AnimalBlueprint animal, ICreature food)
-        {
-            return await UpdateAnimal(animal);
-        }
-
-        public async Task<bool> OnMove(AnimalBlueprint animal)
-        {
-            return await UpdateAnimal(animal);
-        }
-
-        public async Task<bool> OnReproduce(AnimalBlueprint parent, AnimalBlueprint son)
-        {
-           var parentUpdated = await UpdateAnimal(parent);
-           if (parentUpdated) return await AddAnimal(son);
-           
-           return false;
-        }
-
-        private async Task<bool> AddAnimal(AnimalBlueprint animal)
+        public async Task<bool> Add(AnimalBlueprint animal)
         {
             var animalJson = JsonConvert.SerializeObject(animal);
             var animalContent = new StringContent(animalJson);
@@ -42,7 +24,7 @@ namespace Evolution
             return response.IsSuccessStatusCode;
         }
 
-        private async Task<bool> UpdateAnimal(AnimalBlueprint animal)
+        public async Task<bool> Update(AnimalBlueprint animal)
         {
             var animalJson = JsonConvert.SerializeObject(animal);
             var animalContent = new StringContent(animalJson);

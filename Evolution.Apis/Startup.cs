@@ -32,7 +32,7 @@ namespace Evolution.Apis
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Evolution Apis v1"); 
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Evolution Apis v1");
                 c.RoutePrefix = string.Empty;
             });
 
@@ -49,7 +49,7 @@ namespace Evolution.Apis
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Evolution Apis", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Evolution Apis", Version = "v1"});
             });
         }
     }

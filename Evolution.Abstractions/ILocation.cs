@@ -7,6 +7,7 @@ namespace Evolution.Abstractions
     public interface ILocation
     {
         IEnumerable<IAnimal> Animals { get; }
+        LocationBlueprint Blueprint { get; }
         IEnumerable<ICreature> Creatures { get; }
         Guid Id { get; set; }
         string Name { get; }
@@ -15,6 +16,5 @@ namespace Evolution.Abstractions
         int X { get; }
         int Y { get; }
         bool IsEmpty();
-        LocationBlueprint Blueprint { get; }
     }
 }

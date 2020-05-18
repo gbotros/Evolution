@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Evolution.Blueprints;
+using Evolution.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,22 +20,18 @@ namespace Evolution.Apis.Controllers
             _context = context;
         }
 
-        // GET: api/Animals/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AnimalBlueprint>> GetAnimalBlueprint(Guid id)
-        {
-            var animalBlueprint = await _context.Animals.FindAsync(id);
-
-            if (animalBlueprint == null) return NotFound();
-
-            return animalBlueprint;
-        }
-
         // GET: api/Animals
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AnimalBlueprint>>> GetAnimals()
+        public async Task<ActionResult<IEnumerable<AnimalBlueprint>>> GetAnimals(AnimalsFilter filter)
         {
-            return await _context.Animals.ToListAsync();
+            var animals = _context.Animals.AsQueryable();
+            if (filter == null) return await animals.ToListAsync();
+
+            if (filter.Id != Guid.Empty) animals = animals.Where(a => a.Id == filter.Id);
+            if (filter.LocationX.HasValue) animals = animals.Where(a => a.Location.X == filter.LocationX);
+            if (filter.LocationY.HasValue) animals = animals.Where(a => a.Location.Y == filter.LocationY);
+
+            return await animals.ToListAsync();
         }
 
         // POST: api/Animals

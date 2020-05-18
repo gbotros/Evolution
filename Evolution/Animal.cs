@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Evolution.Abstractions;
 using Evolution.Blueprints;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,9 @@ namespace Evolution
         private const int MaxSpeed = 1000; // 1000 step per second
         private const int MaxEnergy = 100000; // on default speed 100K Energy is enough for 100 steps
 
-        public Animal(AnimalBlueprint blueprint, IFoodService plantService, IAnimalObserver animalObserver,
+        public Animal(
+            AnimalBlueprint blueprint,
+            IAnimalService animalObserver,
             ILocationService locationService,
             ILogger logger)
         {
@@ -27,13 +30,12 @@ namespace Evolution
             Location = locationService.GetLocation(blueprint.Location);
 
             Blueprint = blueprint;
-            PlantService = plantService;
-            AnimalObserver = animalObserver;
+            AnimalService = animalObserver;
             LocationService = locationService;
             Logger = logger;
         }
 
-        public IAnimalObserver AnimalObserver { get; }
+        public IAnimalService AnimalService { get; }
         public int BirthDay { get; }
 
         public AnimalBlueprint Blueprint { get; }
@@ -47,7 +49,6 @@ namespace Evolution
         public ILogger Logger { get; }
 
         public string Name { get; }
-        public IFoodService PlantService { get; }
 
         public int SonsCount { get; private set; }
 
@@ -61,11 +62,16 @@ namespace Evolution
 
         private int WaitTime => MaxSpeed / Speed + 500;
 
-        public void Act()
+        public async Task Act()
         {
             Logger.LogDebug($"Animal {Name} started Act");
 
-            while (IsAlive) SatisfyMyNeeds();
+            while (IsAlive) await SatisfyMyNeeds();
+        }
+
+        public Task<int> EatInto(int neededAmount)
+        {
+            throw new NotImplementedException();
         }
 
         public int Fight(int neededAmount)
@@ -80,7 +86,7 @@ namespace Evolution
 
         private static int ConvertEnergyToFood(int energy)
         {
-            return (int) Math.Ceiling((decimal) energy / 1000);
+            return (int)Math.Ceiling((decimal)energy / 1000);
         }
 
         private static int ConvertFoodToEnergy(int food)
@@ -96,7 +102,7 @@ namespace Evolution
             Logger.LogDebug($"Creature {Name} Died after {Steps} steps.");
         }
 
-        private void Eat()
+        private async Task Eat()
         {
             if (!IsFoodAvailable()) return;
 
@@ -105,10 +111,10 @@ namespace Evolution
             foreach (var food in foods)
             {
                 var neededFood = HowMuchCanIEat();
-                var eaten = PlantService.EatInto(food.Id, neededFood);
+                var eaten = await food.EatInto(neededFood);
 
                 Energy += ConvertFoodToEnergy(eaten);
-                AnimalObserver.OnEat(Blueprint, food);
+                await AnimalService.Update(Blueprint);
                 Logger.LogDebug($"Creature {Name} ate {eaten} Food - current Energy {Energy}");
                 if (!IsHungry()) break;
             }
@@ -140,7 +146,7 @@ namespace Evolution
             return Energy < MaxEnergy / 2;
         }
 
-        private void Move()
+        private async Task Move()
         {
             var neighboursCount = Location.Neighbours.Count();
             if (neighboursCount == 0) return;
@@ -152,20 +158,20 @@ namespace Evolution
 
             Steps++;
             Energy -= StepCost;
-            AnimalObserver.OnMove(Blueprint);
+            await AnimalService.Update(Blueprint);
             Logger.LogDebug(
                 $"Creature {Name} moved to cell {Location.Name} at step number {Steps} - current Energy = {Energy}");
 
             if (Energy <= 0) Die();
         }
 
-        private void Reproduce()
+        private async Task Reproduce()
         {
             if (!CanReproduce()) return;
 
             SonsCount++;
             Energy /= 2; // reproduction cost 50% energy
-            var son= new AnimalBlueprint
+            var son = new AnimalBlueprint
             {
                 Id = Guid.NewGuid(),
                 Name = $"{Name}:s{SonsCount}",
@@ -175,17 +181,18 @@ namespace Evolution
                 Speed = Speed, // allow mutations here
                 Location = Location.Blueprint
             };
-             
-            AnimalObserver.OnReproduce(Blueprint, son);
+
+            await AnimalService.Update(Blueprint);
+            await AnimalService.Add(son);
             Logger.LogDebug($"{Name} gave birth to {son.Name}");
         }
 
-        private void SatisfyMyNeeds()
+        private async Task SatisfyMyNeeds()
         {
-            if (CanReproduce()) Reproduce();
+            if (CanReproduce()) await Reproduce();
 
-            if (IsHungry() && IsFoodAvailable()) Eat();
-            else Move();
+            if (IsHungry() && IsFoodAvailable()) await Eat();
+            else await Move();
         }
     }
 }
