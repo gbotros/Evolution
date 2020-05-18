@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Evolution.Abstractions;
 using Evolution.Blueprints;
+using Evolution.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Evolution
@@ -86,7 +87,7 @@ namespace Evolution
 
         private static int ConvertEnergyToFood(int energy)
         {
-            return (int)Math.Ceiling((decimal)energy / 1000);
+            return (int) Math.Ceiling((decimal) energy / 1000);
         }
 
         private static int ConvertFoodToEnergy(int food)

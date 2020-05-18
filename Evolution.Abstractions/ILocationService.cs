@@ -1,4 +1,5 @@
 using Evolution.Blueprints;
+using Evolution.Entities;
 
 namespace Evolution.Abstractions
 {

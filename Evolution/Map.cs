@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Evolution.Abstractions;
 using Evolution.Blueprints;
+using Evolution.Entities;
 
 namespace Evolution
 {

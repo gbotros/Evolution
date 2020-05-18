@@ -1,6 +1,7 @@
 ﻿using System;
 using Evolution.Abstractions;
 using Evolution.Blueprints;
+using Evolution.Entities;
 
 namespace Evolution.Services.Http
 {

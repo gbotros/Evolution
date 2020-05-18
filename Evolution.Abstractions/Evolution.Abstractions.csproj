@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Evolution.Blueprints\Evolution.Blueprints.csproj" />
     <ProjectReference Include="..\Evolution.Dtos\Evolution.Dtos.csproj" />
+    <ProjectReference Include="..\Evolution.Entities\Evolution.Entities.csproj" />
   </ItemGroup>
 
 </Project>

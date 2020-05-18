@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>b42b9262-71cf-4d73-8170-c3377dcc14ed</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,11 +19,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Evolution.Blueprints\Evolution.Blueprints.csproj" />
-    <ProjectReference Include="..\Evolution.Dtos\Evolution.Dtos.csproj" />
   </ItemGroup>
 
 

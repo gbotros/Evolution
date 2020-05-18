@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Evolution.Dtos
+namespace Evolution.Apis.Dtos
 {
     public class AnimalsFilter
     {

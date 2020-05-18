@@ -8,7 +8,7 @@ namespace Evolution.Services.Http
 {
     public class PlantService : IPlantService
     {
-        public Task<EatIntoResponse> EatInto(Guid plantId, int neededAmount)
+        public Task<EatIntoResult> EatInto(Guid plantId, int neededAmount)
         {
             throw new NotImplementedException();
         }

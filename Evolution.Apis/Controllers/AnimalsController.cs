@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Evolution.Blueprints;
-using Evolution.Dtos;
+using Evolution.Apis.Dtos;
+using Evolution.Apis.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +18,17 @@ namespace Evolution.Apis.Controllers
         public AnimalsController(EvolutionDbContext context)
         {
             _context = context;
+        }
+        
+        // GET: api/Animals/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AnimalBlueprint>> GetAnimalBlueprint(Guid id)
+        {
+            var animalBlueprint = await _context.Animals.FindAsync(id);
+
+            if (animalBlueprint == null) return NotFound();
+
+            return animalBlueprint;
         }
 
         // GET: api/Animals
