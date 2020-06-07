@@ -7,6 +7,6 @@ namespace Evolution.Abstractions
     public interface IPlantService
     {
         Task<EatIntoOperationResult> EatInto(Guid plantId, int neededAmount);
-        Task<int> Update(PlantBlueprint plant);
+        Task<bool> Update(PlantBlueprint plant);
     }
 }
