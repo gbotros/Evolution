@@ -17,8 +17,8 @@ namespace Animals.Spirits
             var httpServiceBaseAddress = Environment.GetEnvironmentVariable("HttpServiceBaseAddress");
             builder.Services.AddHttpClient<IPlantService, PlantService>(client => { client.BaseAddress = new Uri(httpServiceBaseAddress); });
             builder.Services.AddHttpClient<IAnimalService, AnimalService>(client => { client.BaseAddress = new Uri(httpServiceBaseAddress); });
-            builder.Services.AddHttpClient<ILocationService, LocationService>(client => { client.BaseAddress = new Uri(httpServiceBaseAddress); });
-            builder.Services.AddHttpClient<ILocationNameHelper, LocationNameHelper>(client => { client.BaseAddress = new Uri(httpServiceBaseAddress); });
+            builder.Services.AddSingleton<ILocationService, LocationService>();
+            builder.Services.AddSingleton<ILocationNameHelper, LocationNameHelper>();
         }
     }
 }
