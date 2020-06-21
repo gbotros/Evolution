@@ -1,8 +1,6 @@
-using System;
 using Evolution.Abstractions;
 using Evolution.Entities;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
 namespace Animals.Spirits
@@ -29,9 +27,12 @@ namespace Animals.Spirits
         [FunctionName("AnimalsFunction")]
         public void Run(
             [QueueTrigger("animals", Connection = "EvolutionStorageConnection")] AnimalBlueprint animalBlueprint,
+            [Queue("animals"), StorageAccount("EvolutionStorageConnection")] ICollector<AnimalBlueprint> animalsOutputQueue,
             ILogger log)
         {
-
+            var s = animalBlueprint;
+            animalBlueprint.Speed++;
+            animalsOutputQueue.Add(animalBlueprint);
             log.LogInformation($"C# Queue trigger function processed: {animalBlueprint}");
         }
     }

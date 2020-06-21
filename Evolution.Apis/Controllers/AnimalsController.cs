@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Storage.Queues;
 using Evolution.Apis.Dtos;
 using Evolution.Apis.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace Evolution.Apis.Controllers
 {
@@ -13,18 +16,21 @@ namespace Evolution.Apis.Controllers
     [ApiController]
     public class AnimalsController : ControllerBase
     {
-        private readonly EvolutionDbContext _context;
+        public IConfiguration Configuration { get; }
 
-        public AnimalsController(EvolutionDbContext context)
+        private EvolutionDbContext Context { get; }
+
+        public AnimalsController(EvolutionDbContext context, IConfiguration configuration)
         {
-            _context = context;
+            Context = context;
+            Configuration = configuration;
         }
-        
+
         // GET: api/Animals/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AnimalBlueprint>> GetAnimalBlueprint(Guid id)
         {
-            var animalBlueprint = await _context.Animals.FindAsync(id);
+            var animalBlueprint = await Context.Animals.FindAsync(id);
 
             if (animalBlueprint == null) return NotFound();
 
@@ -35,7 +41,7 @@ namespace Evolution.Apis.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AnimalBlueprint>>> GetAnimals(AnimalsFilter filter)
         {
-            var animals = _context.Animals.AsQueryable();
+            var animals = Context.Animals.AsQueryable();
             if (filter == null) return await animals.ToListAsync();
 
             if (filter.Id != Guid.Empty) animals = animals.Where(a => a.Id == filter.Id);
@@ -51,10 +57,11 @@ namespace Evolution.Apis.Controllers
         [HttpPost]
         public async Task<ActionResult<AnimalBlueprint>> PostAnimalBlueprint(AnimalBlueprint animalBlueprint)
         {
-            _context.Animals.Add(animalBlueprint);
+            Context.Animals.Add(animalBlueprint);
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
+                await PublishToQueue(animalBlueprint);
             }
             catch (DbUpdateException)
             {
@@ -63,7 +70,7 @@ namespace Evolution.Apis.Controllers
                 throw;
             }
 
-            return CreatedAtAction("GetAnimalBlueprint", new {id = animalBlueprint.Id}, animalBlueprint);
+            return CreatedAtAction("GetAnimalBlueprint", new { id = animalBlueprint.Id }, animalBlueprint);
         }
 
         // PUT: api/Animals/5
@@ -74,11 +81,11 @@ namespace Evolution.Apis.Controllers
         {
             if (id != animalBlueprint.Id) return BadRequest();
 
-            _context.Entry(animalBlueprint).State = EntityState.Modified;
+            Context.Entry(animalBlueprint).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -92,7 +99,23 @@ namespace Evolution.Apis.Controllers
 
         private bool AnimalBlueprintExists(Guid id)
         {
-            return _context.Animals.Any(e => e.Id == id);
+            return Context.Animals.Any(e => e.Id == id);
         }
+
+        private async Task<bool> PublishToQueue(AnimalBlueprint animal)
+        {
+            var connectionString = Configuration.GetConnectionString("EvolutionStorageConnection");
+            var queueClient = new QueueClient(connectionString, "animals");
+
+            if (!queueClient.Exists()) return false;
+
+            var animalMessage = JsonConvert.SerializeObject(animal);
+            var animalMessageBytes = System.Text.Encoding.UTF8.GetBytes(animalMessage);
+            var animalMessageEncoded = Convert.ToBase64String(animalMessageBytes);
+            await queueClient.SendMessageAsync(animalMessageEncoded).ConfigureAwait(false);
+
+            return true;
+        }
+
     }
 }

@@ -45,11 +45,16 @@ namespace Evolution.Apis
             services.AddControllers();
 
             services.AddDbContext<EvolutionDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("evolutionDb")));
+            {
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("evolutionDbConnection"),
+                    builder => { builder.EnableRetryOnFailure(); }
+                );
+            });
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Evolution Apis", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Evolution Apis", Version = "v1" });
             });
         }
     }
