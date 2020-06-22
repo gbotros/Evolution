@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Evolution.Apis.Dtos;
 using Evolution.Blueprints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace Evolution.Apis.Controllers
     [ApiController]
     public class PlantsController : ControllerBase
     {
-        private readonly EvolutionDbContext _context;
+        private  EvolutionDbContext Context { get; }
 
         public PlantsController(EvolutionDbContext context)
         {
-            _context = context;
+            Context = context;
         }
 
         // GET: api/Plants/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PlantBlueprint>> GetPlantBlueprint(Guid id)
         {
-            var plantBlueprint = await _context.Plants.FindAsync(id);
+            var plantBlueprint = await Context.Plants.FindAsync(id);
 
             if (plantBlueprint == null) return NotFound();
 
@@ -32,9 +33,16 @@ namespace Evolution.Apis.Controllers
 
         // GET: api/Plants
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlantBlueprint>>> GetPlants()
+        public async Task<ActionResult<IEnumerable<PlantBlueprint>>> GetPlants([FromQuery]PlantsFilter filter)
         {
-            return await _context.Plants.ToListAsync();
+            var plants = Context.Plants.AsQueryable();
+            if (filter == null) return await plants.ToListAsync();
+
+            if (filter.Id.HasValue && filter.Id != Guid.Empty) plants = plants.Where(a => a.Id == filter.Id);
+            if (filter.LocationX.HasValue) plants = plants.Where(a => a.Location.X == filter.LocationX);
+            if (filter.LocationY.HasValue) plants = plants.Where(a => a.Location.Y == filter.LocationY);
+
+            return await plants.ToListAsync();
         }
 
         // POST: api/Plants
@@ -43,10 +51,10 @@ namespace Evolution.Apis.Controllers
         [HttpPost]
         public async Task<ActionResult<PlantBlueprint>> PostPlantBlueprint(PlantBlueprint plantBlueprint)
         {
-            _context.Plants.Add(plantBlueprint);
+            Context.Plants.Add(plantBlueprint);
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
@@ -66,11 +74,11 @@ namespace Evolution.Apis.Controllers
         {
             if (id != plantBlueprint.Id) return BadRequest();
 
-            _context.Entry(plantBlueprint).State = EntityState.Modified;
+            Context.Entry(plantBlueprint).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,7 +92,7 @@ namespace Evolution.Apis.Controllers
 
         private bool PlantBlueprintExists(Guid id)
         {
-            return _context.Plants.Any(e => e.Id == id);
+            return Context.Plants.Any(e => e.Id == id);
         }
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using Evolution.Abstractions;
 using Evolution.Entities;
 using Newtonsoft.Json;
@@ -19,8 +22,7 @@ namespace Evolution.Services.Http
         {
             var animalJson = JsonConvert.SerializeObject(animal);
             using var animalContent = new StringContent(animalJson);
-            using var response = await HttpClient.PostAsync("Animals", animalContent).ConfigureAwait(false);
-            ;
+            using var response = await HttpClient.PostAsync("Animals", animalContent);
 
             return response.IsSuccessStatusCode;
         }
@@ -29,9 +31,30 @@ namespace Evolution.Services.Http
         {
             var animalJson = JsonConvert.SerializeObject(animal);
             using var animalContent = new StringContent(animalJson);
-            using var response = await HttpClient.PutAsync("Animals", animalContent).ConfigureAwait(false);
+            using var response = await HttpClient.PutAsync("Animals", animalContent);
 
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<IEnumerable<AnimalBlueprint>> GetByLocation(LocationBlueprint location)
+        {
+            if (location == null)
+            {
+                return new List<AnimalBlueprint>();
+            }
+
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["Id"] = null;
+            query["LocationX"] = location.X.ToString(CultureInfo.InvariantCulture);
+            query["LocationY"] = location.Y.ToString(CultureInfo.InvariantCulture);
+            var queryFilter = query.ToString();
+              
+            using var response = await HttpClient.GetAsync($"Animals?{queryFilter}");
+
+            var content = await response.Content.ReadAsStringAsync();
+            var creatures = JsonConvert.DeserializeObject<IEnumerable<AnimalBlueprint>>(content);
+            return creatures;
+        }
     }
+     
 }

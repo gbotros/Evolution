@@ -11,21 +11,22 @@ namespace Evolution
     {
         public Location(LocationBlueprint blueprint,
             ILocationNameHelper nameHelper,
-            IEnumerable<ICreature> creatures = null,
+            IEnumerable<AnimalBlueprint> animals = null,
+            IEnumerable<PlantBlueprint> plants = null,
             IEnumerable<ILocation> neighbours = null)
         {
             X = blueprint.X;
             Y = blueprint.Y;
             Blueprint = blueprint;
             NameHelper = nameHelper;
-            Creatures = creatures;
+            Animals = animals;
+            Plants = plants;
             Neighbours = neighbours;
         }
 
-        public IEnumerable<IAnimal> Animals => Creatures.OfType<IAnimal>();
+        public IEnumerable<AnimalBlueprint> Animals { get; set; }
 
         public LocationBlueprint Blueprint { get; }
-        public IEnumerable<ICreature> Creatures { get; }
 
         public Guid Id { get; set; }
 
@@ -35,7 +36,7 @@ namespace Evolution
 
         public IEnumerable<ILocation> Neighbours { get; set; }
 
-        public IEnumerable<IPlant> Plants => Creatures.OfType<IPlant>();
+        public IEnumerable<PlantBlueprint> Plants { get; set; }
 
         public int X { get; }
 
@@ -43,7 +44,7 @@ namespace Evolution
 
         public bool IsEmpty()
         {
-            return Creatures != null && !Creatures.Any();
+            return !Animals.Any() && !Plants.Any();
         }
     }
 }

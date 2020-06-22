@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Evolution.Entities
 {
     public class LocationBlueprint

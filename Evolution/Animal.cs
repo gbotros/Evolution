@@ -16,8 +16,8 @@ namespace Evolution
 
         public Animal(
             AnimalBlueprint blueprint,
-            IAnimalService animalObserver,
-            ILocationService locationService,
+            IAnimalService animalService,
+            ILocationFactory locationFactory,
             ILogger logger)
         {
             Id = blueprint.Id;
@@ -28,11 +28,10 @@ namespace Evolution
             BirthDay = blueprint.BirthDay;
             DeathDay = blueprint.DeathDay;
             IsAlive = blueprint.IsAlive;
-            Location = locationService.GetLocation(blueprint.Location);
+            Location = locationFactory.Create(blueprint.Location).Result;
 
             Blueprint = blueprint;
-            AnimalService = animalObserver;
-            LocationService = locationService;
+            AnimalService = animalService;
             Logger = logger;
         }
 
@@ -46,7 +45,6 @@ namespace Evolution
 
         public bool IsAlive { get; private set; }
         public ILocation Location { get; set; }
-        public ILocationService LocationService { get; }
         public ILogger Logger { get; }
 
         public string Name { get; }
@@ -112,7 +110,7 @@ namespace Evolution
             foreach (var food in foods)
             {
                 var neededFood = HowMuchCanIEat();
-                var eaten = await food.EatInto(neededFood);
+                var eaten = neededFood;// await food.EatInto(neededFood);
 
                 Energy += ConvertFoodToEnergy(eaten);
                 await AnimalService.Update(Blueprint);
@@ -121,7 +119,7 @@ namespace Evolution
             }
         }
 
-        private IEnumerable<IPlant> GetAvailableFood()
+        private IEnumerable<PlantBlueprint> GetAvailableFood()
         {
             return Location.Plants;
         }

@@ -2,7 +2,7 @@
 
 namespace Evolution.Apis.Dtos
 {
-    public class AnimalsFilter
+    public class PlantsFilter
     {
         public Guid? Id { get; set; }
         public int? LocationX { get; set; }

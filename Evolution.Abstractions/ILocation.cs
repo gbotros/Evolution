@@ -7,13 +7,12 @@ namespace Evolution.Abstractions
 {
     public interface ILocation
     {
-        IEnumerable<IAnimal> Animals { get; }
+        IEnumerable<AnimalBlueprint> Animals { get; }
         LocationBlueprint Blueprint { get; }
-        IEnumerable<ICreature> Creatures { get; }
         Guid Id { get; set; }
         string Name { get; }
         IEnumerable<ILocation> Neighbours { get; set; }
-        IEnumerable<IPlant> Plants { get; }
+        IEnumerable<PlantBlueprint> Plants { get; }
         int X { get; }
         int Y { get; }
         bool IsEmpty();

@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Services.Http", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Entities", "Evolution.Entities\Evolution.Entities.csproj", "{8FBB3F57-F14E-4B3C-8EE0-3C9233217B1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animals.Spirits", "Animals.Spirits\Animals.Spirits.csproj", "{FB59BCD4-C550-4B89-9430-98CA413C3897}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Animals.Spirits", "Animals.Spirits\Animals.Spirits.csproj", "{FB59BCD4-C550-4B89-9430-98CA413C3897}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{733FBCBC-4B44-477C-8ACC-822C75D958D8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

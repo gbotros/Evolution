@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Evolution;
 using Evolution.Abstractions;
 using Evolution.Entities;
 using Microsoft.Azure.WebJobs;
@@ -9,31 +11,35 @@ namespace Animals.Spirits
     {
         public IPlantService PlantService { get; }
         public IAnimalService AnimalService { get; }
-        public ILocationService LocationService { get; }
+        public ILocationFactory LocationFactory { get; }
         public ILocationNameHelper LocationNameHelper { get; }
 
         public AnimalsFunction(
             IPlantService plantService,
             IAnimalService animalService,
-            ILocationService locationService,
+            ILocationFactory locationFactory,
             ILocationNameHelper locationNameHelper)
         {
             PlantService = plantService;
             AnimalService = animalService;
-            LocationService = locationService;
+            LocationFactory = locationFactory;
             LocationNameHelper = locationNameHelper;
         }
 
         [FunctionName("AnimalsFunction")]
-        public void Run(
+        public async Task Run(
             [QueueTrigger("animals", Connection = "EvolutionStorageConnection")] AnimalBlueprint animalBlueprint,
             [Queue("animals"), StorageAccount("EvolutionStorageConnection")] ICollector<AnimalBlueprint> animalsOutputQueue,
             ILogger log)
         {
-            var s = animalBlueprint;
-            animalBlueprint.Speed++;
-            animalsOutputQueue.Add(animalBlueprint);
-            log.LogInformation($"C# Queue trigger function processed: {animalBlueprint}");
+            var animal = new Animal(animalBlueprint, AnimalService, LocationFactory, log);
+            await animal.Act();
+            if (animal.IsAlive)
+            {
+                animalsOutputQueue.Add(animal.Blueprint);
+            }
+
+            log.LogInformation($"Animal acted successfully: {animalBlueprint}");
         }
     }
 }

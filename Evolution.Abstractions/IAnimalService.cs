@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Evolution.Blueprints;
 using Evolution.Entities;
 
 namespace Evolution.Abstractions
@@ -8,5 +8,6 @@ namespace Evolution.Abstractions
     {
         Task<bool> Add(AnimalBlueprint animal);
         Task<bool> Update(AnimalBlueprint animal);
+        Task<IEnumerable<AnimalBlueprint>> GetByLocation(LocationBlueprint location);
     }
 }

@@ -39,12 +39,12 @@ namespace Evolution.Apis.Controllers
 
         // GET: api/Animals
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AnimalBlueprint>>> GetAnimals(AnimalsFilter filter)
+        public async Task<ActionResult<IEnumerable<AnimalBlueprint>>> GetAnimals([FromQuery]AnimalsFilter filter)
         {
             var animals = Context.Animals.AsQueryable();
             if (filter == null) return await animals.ToListAsync();
 
-            if (filter.Id != Guid.Empty) animals = animals.Where(a => a.Id == filter.Id);
+            if (filter.Id.HasValue && filter.Id != Guid.Empty) animals = animals.Where(a => a.Id == filter.Id);
             if (filter.LocationX.HasValue) animals = animals.Where(a => a.Location.X == filter.LocationX);
             if (filter.LocationY.HasValue) animals = animals.Where(a => a.Location.Y == filter.LocationY);
 
@@ -112,7 +112,7 @@ namespace Evolution.Apis.Controllers
             var animalMessage = JsonConvert.SerializeObject(animal);
             var animalMessageBytes = System.Text.Encoding.UTF8.GetBytes(animalMessage);
             var animalMessageEncoded = Convert.ToBase64String(animalMessageBytes);
-            await queueClient.SendMessageAsync(animalMessageEncoded).ConfigureAwait(false);
+            await queueClient.SendMessageAsync(animalMessageEncoded);
 
             return true;
         }
