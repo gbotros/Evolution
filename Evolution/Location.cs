@@ -9,16 +9,16 @@ namespace Evolution
 {
     public class Location : ILocation
     {
+        private const string IntFormat = "D2";
+
         public Location(LocationBlueprint blueprint,
-            ILocationNameHelper nameHelper,
             IEnumerable<AnimalBlueprint> animals = null,
             IEnumerable<PlantBlueprint> plants = null,
-            IEnumerable<ILocation> neighbours = null)
+            IEnumerable<LocationBlueprint> neighbours = null)
         {
             X = blueprint.X;
             Y = blueprint.Y;
             Blueprint = blueprint;
-            NameHelper = nameHelper;
             Animals = animals;
             Plants = plants;
             Neighbours = neighbours;
@@ -30,11 +30,9 @@ namespace Evolution
 
         public Guid Id { get; set; }
 
-        public string Name => NameHelper.GetLocationName(X, Y);
+        public string Name => X.ToString(IntFormat) + "," + Y.ToString(IntFormat);
 
-        public ILocationNameHelper NameHelper { get; }
-
-        public IEnumerable<ILocation> Neighbours { get; set; }
+        public IEnumerable<LocationBlueprint> Neighbours { get; set; }
 
         public IEnumerable<PlantBlueprint> Plants { get; set; }
 

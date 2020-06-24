@@ -27,6 +27,23 @@ namespace Evolution.Services.Http
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<IEnumerable<AnimalBlueprint>> GetByLocation(LocationBlueprint location)
+        {
+            if (location == null) return new List<AnimalBlueprint>();
+
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["Id"] = null;
+            query["LocationX"] = location.X.ToString(CultureInfo.InvariantCulture);
+            query["LocationY"] = location.Y.ToString(CultureInfo.InvariantCulture);
+            var queryFilter = query.ToString();
+
+            using var response = await HttpClient.GetAsync($"Animals?{queryFilter}");
+
+            var content = await response.Content.ReadAsStringAsync();
+            var creatures = JsonConvert.DeserializeObject<IEnumerable<AnimalBlueprint>>(content);
+            return creatures;
+        }
+
         public async Task<bool> Update(AnimalBlueprint animal)
         {
             var animalJson = JsonConvert.SerializeObject(animal);
@@ -35,26 +52,5 @@ namespace Evolution.Services.Http
 
             return response.IsSuccessStatusCode;
         }
-
-        public async Task<IEnumerable<AnimalBlueprint>> GetByLocation(LocationBlueprint location)
-        {
-            if (location == null)
-            {
-                return new List<AnimalBlueprint>();
-            }
-
-            var query = HttpUtility.ParseQueryString(string.Empty);
-            query["Id"] = null;
-            query["LocationX"] = location.X.ToString(CultureInfo.InvariantCulture);
-            query["LocationY"] = location.Y.ToString(CultureInfo.InvariantCulture);
-            var queryFilter = query.ToString();
-              
-            using var response = await HttpClient.GetAsync($"Animals?{queryFilter}");
-
-            var content = await response.Content.ReadAsStringAsync();
-            var creatures = JsonConvert.DeserializeObject<IEnumerable<AnimalBlueprint>>(content);
-            return creatures;
-        }
     }
-     
 }

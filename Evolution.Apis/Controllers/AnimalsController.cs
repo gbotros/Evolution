@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Azure.Storage.Queues;
 using Evolution.Apis.Dtos;
@@ -16,15 +17,15 @@ namespace Evolution.Apis.Controllers
     [ApiController]
     public class AnimalsController : ControllerBase
     {
-        public IConfiguration Configuration { get; }
-
-        private EvolutionDbContext Context { get; }
-
         public AnimalsController(EvolutionDbContext context, IConfiguration configuration)
         {
             Context = context;
             Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
+
+        private EvolutionDbContext Context { get; }
 
         // GET: api/Animals/5
         [HttpGet("{id}")]
@@ -39,7 +40,7 @@ namespace Evolution.Apis.Controllers
 
         // GET: api/Animals
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AnimalBlueprint>>> GetAnimals([FromQuery]AnimalsFilter filter)
+        public async Task<ActionResult<IEnumerable<AnimalBlueprint>>> GetAnimals([FromQuery] AnimalsFilter filter)
         {
             var animals = Context.Animals.AsQueryable();
             if (filter == null) return await animals.ToListAsync();
@@ -70,7 +71,7 @@ namespace Evolution.Apis.Controllers
                 throw;
             }
 
-            return CreatedAtAction("GetAnimalBlueprint", new { id = animalBlueprint.Id }, animalBlueprint);
+            return CreatedAtAction("GetAnimalBlueprint", new {id = animalBlueprint.Id}, animalBlueprint);
         }
 
         // PUT: api/Animals/5
@@ -110,12 +111,11 @@ namespace Evolution.Apis.Controllers
             if (!queueClient.Exists()) return false;
 
             var animalMessage = JsonConvert.SerializeObject(animal);
-            var animalMessageBytes = System.Text.Encoding.UTF8.GetBytes(animalMessage);
+            var animalMessageBytes = Encoding.UTF8.GetBytes(animalMessage);
             var animalMessageEncoded = Convert.ToBase64String(animalMessageBytes);
             await queueClient.SendMessageAsync(animalMessageEncoded);
 
             return true;
         }
-
     }
 }

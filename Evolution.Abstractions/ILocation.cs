@@ -11,7 +11,7 @@ namespace Evolution.Abstractions
         LocationBlueprint Blueprint { get; }
         Guid Id { get; set; }
         string Name { get; }
-        IEnumerable<ILocation> Neighbours { get; set; }
+        IEnumerable<LocationBlueprint> Neighbours { get; set; }
         IEnumerable<PlantBlueprint> Plants { get; }
         int X { get; }
         int Y { get; }

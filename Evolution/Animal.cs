@@ -30,21 +30,21 @@ namespace Evolution
             IsAlive = blueprint.IsAlive;
             Location = locationFactory.Create(blueprint.Location).Result;
 
-            Blueprint = blueprint;
             AnimalService = animalService;
+            LocationFactory = locationFactory;
             Logger = logger;
         }
 
         public IAnimalService AnimalService { get; }
         public int BirthDay { get; }
 
-        public AnimalBlueprint Blueprint { get; }
         public int? DeathDay { get; private set; }
 
         public Guid Id { get; }
 
         public bool IsAlive { get; private set; }
         public ILocation Location { get; set; }
+        public ILocationFactory LocationFactory { get; }
         public ILogger Logger { get; }
 
         public string Name { get; }
@@ -76,6 +76,22 @@ namespace Evolution
         public int Fight(int neededAmount)
         {
             throw new NotImplementedException();
+        }
+
+        public AnimalBlueprint GetBlueprint()
+        {
+            return new AnimalBlueprint
+            {
+                Id = Id,
+                IsAlive = IsAlive,
+                Speed = Speed,
+                Location = Location.Blueprint,
+                BirthDay = BirthDay,
+                DeathDay = DeathDay,
+                Energy = Energy,
+                Name = Name,
+                Weight = Weight
+            };
         }
 
         private bool CanReproduce()
@@ -110,10 +126,10 @@ namespace Evolution
             foreach (var food in foods)
             {
                 var neededFood = HowMuchCanIEat();
-                var eaten = neededFood;// await food.EatInto(neededFood);
+                var eaten = neededFood; // await food.EatInto(neededFood);
 
                 Energy += ConvertFoodToEnergy(eaten);
-                await AnimalService.Update(Blueprint);
+                await AnimalService.Update(GetBlueprint());
                 Logger.LogDebug($"Creature {Name} ate {eaten} Food - current Energy {Energy}");
                 if (!IsHungry()) break;
             }
@@ -151,13 +167,13 @@ namespace Evolution
             if (neighboursCount == 0) return;
 
             var newLocationIndex = new Random().Next(0, neighboursCount);
-            var newLocation = Location.Neighbours.ElementAt(newLocationIndex);
+            var newLocationBlueprint = Location.Neighbours.ElementAt(newLocationIndex);
 
-            Location = newLocation;
+            Location = await LocationFactory.CreateEmpty(newLocationBlueprint);
 
             Steps++;
             Energy -= StepCost;
-            await AnimalService.Update(Blueprint);
+            await AnimalService.Update(GetBlueprint());
             Logger.LogDebug(
                 $"Creature {Name} moved to cell {Location.Name} at step number {Steps} - current Energy = {Energy}");
 
@@ -177,11 +193,11 @@ namespace Evolution
                 BirthDay = 0, // TODO: get current day
                 DeathDay = null,
                 IsAlive = true,
-                Speed = Speed, // allow mutations here
+                Speed = Speed, // TODO: allow mutations here
                 Location = Location.Blueprint
             };
 
-            await AnimalService.Update(Blueprint);
+            await AnimalService.Update(GetBlueprint());
             await AnimalService.Add(son);
             Logger.LogDebug($"{Name} gave birth to {son.Name}");
         }

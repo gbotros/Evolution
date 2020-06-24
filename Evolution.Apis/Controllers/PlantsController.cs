@@ -13,12 +13,12 @@ namespace Evolution.Apis.Controllers
     [ApiController]
     public class PlantsController : ControllerBase
     {
-        private  EvolutionDbContext Context { get; }
-
         public PlantsController(EvolutionDbContext context)
         {
             Context = context;
         }
+
+        private EvolutionDbContext Context { get; }
 
         // GET: api/Plants/5
         [HttpGet("{id}")]
@@ -33,7 +33,7 @@ namespace Evolution.Apis.Controllers
 
         // GET: api/Plants
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlantBlueprint>>> GetPlants([FromQuery]PlantsFilter filter)
+        public async Task<ActionResult<IEnumerable<PlantBlueprint>>> GetPlants([FromQuery] PlantsFilter filter)
         {
             var plants = Context.Plants.AsQueryable();
             if (filter == null) return await plants.ToListAsync();

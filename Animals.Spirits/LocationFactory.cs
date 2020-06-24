@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Evolution;
 using Evolution.Abstractions;
@@ -10,26 +8,45 @@ namespace Animals.Spirits
 {
     public class LocationFactory : ILocationFactory
     {
-        public LocationFactory(ILocationNameHelper nameHelper, IAnimalService animalService, IPlantService plantService)
+        public LocationFactory(ILocationHelper locationHelper, IAnimalService animalService, IPlantService plantService)
         {
-            NameHelper = nameHelper;
+            LocationHelper = locationHelper;
             AnimalService = animalService;
             PlantService = plantService;
         }
 
-        public ILocationNameHelper NameHelper { get; }
         public IAnimalService AnimalService { get; }
+
+        public ILocationHelper LocationHelper { get; }
         public IPlantService PlantService { get; }
 
         public async Task<ILocation> Create(LocationBlueprint blueprint)
         {
             var animals = await AnimalService.GetByLocation(blueprint);
-            var plants = await PlantService.GetByLocation(blueprint); 
-            var location = new Location(blueprint, NameHelper, animals, plants);
+            var plants = await PlantService.GetByLocation(blueprint);
+            var neighbors = CreateNeighbors(blueprint);
+            var location = new Location(blueprint, animals, plants, neighbors);
             return location;
         }
 
+        public async Task<ILocation> CreateEmpty(LocationBlueprint blueprint)
+        {
+            return new Location(blueprint);
+        }
+
+        private IEnumerable<LocationBlueprint> CreateNeighbors(LocationBlueprint location)
+        {
+            return new List<LocationBlueprint>
+            {
+                LocationHelper.GetEastLocation(location),
+                LocationHelper.GetSouthEastLocation(location),
+                LocationHelper.GetSouthLocation(location),
+                LocationHelper.GetSouthWestLocation(location),
+                LocationHelper.GetWestLocation(location),
+                LocationHelper.GetNorthWestLocation(location),
+                LocationHelper.GetNorthLocation(location),
+                LocationHelper.GetNorthEastLocation(location)
+            };
+        }
     }
-
-
 }

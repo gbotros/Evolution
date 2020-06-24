@@ -54,7 +54,7 @@ namespace Evolution.Apis
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Evolution Apis", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Evolution Apis", Version = "v1"});
             });
         }
     }
