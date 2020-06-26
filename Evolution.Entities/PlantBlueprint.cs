@@ -1,7 +1,6 @@
 using System;
-using Evolution.Entities;
 
-namespace Evolution.Blueprints
+namespace Evolution.Entities
 {
     public class PlantBlueprint
     {

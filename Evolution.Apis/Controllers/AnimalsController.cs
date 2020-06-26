@@ -46,7 +46,9 @@ namespace Evolution.Apis.Controllers
             if (filter == null) return await animals.ToListAsync();
 
             if (filter.Id.HasValue && filter.Id != Guid.Empty) animals = animals.Where(a => a.Id == filter.Id);
+
             if (filter.LocationX.HasValue) animals = animals.Where(a => a.Location.X == filter.LocationX);
+
             if (filter.LocationY.HasValue) animals = animals.Where(a => a.Location.Y == filter.LocationY);
 
             return await animals.ToListAsync();
@@ -66,8 +68,8 @@ namespace Evolution.Apis.Controllers
             }
             catch (DbUpdateException)
             {
-                if (AnimalBlueprintExists(animalBlueprint.Id))
-                    return Conflict();
+                if (AnimalBlueprintExists(animalBlueprint.Id)) return Conflict();
+
                 throw;
             }
 
@@ -90,8 +92,8 @@ namespace Evolution.Apis.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AnimalBlueprintExists(id))
-                    return NotFound();
+                if (!AnimalBlueprintExists(id)) return NotFound();
+
                 throw;
             }
 

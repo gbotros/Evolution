@@ -11,7 +11,8 @@ namespace Evolution.Entities
         public bool IsAlive { get; set; } = true;
         public LocationBlueprint Location { get; set; } = null;
         public string Name { get; set; } = "Animal";
-        public int Speed { get; set; } = 500; // 500 step per second
+        public int Speed { get; set; } = 500; // 500 step per game hour
+        public int Steps { get; set; }
         public int Weight { get; set; } = 10;
     }
 }

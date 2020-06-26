@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Evolution.Abstractions;
-using Evolution.Blueprints;
 using Evolution.Entities;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +10,7 @@ namespace Evolution
 {
     public class Animal : IAnimal
     {
-        private const int MaxSpeed = 1000; // 1000 step per second
+        private const int MaxSpeed = 1000; // 1000 step per game hour
         private const int MaxEnergy = 100000; // on default speed 100K Energy is enough for 100 steps
 
         public Animal(
@@ -28,6 +27,7 @@ namespace Evolution
             BirthDay = blueprint.BirthDay;
             DeathDay = blueprint.DeathDay;
             IsAlive = blueprint.IsAlive;
+            Steps = blueprint.Steps;
             Location = locationFactory.Create(blueprint.Location).Result;
 
             AnimalService = animalService;
@@ -59,13 +59,11 @@ namespace Evolution
 
         private int StepCost => Speed * 2; // Energy unit
 
-        private int WaitTime => MaxSpeed / Speed + 500;
-
         public async Task Act()
         {
             Logger.LogDebug($"Animal {Name} started Act");
 
-            while (IsAlive) await SatisfyMyNeeds();
+            await SatisfyMyNeeds();
         }
 
         public Task<int> EatInto(int neededAmount)
@@ -90,7 +88,8 @@ namespace Evolution
                 DeathDay = DeathDay,
                 Energy = Energy,
                 Name = Name,
-                Weight = Weight
+                Weight = Weight,
+                Steps = Steps
             };
         }
 
@@ -121,7 +120,7 @@ namespace Evolution
         {
             if (!IsFoodAvailable()) return;
 
-            var foods = GetAvailableFood().ToList();
+            var foods = GetAvailablePlants().ToList();
 
             foreach (var food in foods)
             {
@@ -135,9 +134,14 @@ namespace Evolution
             }
         }
 
-        private IEnumerable<PlantBlueprint> GetAvailableFood()
+        private IEnumerable<PlantBlueprint> GetAvailablePlants()
         {
-            return Location.Plants;
+            return Location.Plants ?? new List<PlantBlueprint>();
+        }
+
+        private IEnumerable<LocationBlueprint> GetNeighbors()
+        {
+            return Location.Neighbours ?? new List<LocationBlueprint>();
         }
 
         private int HowMuchCanIEat()
@@ -147,12 +151,12 @@ namespace Evolution
 
         private bool IsAdult()
         {
-            return Steps > 5;
+            return Steps > 5; // TODO: Determine is adult from age
         }
 
         private bool IsFoodAvailable()
         {
-            var food = GetAvailableFood().ToList();
+            var food = GetAvailablePlants().ToList();
             return food.Sum(f => f.Weight) > 0;
         }
 
@@ -163,7 +167,7 @@ namespace Evolution
 
         private async Task Move()
         {
-            var neighboursCount = Location.Neighbours.Count();
+            var neighboursCount = GetNeighbors().Count();
             if (neighboursCount == 0) return;
 
             var newLocationIndex = new Random().Next(0, neighboursCount);
@@ -206,8 +210,10 @@ namespace Evolution
         {
             if (CanReproduce()) await Reproduce();
 
-            if (IsHungry() && IsFoodAvailable()) await Eat();
-            else await Move();
+            if (IsHungry() && IsFoodAvailable())
+                await Eat();
+            else
+                await Move();
         }
     }
 }
