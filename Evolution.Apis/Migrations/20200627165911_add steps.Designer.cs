@@ -4,14 +4,16 @@ using Evolution.Apis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Evolution.Apis.Migrations
 {
     [DbContext(typeof(EvolutionDbContext))]
-    partial class EvolutionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200627165911_add steps")]
+    partial class addsteps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
