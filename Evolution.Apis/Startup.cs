@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ namespace Evolution.Apis
 {
     public class Startup
     {
+        const string EvolutionCorsPolicy = "evolutionCorsPolicy";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,6 +39,8 @@ namespace Evolution.Apis
                 c.RoutePrefix = string.Empty;
             });
 
+            app.UseCors(EvolutionCorsPolicy);
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
@@ -52,9 +57,19 @@ namespace Evolution.Apis
                 );
             });
 
+            var domains = Configuration.GetSection("Cors").Get<string[]>(); 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: EvolutionCorsPolicy,
+                    builder =>
+                    {
+                        builder.WithOrigins(domains);
+                    });
+            });
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Evolution Apis", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Evolution Apis", Version = "v1" });
             });
         }
     }
