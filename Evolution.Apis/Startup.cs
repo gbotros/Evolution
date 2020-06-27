@@ -11,8 +11,6 @@ namespace Evolution.Apis
 {
     public class Startup
     {
-        const string EvolutionCorsPolicy = "evolutionCorsPolicy";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,7 +37,7 @@ namespace Evolution.Apis
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseCors(EvolutionCorsPolicy);
+            app.UseCors();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
@@ -60,10 +58,12 @@ namespace Evolution.Apis
             var domains = Configuration.GetSection("Cors").Get<string[]>(); 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: EvolutionCorsPolicy,
+                options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins(domains);
+                        builder.WithOrigins(domains)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
                     });
             });
 
