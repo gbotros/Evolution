@@ -1,5 +1,4 @@
-﻿using Evolution.Apis.Models;
-using Evolution.Blueprints;
+﻿using Evolution.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Apis
