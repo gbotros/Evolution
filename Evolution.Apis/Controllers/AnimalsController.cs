@@ -82,9 +82,12 @@ namespace Evolution.Apis.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAnimalBlueprint(Guid id, AnimalBlueprint animalBlueprint)
         {
+            if (animalBlueprint == null) return BadRequest();
             if (id != animalBlueprint.Id) return BadRequest();
 
             Context.Entry(animalBlueprint).State = EntityState.Modified;
+            // workaround for updating value object at ef
+            animalBlueprint.Location = new LocationBlueprint(animalBlueprint.Location.X, animalBlueprint.Location.Y); 
 
             try
             {
