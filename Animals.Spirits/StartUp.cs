@@ -15,6 +15,7 @@ namespace Animals.Spirits
         public override void Configure(IFunctionsHostBuilder builder)
         {
             var httpServiceBaseAddress = Environment.GetEnvironmentVariable("HttpServiceBaseAddress");
+            builder.Services.AddLogging();
             builder.Services.AddHttpClient<IPlantService, PlantService>(client =>
             {
                 client.BaseAddress = new Uri(httpServiceBaseAddress);
