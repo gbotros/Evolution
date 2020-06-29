@@ -12,7 +12,8 @@ namespace Evolution
             var targetX = location.X + 1;
             var targetY = location.Y;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
         }
 
         public LocationBlueprint GetNorthEastLocation(LocationBlueprint location)
@@ -20,7 +21,8 @@ namespace Evolution
             var targetX = location.X + 1;
             var targetY = location.Y - 1;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
         }
 
         public LocationBlueprint GetNorthLocation(LocationBlueprint location)
@@ -28,7 +30,8 @@ namespace Evolution
             var targetX = location.X;
             var targetY = location.Y - 1;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
         }
 
         public LocationBlueprint GetNorthWestLocation(LocationBlueprint location)
@@ -36,7 +39,8 @@ namespace Evolution
             var targetX = location.X - 1;
             var targetY = location.Y - 1;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
         }
 
         public LocationBlueprint GetSouthEastLocation(LocationBlueprint location)
@@ -44,7 +48,8 @@ namespace Evolution
             var targetX = location.X + 1;
             var targetY = location.Y + 1;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
         }
 
         public LocationBlueprint GetSouthLocation(LocationBlueprint location)
@@ -52,7 +57,8 @@ namespace Evolution
             var targetX = location.X;
             var targetY = location.Y + 1;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
         }
 
         public LocationBlueprint GetSouthWestLocation(LocationBlueprint location)
@@ -60,7 +66,8 @@ namespace Evolution
             var targetX = location.X - 1;
             var targetY = location.Y + 1;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
         }
 
         public LocationBlueprint GetWestLocation(LocationBlueprint location)
@@ -68,7 +75,16 @@ namespace Evolution
             var targetX = location.X - 1;
             var targetY = location.Y;
 
-            return new LocationBlueprint(targetX, targetY);
+            var neighbor = new LocationBlueprint(targetX, targetY);
+            return IsLocationWithinWorldLimits(neighbor) ? neighbor : null;
+        }
+
+        private bool IsLocationWithinWorldLimits(LocationBlueprint location)
+        {
+            return location.X >= Constants.WorldEdgeStart &&
+                   location.Y >= Constants.WorldEdgeStart &&
+                   location.X <= Constants.WorldEdgeEnd &&
+                   location.Y <= Constants.WorldEdgeEnd;
         }
     }
 }
