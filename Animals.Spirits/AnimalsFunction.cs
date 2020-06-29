@@ -39,19 +39,19 @@ namespace Animals.Spirits
             AnimalBlueprint animalBlueprint,
             [Queue("animals")] [StorageAccount("EvolutionStorageConnection")]
             CloudQueue animalsOutputQueue,
-            ILogger log)
+            ILogger logger)
         {
             try
             {
-                var animal = new Animal(animalBlueprint, AnimalService, LocationFactory, log);
+                var animal = new Animal(animalBlueprint, AnimalService, LocationFactory, logger);
                 await animal.Act();
                 if (animal.IsAlive) await PublishAnimalMessage(animalsOutputQueue, animal);
 
-                log.LogInformation($"Animal acted successfully: {JsonConvert.SerializeObject(animalBlueprint)}");
+                logger.LogInformation($"Animal acted successfully: {JsonConvert.SerializeObject(animalBlueprint)}");
             }
             catch (Exception ex)
             {
-                log.LogError(ex,
+                logger.LogError(ex,
                     $"Error at AnimalsFunction processing: {JsonConvert.SerializeObject(animalBlueprint)}");
                 throw;
             }

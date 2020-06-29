@@ -1,10 +1,33 @@
 {
   "version": "2.0",
+  "IsEncrypted": false,
   "logging": {
     "applicationInsights": {
       "samplingSettings": {
         "isEnabled": true
       }
+    },
+    "fileLoggingMode": "always",
+    "logLevel": {
+      "default": "Debug",
+      "Host.Results": "Error",
+      "Function": "Error",
+      "Host.Aggregator": "Trace"
     }
+  },
+  "extensions": {
+    "queues": {
+      "maxPollingInterval": "00:00:10",
+      "visibilityTimeout": "00:10:00",
+      "batchSize": 1,
+      "maxDequeueCount": 500,
+      "newBatchThreshold": 0
+    }
+  },
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "EvolutionStorageConnection": "",
+    "HttpServiceBaseAddress": "https://evolutionapis.azurewebsites.net/api/"
   }
 }
