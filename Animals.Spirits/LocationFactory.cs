@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Evolution;
 using Evolution.Abstractions;
@@ -36,7 +37,7 @@ namespace Animals.Spirits
 
         private IEnumerable<LocationBlueprint> CreateNeighbors(LocationBlueprint location)
         {
-            return new List<LocationBlueprint>
+            var neighbors = new List<LocationBlueprint>
             {
                 LocationHelper.GetEastLocation(location),
                 LocationHelper.GetSouthEastLocation(location),
@@ -47,6 +48,8 @@ namespace Animals.Spirits
                 LocationHelper.GetNorthLocation(location),
                 LocationHelper.GetNorthEastLocation(location)
             };
+
+            return neighbors.Where(n => n != null);
         }
     }
 }
