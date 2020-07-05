@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -55,7 +54,7 @@ namespace Evolution.Apis
                 );
             });
 
-            var domains = Configuration.GetSection("Cors").Get<string[]>(); 
+            var domains = Configuration.GetSection("Cors").Get<string[]>();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -69,7 +68,7 @@ namespace Evolution.Apis
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Evolution Apis", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Evolution Apis", Version = "v1"});
             });
         }
     }

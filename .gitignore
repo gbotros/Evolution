@@ -350,3 +350,5 @@ MigrationBackup/
 .ionide/
 
 appsettings.Development.json
+/Evolution.Apis/LogFiles
+/Animals.Spirits/var.env.json

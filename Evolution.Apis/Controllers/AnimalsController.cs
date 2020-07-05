@@ -9,6 +9,7 @@ using Evolution.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Evolution.Apis.Controllers
@@ -17,13 +18,16 @@ namespace Evolution.Apis.Controllers
     [ApiController]
     public class AnimalsController : ControllerBase
     {
-        public AnimalsController(EvolutionDbContext context, IConfiguration configuration)
+        public AnimalsController(EvolutionDbContext context, IConfiguration configuration,
+            ILogger<AnimalsController> logger)
         {
             Context = context;
             Configuration = configuration;
+            Logger = logger;
         }
 
         public IConfiguration Configuration { get; }
+        public ILogger<AnimalsController> Logger { get; }
 
         private EvolutionDbContext Context { get; }
 
@@ -87,7 +91,7 @@ namespace Evolution.Apis.Controllers
 
             Context.Entry(animalBlueprint).State = EntityState.Modified;
             // workaround for updating value object at ef
-            animalBlueprint.Location = new LocationBlueprint(animalBlueprint.Location.X, animalBlueprint.Location.Y); 
+            animalBlueprint.Location = new LocationBlueprint(animalBlueprint.Location.X, animalBlueprint.Location.Y);
 
             try
             {

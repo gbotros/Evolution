@@ -45,21 +45,24 @@ namespace Animals.Spirits
             {
                 var animal = new Animal(animalBlueprint, AnimalService, LocationFactory, logger);
                 await animal.Act();
-                if (animal.IsAlive) await PublishAnimalMessage(animalsOutputQueue, animal);
+                if (animal.IsAlive) await PublishAnimalMessage(animalsOutputQueue, animal.GetBlueprint());
 
-                logger.LogInformation($"Animal acted successfully: {JsonConvert.SerializeObject(animalBlueprint)}");
+                foreach (var child in animal.Children)
+                {
+                    if (child.IsAlive) await PublishAnimalMessage(animalsOutputQueue, animal.GetBlueprint());
+                }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex,
-                    $"Error at AnimalsFunction processing: {JsonConvert.SerializeObject(animalBlueprint)}");
+                    $"Error at AnimalsFunction processing animal: {JsonConvert.SerializeObject(animalBlueprint)}");
                 throw;
             }
         }
 
-        private static async Task PublishAnimalMessage(CloudQueue animalsOutputQueue, Animal animal)
+        private static async Task PublishAnimalMessage(CloudQueue animalsOutputQueue, AnimalBlueprint animal)
         {
-            var newBlueprint = animal.GetBlueprint();
+            var newBlueprint = animal;
             var newMessage = new CloudQueueMessage(JsonConvert.SerializeObject(newBlueprint));
             var waitSeconds = Constants.GameHourToRealSecondRatio / animal.Speed;
             var waitTime = TimeSpan.FromSeconds(waitSeconds);

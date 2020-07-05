@@ -8,7 +8,6 @@ using System.Web;
 using Evolution.Abstractions;
 using Evolution.Entities;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace Evolution.Services.Http
 {
@@ -29,6 +28,11 @@ namespace Evolution.Services.Http
 
             using var response = await HttpClient.PostAsJsonAsync("Animals", animal);
             return response.IsSuccessStatusCode;
+        }
+
+        public Task<AnimalBlueprint> GetById(Guid animalId)
+        {
+            return HttpClient.GetFromJsonAsync<AnimalBlueprint>($"Animals/{animalId}");
         }
 
         public async Task<IEnumerable<AnimalBlueprint>> GetByLocation(LocationBlueprint location)
