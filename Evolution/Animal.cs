@@ -11,7 +11,7 @@ namespace Evolution
     public class Animal : IAnimal
     {
         private const int MaxSpeed = 1000; // 1000 step per game hour
-        private const int MaxEnergy = 100000; // on default speed 100K Energy is enough for 100 steps
+        private const int MaxEnergy = 12000; // on default speed 12K Energy is enough for 200 steps
 
         public Animal(
             AnimalBlueprint blueprint,
@@ -29,6 +29,7 @@ namespace Evolution
             IsAlive = blueprint.IsAlive;
             Steps = blueprint.Steps;
             Location = locationFactory.Create(blueprint.Location).Result;
+            Children = new List<AnimalBlueprint>();
 
             AnimalService = animalService;
             LocationFactory = locationFactory;
@@ -37,6 +38,7 @@ namespace Evolution
 
         public IAnimalService AnimalService { get; }
         public int BirthDay { get; }
+        public IEnumerable<AnimalBlueprint> Children { get; }
 
         public int? DeathDay { get; private set; }
 
@@ -52,7 +54,6 @@ namespace Evolution
         public int SonsCount { get; private set; }
 
         public int Speed { get; }
-
         public int Steps { get; private set; }
         public int Weight { get; }
         private int Energy { get; set; }
@@ -100,7 +101,7 @@ namespace Evolution
 
         private static int ConvertEnergyToFood(int energy)
         {
-            return (int) Math.Ceiling((decimal) energy / 1000);
+            return (int)Math.Ceiling((decimal)energy / 1000);
         }
 
         private static int ConvertFoodToEnergy(int food)
