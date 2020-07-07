@@ -5,48 +5,57 @@ using Evolution.Entities;
 
 namespace Evolution
 {
-    public class Plant : IPlant
+    public class Plant : Creature, IPlant
     {
-        public Plant(PlantBlueprint blueprint, IPlantService plantService)
+        public Plant(
+            PlantBlueprint blueprint,
+            IPlantService plantService,
+            IGameCalender gameCalender) : base(gameCalender)
         {
             Id = blueprint.Id;
             Name = blueprint.Name;
             Weight = blueprint.Weight;
-            BirthDay = blueprint.BirthDay;
-            DeathDay = blueprint.DeathDay;
+            BirthDate = blueprint.BirthDate;
+            DeathDate = blueprint.DeathDate;
             GrowthAmount = blueprint.GrowthAmount;
-            Blueprint = blueprint;
+            ParentId = blueprint.ParentId;
+
             PlantService = plantService;
         }
 
-        public int BirthDay { get; }
-        public PlantBlueprint Blueprint { get; }
-        public int? DeathDay { get; }
+        private int GrowthAmount { get; }
 
-        public int GrowthAmount { get; }
-        public Guid Id { get; }
+        private IPlantService PlantService { get; }
 
-        public bool IsAlive { get; set; }
-
-        public ILocation Location { get; set; }
-
-        public string Name { get; }
-        public IPlantService PlantService { get; }
-
-        public int Weight { get; private set; }
-
-        public async Task Act()
+        public override async Task Act()
         {
             while (IsAlive) await Grow();
         }
 
-        public async Task<int> EatInto(int neededAmount)
+        public override async Task<int> EatInto(int neededAmount)
         {
             var response = await PlantService.EatInto(Id, neededAmount);
             Weight = response.CurrentWeight;
             if (Weight <= 0) Die();
 
             return response.Eaten;
+        }
+
+        public PlantBlueprint GetBlueprint()
+        {
+            return new PlantBlueprint
+            {
+                Id = Id,
+                Name = Name,
+                Weight = Weight,
+                BirthDate = BirthDate,
+                DeathDate = DeathDate,
+                GrowthAmount = GrowthAmount,
+                ParentId = ParentId,
+                UpdatedAt = DateTime.UtcNow,
+                IsAlive = IsAlive,
+                Location = Location.Blueprint
+            };
         }
 
         private void Die()
@@ -56,8 +65,8 @@ namespace Evolution
 
         private async Task Grow()
         {
-            Weight += Blueprint.GrowthAmount;
-            await PlantService.Update(Blueprint);
+            Weight += GrowthAmount;
+            await PlantService.Update(GetBlueprint());
         }
     }
 }

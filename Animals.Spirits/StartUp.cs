@@ -40,6 +40,10 @@ namespace Animals.Spirits
             });
             builder.Services.AddSingleton<ILocationFactory, LocationFactory>();
             builder.Services.AddSingleton<ILocationHelper, LocationHelper>();
+            builder.Services.AddSingleton<IGameCalender>(serviceProvider =>
+                new GameCalender(Constants.GameHourToRealSecondRatio));
+
+            Log.Logger.Information("Starting app Animals.Spirits");
         }
 
         public static IConfiguration ReadConfiguration(IFunctionsHostBuilder builder)

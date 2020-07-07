@@ -18,18 +18,21 @@ namespace Animals.Spirits
             IPlantService plantService,
             IAnimalService animalService,
             ILocationFactory locationFactory,
-            ILocationHelper locationNameHelper)
+            ILocationHelper locationNameHelper,
+            IGameCalender gameCalender)
         {
             PlantService = plantService;
             AnimalService = animalService;
             LocationFactory = locationFactory;
             LocationNameHelper = locationNameHelper;
+            GameCalender = gameCalender;
         }
 
-        public IAnimalService AnimalService { get; }
-        public ILocationFactory LocationFactory { get; }
-        public ILocationHelper LocationNameHelper { get; }
-        public IPlantService PlantService { get; }
+        private IAnimalService AnimalService { get; }
+        private IGameCalender GameCalender { get; }
+        private ILocationFactory LocationFactory { get; }
+        private ILocationHelper LocationNameHelper { get; }
+        private IPlantService PlantService { get; }
 
         private static TimeSpan TimeToLive { get; } = TimeSpan.FromDays(7);
 
@@ -43,7 +46,8 @@ namespace Animals.Spirits
         {
             try
             {
-                var animal = new Animal(animalBlueprint, AnimalService, LocationFactory, logger);
+                var animal = (IAnimal) new Animal(animalBlueprint, AnimalService, LocationFactory, GameCalender,
+                    logger);
                 await animal.Act();
                 if (animal.IsAlive) await PublishAnimalMessage(animalsOutputQueue, animal.GetBlueprint());
 

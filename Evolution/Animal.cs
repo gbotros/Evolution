@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Evolution
 {
-    public class Animal : IAnimal
+    public class Animal : Creature, IAnimal
     {
         private const int MaxSpeed = 1000; // 1000 step per game hour
         private const int MaxEnergy = 12000; // on default speed 12K Energy is enough for 200 steps
@@ -17,57 +17,51 @@ namespace Evolution
             AnimalBlueprint blueprint,
             IAnimalService animalService,
             ILocationFactory locationFactory,
-            ILogger logger)
+            IGameCalender gameCalender,
+            ILogger logger) : base(gameCalender)
         {
             Id = blueprint.Id;
             Name = blueprint.Name;
             Weight = blueprint.Weight;
             Speed = blueprint.Speed;
             Energy = blueprint.Energy;
-            BirthDay = blueprint.BirthDay;
-            DeathDay = blueprint.DeathDay;
+            BirthDate = blueprint.BirthDate;
+            DeathDate = blueprint.DeathDate;
             IsAlive = blueprint.IsAlive;
             Steps = blueprint.Steps;
+            ChildrenCount = blueprint.ChildrenCount;
             Location = locationFactory.Create(blueprint.Location).Result;
             Children = new List<AnimalBlueprint>();
 
             AnimalService = animalService;
             LocationFactory = locationFactory;
+            GameCalender = gameCalender;
             Logger = logger;
         }
 
-        public IAnimalService AnimalService { get; }
-        public int BirthDay { get; }
         public IEnumerable<AnimalBlueprint> Children { get; }
-
-        public int? DeathDay { get; private set; }
-
-        public Guid Id { get; }
-
-        public bool IsAlive { get; private set; }
-        public ILocation Location { get; set; }
-        public ILocationFactory LocationFactory { get; }
-        public ILogger Logger { get; }
-
-        public string Name { get; }
-
-        public int SonsCount { get; private set; }
+        public int ChildrenCount { get; private set; }
 
         public int Speed { get; }
-        public int Steps { get; private set; }
-        public int Weight { get; }
+
+        private IAnimalService AnimalService { get; }
         private int Energy { get; set; }
+        private IGameCalender GameCalender { get; }
+
+        private ILocationFactory LocationFactory { get; }
+        private ILogger Logger { get; }
 
         private int StepCost => Speed * 2; // Energy unit
+        private int Steps { get; set; }
 
-        public async Task Act()
+        public override async Task Act()
         {
             Logger.LogDebug($"Animal {Name} started Act");
 
             await SatisfyMyNeeds();
         }
 
-        public Task<int> EatInto(int neededAmount)
+        public override Task<int> EatInto(int neededAmount)
         {
             throw new NotImplementedException();
         }
@@ -85,12 +79,15 @@ namespace Evolution
                 IsAlive = IsAlive,
                 Speed = Speed,
                 Location = Location.Blueprint,
-                BirthDay = BirthDay,
-                DeathDay = DeathDay,
+                BirthDate = BirthDate,
+                DeathDate = DeathDate,
                 Energy = Energy,
                 Name = Name,
                 Weight = Weight,
-                Steps = Steps
+                Steps = Steps,
+                UpdatedAt = DateTime.UtcNow,
+                ParentId = ParentId,
+                ChildrenCount = ChildrenCount
             };
         }
 
@@ -101,7 +98,7 @@ namespace Evolution
 
         private static int ConvertEnergyToFood(int energy)
         {
-            return (int)Math.Ceiling((decimal)energy / 1000);
+            return (int) Math.Ceiling((decimal) energy / 1000);
         }
 
         private static int ConvertFoodToEnergy(int food)
@@ -112,7 +109,7 @@ namespace Evolution
         private void Die()
         {
             IsAlive = false;
-            DeathDay = null; // TODO: get current day
+            DeathDate = DateTime.UtcNow;
 
             Logger.LogDebug($"Creature {Name} Died after {Steps} steps.");
         }
@@ -147,7 +144,8 @@ namespace Evolution
 
         private int HowMuchCanIEat()
         {
-            return ConvertEnergyToFood(MaxEnergy - Energy);
+            var neededEnergy = MaxEnergy - Energy;
+            return ConvertEnergyToFood(neededEnergy);
         }
 
         private bool IsAdult()
@@ -189,17 +187,19 @@ namespace Evolution
         {
             if (!CanReproduce()) return;
 
-            SonsCount++;
-            Energy /= 2; // reproduction cost 50% energy
+            ChildrenCount++;
+            // TODO: different animals can have different reproduction cost
+            Energy /= 2; // current reproduction cost 50% energy 
             var son = new AnimalBlueprint
             {
                 Id = Guid.NewGuid(),
-                Name = $"{Name}:s{SonsCount}",
-                BirthDay = 0, // TODO: get current day
-                DeathDay = null,
+                Name = $"{Name}:s{ChildrenCount}",
+                BirthDate = DateTime.UtcNow,
+                DeathDate = null,
                 IsAlive = true,
                 Speed = Speed, // TODO: allow mutations here
-                Location = Location.Blueprint
+                Location = Location.Blueprint,
+                ParentId = Id
             };
 
             await AnimalService.Update(GetBlueprint());

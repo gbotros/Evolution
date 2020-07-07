@@ -59,12 +59,14 @@ namespace Evolution.Apis.Controllers
         }
 
         // POST: api/Animals
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<AnimalBlueprint>> PostAnimalBlueprint(AnimalBlueprint animalBlueprint)
         {
+            if (animalBlueprint == null) return BadRequest("animal blueprint cannot be null");
+
             Context.Animals.Add(animalBlueprint);
+            animalBlueprint.BirthDate = DateTime.UtcNow;
+            animalBlueprint.UpdatedAt = DateTime.UtcNow;
             try
             {
                 await Context.SaveChangesAsync();
@@ -81,15 +83,14 @@ namespace Evolution.Apis.Controllers
         }
 
         // PUT: api/Animals/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAnimalBlueprint(Guid id, AnimalBlueprint animalBlueprint)
         {
-            if (animalBlueprint == null) return BadRequest();
-            if (id != animalBlueprint.Id) return BadRequest();
+            if (animalBlueprint == null) return BadRequest("animal blueprint cannot be null");
+            if (id != animalBlueprint.Id) return BadRequest("resource id does not match animalBluePrint Id");
 
             Context.Entry(animalBlueprint).State = EntityState.Modified;
+            animalBlueprint.UpdatedAt = DateTime.UtcNow;
             // workaround for updating value object at ef
             animalBlueprint.Location = new LocationBlueprint(animalBlueprint.Location.X, animalBlueprint.Location.Y);
 

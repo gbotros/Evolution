@@ -23,11 +23,14 @@ namespace Evolution.Apis.Migrations
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
 
-                b.Property<int>("BirthDay")
+                b.Property<DateTime>("BirthDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<int>("ChildrenCount")
                     .HasColumnType("int");
 
-                b.Property<int?>("DeathDay")
-                    .HasColumnType("int");
+                b.Property<DateTime?>("DeathDate")
+                    .HasColumnType("datetime2");
 
                 b.Property<int>("Energy")
                     .HasColumnType("int");
@@ -38,11 +41,17 @@ namespace Evolution.Apis.Migrations
                 b.Property<string>("Name")
                     .HasColumnType("nvarchar(max)");
 
+                b.Property<Guid?>("ParentId")
+                    .HasColumnType("uniqueidentifier");
+
                 b.Property<int>("Speed")
                     .HasColumnType("int");
 
                 b.Property<int>("Steps")
                     .HasColumnType("int");
+
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
                 b.Property<int>("Weight")
                     .HasColumnType("int");
@@ -57,11 +66,11 @@ namespace Evolution.Apis.Migrations
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
 
-                b.Property<int>("BirthDay")
-                    .HasColumnType("int");
+                b.Property<DateTime>("BirthDate")
+                    .HasColumnType("datetime2");
 
-                b.Property<int?>("DeathDay")
-                    .HasColumnType("int");
+                b.Property<DateTime?>("DeathDate")
+                    .HasColumnType("datetime2");
 
                 b.Property<int>("GrowthAmount")
                     .HasColumnType("int");
@@ -71,6 +80,12 @@ namespace Evolution.Apis.Migrations
 
                 b.Property<string>("Name")
                     .HasColumnType("nvarchar(max)");
+
+                b.Property<Guid?>("ParentId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
                 b.Property<int>("Weight")
                     .HasColumnType("int");

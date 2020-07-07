@@ -5,8 +5,9 @@ namespace Evolution.Abstractions
 {
     public interface ICreature
     {
-        int BirthDay { get; }
-        int? DeathDay { get; }
+        double AgeInDays { get; }
+        DateTime BirthDate { get; }
+        DateTime? DeathDate { get; }
         Guid Id { get; }
         bool IsAlive { get; }
         ILocation Location { get; }
