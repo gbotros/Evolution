@@ -3,6 +3,7 @@ using System.IO;
 using Animals.Spirits;
 using Evolution;
 using Evolution.Abstractions;
+using Evolution.Factories;
 using Evolution.Services.Http;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +41,7 @@ namespace Animals.Spirits
             });
             builder.Services.AddSingleton<ILocationFactory, LocationFactory>();
             builder.Services.AddSingleton<ILocationHelper, LocationHelper>();
+            builder.Services.AddSingleton<IPlantFactory, PlantFactory>();
             builder.Services.AddSingleton<IGameCalender>(serviceProvider =>
                 new GameCalender(Constants.GameHourToRealSecondRatio));
 

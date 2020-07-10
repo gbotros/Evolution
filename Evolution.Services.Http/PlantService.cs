@@ -4,13 +4,16 @@ using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Evolution.Abstractions;
+using Evolution.Abstractions.Dtos;
 using Evolution.Entities;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
 namespace Evolution.Services.Http
 {
     public class PlantService : IPlantService
     {
+        private const string Uri = "Plants";
         public PlantService(HttpClient httpClient)
         {
             HttpClient = httpClient;
@@ -18,36 +21,41 @@ namespace Evolution.Services.Http
 
         public HttpClient HttpClient { get; }
 
-        public async Task<EatIntoOperationResult> EatInto(Guid plantId, int neededAmount)
-        {
-            return new EatIntoOperationResult {CurrentWeight = 10000, Eaten = neededAmount};
-        }
-
         public async Task<IEnumerable<PlantBlueprint>> GetByLocation(LocationBlueprint location)
         {
             if (location == null) return new List<PlantBlueprint>();
 
-            var parameters = new Dictionary<string, string>
+            var filter = new Dictionary<string, string>()
             {
-                {"Id", null},
-                {"LocationX", location.X.ToString(CultureInfo.InvariantCulture)},
-                {"LocationY", location.Y.ToString(CultureInfo.InvariantCulture)}
+                { "LocationX", location.X.ToString(CultureInfo.InvariantCulture) },
+                { "LocationY", location.Y.ToString(CultureInfo.InvariantCulture) }
             };
-            using var animalsFilter = new FormUrlEncodedContent(parameters);
-            using var response = await HttpClient.GetAsync($"Plants/?{animalsFilter}");
 
+            var url = QueryHelpers.AddQueryString(Uri, filter);
+
+            using var response = await HttpClient.GetAsync(url);
+
+            var content = await response.Content.ReadAsStringAsync();
+            var creatures = JsonConvert.DeserializeObject<IEnumerable<PlantBlueprint>>(content);
+            return creatures;
+
+
+        }
+        public async Task<IEnumerable<PlantBlueprint>> GetAll()
+        {
+            using var response = await HttpClient.GetAsync(Uri);
             var content = await response.Content.ReadAsStringAsync();
             var creatures = JsonConvert.DeserializeObject<IEnumerable<PlantBlueprint>>(content);
             return creatures;
         }
 
-        public async Task<bool> Update(PlantBlueprint plant)
+        public async Task<UpdatePlantResponseDto> Update(UpdatePlantDto dto)
         {
-            var plantJson = JsonConvert.SerializeObject(plant);
-            using var plantContent = new StringContent(plantJson);
-            using var response = await HttpClient.PutAsync("Plants", plantContent);
+            if (dto == null) throw new ArgumentNullException(nameof(dto));
 
-            return response.IsSuccessStatusCode;
+            using var response = await HttpClient.PutAsJsonAsync($"{Uri}/{dto.Id}", dto);
+            var r = await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsAsync<UpdatePlantResponseDto>();
         }
     }
 }

@@ -20,6 +20,7 @@
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Evolution.Factories\Evolution.Factories.csproj" />
     <ProjectReference Include="..\Evolution.Services.Http\Evolution.Services.Http.csproj" />
     <ProjectReference Include="..\Evolution\Evolution.csproj" />
   </ItemGroup>

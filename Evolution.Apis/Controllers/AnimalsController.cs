@@ -75,8 +75,7 @@ namespace Evolution.Apis.Controllers
             catch (DbUpdateException)
             {
                 if (AnimalBlueprintExists(animalBlueprint.Id)) return Conflict();
-
-                throw;
+                else throw;
             }
 
             return CreatedAtAction("GetAnimalBlueprint", new {id = animalBlueprint.Id}, animalBlueprint);
@@ -101,8 +100,7 @@ namespace Evolution.Apis.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!AnimalBlueprintExists(id)) return NotFound();
-
-                throw;
+                else throw;
             }
 
             return NoContent();

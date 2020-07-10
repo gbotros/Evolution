@@ -48,11 +48,11 @@ namespace Evolution.Apis.Controllers
         }
 
         // POST: api/Plants
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<PlantBlueprint>> PostPlantBlueprint(PlantBlueprint plantBlueprint)
         {
+            if (plantBlueprint == null) return BadRequest("plantBlueprint cannot be null");
+
             Context.Plants.Add(plantBlueprint);
             try
             {
@@ -61,35 +61,32 @@ namespace Evolution.Apis.Controllers
             catch (DbUpdateException)
             {
                 if (PlantBlueprintExists(plantBlueprint.Id)) return Conflict();
-
-                throw;
+                else throw;
             }
 
             return CreatedAtAction("GetPlantBlueprint", new {id = plantBlueprint.Id}, plantBlueprint);
         }
 
         // PUT: api/Plants/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlantBlueprint(Guid id, PlantBlueprint plantBlueprint)
+        public async Task<ActionResult<UpdatePlantResponseDto>> PutPlantBlueprint(Guid id, UpdatePlantDto dto)
         {
-            if (id != plantBlueprint.Id) return BadRequest();
+            if (dto == null) return BadRequest("dto cannot be null");
+            if (id != dto.Id) return BadRequest("resource id does not match dto Id");
 
-            Context.Entry(plantBlueprint).State = EntityState.Modified;
+            var plant = await Context.Plants.FirstOrDefaultAsync(p => p.Id == id);
+            if (plant == null) return NotFound();
 
-            try
-            {
-                await Context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PlantBlueprintExists(id)) return NotFound();
+            var originalWeight = plant.Weight;
+            plant.Weight += dto.Amount;
+            if (plant.Weight < 0) plant.Weight = 0;
+            plant.IsAlive = dto.IsAlive ?? plant.IsAlive;
+            plant.UpdatedAt = DateTime.UtcNow;
 
-                throw;
-            }
+            await Context.SaveChangesAsync();
 
-            return NoContent();
+            var amountOfChange = Math.Abs(originalWeight - plant.Weight);
+            return new UpdatePlantResponseDto {CurrentWeight = plant.Weight, AmountOfChange = amountOfChange};
         }
 
         private bool PlantBlueprintExists(Guid id)

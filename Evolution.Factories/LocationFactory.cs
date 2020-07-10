@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Evolution;
 using Evolution.Abstractions;
 using Evolution.Entities;
 
-namespace Animals.Spirits
+namespace Evolution.Factories
 {
     public class LocationFactory : ILocationFactory
     {

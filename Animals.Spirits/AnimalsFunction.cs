@@ -17,12 +17,14 @@ namespace Animals.Spirits
         public AnimalsFunction(
             IPlantService plantService,
             IAnimalService animalService,
+            IPlantFactory plantFactory,
             ILocationFactory locationFactory,
             ILocationHelper locationNameHelper,
             IGameCalender gameCalender)
         {
             PlantService = plantService;
             AnimalService = animalService;
+            PlantFactory = plantFactory;
             LocationFactory = locationFactory;
             LocationNameHelper = locationNameHelper;
             GameCalender = gameCalender;
@@ -32,6 +34,7 @@ namespace Animals.Spirits
         private IGameCalender GameCalender { get; }
         private ILocationFactory LocationFactory { get; }
         private ILocationHelper LocationNameHelper { get; }
+        private IPlantFactory PlantFactory { get; }
         private IPlantService PlantService { get; }
 
         private static TimeSpan TimeToLive { get; } = TimeSpan.FromDays(7);
@@ -46,7 +49,8 @@ namespace Animals.Spirits
         {
             try
             {
-                var animal = (IAnimal) new Animal(animalBlueprint, AnimalService, LocationFactory, GameCalender,
+                var animal = (IAnimal)new Animal(animalBlueprint, AnimalService, PlantFactory, LocationFactory,
+                    GameCalender,
                     logger);
                 await animal.Act();
                 if (animal.IsAlive) await PublishAnimalMessage(animalsOutputQueue, animal.GetBlueprint());
@@ -70,7 +74,7 @@ namespace Animals.Spirits
             var newMessage = new CloudQueueMessage(JsonConvert.SerializeObject(newBlueprint));
             var waitSeconds = Constants.GameHourToRealSecondRatio / animal.Speed;
             var waitTime = TimeSpan.FromSeconds(waitSeconds);
-            var requestOptions = new QueueRequestOptions {RetryPolicy = new ExponentialRetry()};
+            var requestOptions = new QueueRequestOptions { RetryPolicy = new ExponentialRetry() };
             var operationContext = new OperationContext();
             await animalsOutputQueue.AddMessageAsync(newMessage, TimeToLive, waitTime, requestOptions,
                 operationContext);
