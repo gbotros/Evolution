@@ -73,7 +73,7 @@ namespace Evolution
             if (!IsAlive) return;
 
             Weight += GrowthAmount;
-            await PlantService.Update(new UpdatePlantDto { Amount = 0, Id = Id, IsAlive = IsAlive });
+            await PlantService.Update(new UpdatePlantDto { Amount = GrowthAmount, Id = Id });
         }
 
     }
