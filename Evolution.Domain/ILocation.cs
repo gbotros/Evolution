@@ -5,11 +5,13 @@ namespace Evolution.Domain
 {
     public interface ILocation
     {
-        IEnumerable<ICreature> Community { get; }
-        IEnumerable<INeighbourLocation> Neighbours { get; }
+        IList<ICreature> Community { get; }
+        IEnumerable<ILocation> Neighbours { get; }
         string Name { get; }
         int X { get; }
         int Y { get; }
         bool IsEmpty();
+        void Move(ICreature creature, ILocation newLocation);
+        void Locate(ICreature creature);
     }
 }

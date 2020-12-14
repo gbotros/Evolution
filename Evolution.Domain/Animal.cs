@@ -18,8 +18,6 @@ namespace Evolution.Domain
             AnimalBlueprint blueprint,
             ILocation location,
             IGameCalender gameCalender,
-            IEnumerable<ICreature> community,
-            IEnumerable<INeighbourLocation> neighbours,
             ILogger<Animal> logger) : base(gameCalender)
         {
             Id = blueprint.Id;
@@ -36,8 +34,7 @@ namespace Evolution.Domain
             ParentId = blueprint.ParentId;
 
             GameCalender = gameCalender;
-            Neighbours = neighbours;
-            Community = community;
+
             Logger = logger;
         }
 
@@ -47,7 +44,7 @@ namespace Evolution.Domain
 
         private int Energy { get; set; }
         private IGameCalender GameCalender { get; }
-        public IEnumerable<INeighbourLocation> Neighbours { get; }
+        public IEnumerable<ILocation> Neighbours { get; }
         private ILogger<Animal> Logger { get; }
 
         private int StepCost => Speed * 2; // Energy unit
@@ -135,7 +132,7 @@ namespace Evolution.Domain
             return Location.Community.Where(c => c.IsEatable(this));
         }
 
-        private IEnumerable<INeighbourLocation> GetNeighbors()
+        private IEnumerable<ILocation> GetNeighbors()
         {
             return Location.Neighbours;
         }
@@ -168,9 +165,10 @@ namespace Evolution.Domain
             if (neighboursCount == 0) return;
 
             var newLocationIndex = new Random().Next(0, neighboursCount);
-            var newLocationBlueprint = Location.Neighbours.ElementAt(newLocationIndex);
+            var newLocation = Location.Neighbours.ElementAt(newLocationIndex);
 
-            Location = new Location(newLocationBlueprint.X, newLocationBlueprint.Y);
+            Location = newLocation;
+            Location.Move(this, newLocation);
 
             Steps++;
             Energy -= StepCost;

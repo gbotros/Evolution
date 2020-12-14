@@ -4,12 +4,14 @@ using System.Linq;
 
 namespace Evolution.Domain
 {
-    public class Location : ILocation, IValueObject
+    public class Location : ILocation
     {
-        public Location(int x, int y)
+        public Location(int x, int y, IList<ICreature> community, IEnumerable<ILocation> neighbours)
         {
             X = x;
-            Y = y;
+            Y = y; 
+            Neighbours = neighbours;
+            Community = community;
         }
 
         public Location()
@@ -19,8 +21,8 @@ namespace Evolution.Domain
 
         private const string IntFormat = "D2";
 
-        public IEnumerable<ICreature> Community { get; }
-        public IEnumerable<INeighbourLocation> Neighbours { get; }
+        public IList<ICreature> Community { get; }
+        public IEnumerable<ILocation> Neighbours { get; }
 
         public Guid Id { get; set; }
 
@@ -33,6 +35,17 @@ namespace Evolution.Domain
         public bool IsEmpty()
         {
             return !Community.Any();
+        }
+
+        public void Move(ICreature creature, ILocation newLocation)
+        {
+            this.Community.Remove(creature);
+            newLocation.Locate(creature);
+        }
+
+        public void Locate(ICreature creature)
+        {
+          this.Community.Add(creature);
         }
     }
 }
