@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
@@ -38,22 +37,16 @@ namespace Evolution.Domain
             Logger = logger;
         }
 
-        public IEnumerable<ICreature> Community { get; private set; }
         public int ChildrenCount { get; private set; }
+
         public int Speed { get; }
+        public int Steps { get; private set; }
 
         private int Energy { get; set; }
         private IGameCalender GameCalender { get; }
-        public IEnumerable<ILocation> Neighbours { get; }
         private ILogger<Animal> Logger { get; }
 
         private int StepCost => Speed * 2; // Energy unit
-        public int Steps { get; private set; }
-
-        public override bool IsEatable(ICreature other)
-        {
-            return false;
-        }
 
         public override void Act()
         {
@@ -86,6 +79,11 @@ namespace Evolution.Domain
             };
         }
 
+        public override bool IsEatableBy(ICreature other)
+        {
+            return false;
+        }
+
         private bool CanReproduce()
         {
             return IsAdult() && !IsHungry();
@@ -93,7 +91,7 @@ namespace Evolution.Domain
 
         private static int ConvertEnergyToFood(int energy)
         {
-            return (int)Math.Ceiling((decimal)energy / 100);
+            return (int) Math.Ceiling((decimal) energy / 100);
         }
 
         private static int ConvertFoodToEnergy(int food)
@@ -129,7 +127,21 @@ namespace Evolution.Domain
 
         private IEnumerable<ICreature> GetAvailableFood()
         {
-            return Location.Community.Where(c => c.IsEatable(this));
+            return Location.Community.Where(c => c.IsEatableBy(this));
+        }
+
+        private int GetMutatedSpeed()
+        {
+            var minMutation = -1 * (int) SpeedMutationAmplitude;
+            var maxMutation = (int) SpeedMutationAmplitude + 1;
+            var mutation = new Random().Next(minMutation, maxMutation);
+
+            var mutantSpeed = Speed + mutation;
+
+            if (mutantSpeed < MinSpeed) mutantSpeed = MinSpeed;
+            if (mutantSpeed > MaxSpeed) mutantSpeed = MaxSpeed;
+
+            return mutantSpeed;
         }
 
         private IEnumerable<ILocation> GetNeighbors()
@@ -185,7 +197,7 @@ namespace Evolution.Domain
             ChildrenCount++;
             // TODO: different animals can have different reproduction cost
             Energy /= 2; // Son gets 50% of the Parent Energy
-            var son = new AnimalBlueprint
+            var sonBlueprint = new AnimalBlueprint
             {
                 Id = Guid.NewGuid(),
                 Name = $"{Name}:s{ChildrenCount}",
@@ -198,7 +210,8 @@ namespace Evolution.Domain
                 ParentId = Id
             };
 
-            // TODO: raise event add son animal
+            var son = new Animal(sonBlueprint, Location, GameCalender, Logger);
+            Location.Locate(son);
 
             Logger.LogDebug($"{Name} gave birth to {son.Name}");
         }
@@ -207,22 +220,7 @@ namespace Evolution.Domain
         {
             if (CanReproduce()) Reproduce();
             if (IsHungry() && IsFoodAvailable()) Eat();
-            else  Move();
+            else Move();
         }
-
-        private int GetMutatedSpeed()
-        {
-            var minMutation = -1 * (int)SpeedMutationAmplitude;
-            var maxMutation = (int)SpeedMutationAmplitude + 1;
-            var mutation = new Random().Next(minMutation, maxMutation);
-
-            var mutantSpeed = Speed + mutation;
-
-            if (mutantSpeed < MinSpeed) mutantSpeed = MinSpeed;
-            if (mutantSpeed > MaxSpeed) mutantSpeed = MaxSpeed;
-
-            return mutantSpeed;
-        }
-
     }
 }

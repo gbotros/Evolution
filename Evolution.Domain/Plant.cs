@@ -21,7 +21,7 @@ namespace Evolution.Domain
 
         private int GrowthAmount { get; }
 
-        public override bool IsEatable(ICreature other)
+        public override bool IsEatableBy(ICreature other)
         {
             return true;
         }

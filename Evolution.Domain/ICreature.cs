@@ -13,7 +13,7 @@ namespace Evolution.Domain
         string Name { get; }
         int Weight { get; }
         ILocation Location { get; }
-        bool IsEatable(ICreature other);
+        bool IsEatableBy(ICreature other);
         void Act();
         void EatInto(int neededAmount);
     }
