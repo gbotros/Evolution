@@ -5,14 +5,18 @@ using Evolution.Domain.Common;
 
 namespace Evolution.Domain
 {
-    public class Location : ILocation
+    public class Location : ValueObject<Location>
     {
-        public Location(int x, int y, IList<ICreature> community, IList<ILocation> neighbours = null)
+
+        private const int FirstRow = 0;
+        private const int FirstColumn = 0;
+        private const int LastRow = 25;
+        private const int LastColumn = 25;
+
+        public Location(int row, int column)
         {
-            X = x;
-            Y = y; 
-            Neighbours = neighbours ?? new List<ILocation>();
-            Community = community ?? new List<ICreature>();
+            Row = row;
+            Column = column;
         }
 
         public Location()
@@ -22,34 +26,63 @@ namespace Evolution.Domain
 
         private const string IntFormat = "D2";
 
-        public IList<ICreature> Community { get; }
-        public IList<ILocation> Neighbours { get; }
+        public string Name => Row.ToString(IntFormat) + "," + Column.ToString(IntFormat);
 
-        public string Name => X.ToString(IntFormat) + "," + Y.ToString(IntFormat);
+        public int Row { get; }
 
-        public int X { get; }
+        public int Column { get; }
 
-        public int Y { get; }
+        private Location Up => new Location(Row - 1, Column);
+        private Location Down => new Location(Row + 1, Column);
+        private Location Right => new Location(Row, Column + 1);
+        private Location Left => new Location(Row, Column - 1);
 
-        public bool IsEmpty()
+
+        private Location UpRight => new Location(Row - 1, Column + 1);
+        private Location DownRight => new Location(Row + 1, Column + 1);
+        private Location UpLeft => new Location(Row - 1, Column - 1);
+        private Location DownLeft => new Location(Row + 1, Column - 1);
+
+        private bool IsValid()
         {
-            return !Community.Any();
+            var valid = true;
+            valid &= Row >= FirstRow;
+            valid &= Column >= FirstColumn;
+            valid &= Row <= LastRow;
+            valid &= Column <= LastColumn;
+            return valid;
         }
 
-        public void Move(ICreature creature, ILocation newLocation)
+        public IReadOnlyCollection<Location> Neighbours
         {
-            this.Community.Remove(creature);
-            newLocation.Locate(creature);
+            get
+            {
+                var neighbours = new List<Location>(){
+                    Up,
+                    Down,
+                    Right,
+                    Left,
+                    UpLeft,
+                    UpRight,
+                    DownLeft,
+                    DownRight
+                };
+
+                return neighbours.AsReadOnly();
+
+            }
         }
 
-        public void Locate(ICreature creature)
+        protected override bool EqualsCore(Location other)
         {
-          this.Community.Add(creature);
+            return Row == other.Row && Column == other.Column;
         }
 
-        public void AddNeighbor(ILocation neighbor)
+        protected override int GetHashCodeCore()
         {
-            Neighbours.Add(neighbor);
+            return Name.GetHashCode();
         }
     }
+
+
 }

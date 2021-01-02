@@ -3,25 +3,15 @@ using System.Threading.Tasks;
 
 namespace Evolution.Domain
 {
-    public class Plant : Creature, IPlant
+    public class Plant : Creature
     {
-        public Plant(
-            PlantBlueprint blueprint,
-            IGameCalender gameCalender) : base(gameCalender)
+        public Plant() : base()
         {
-            Id = blueprint.Id;
-            Name = blueprint.Name;
-            Weight = blueprint.Weight;
-            BirthDate = blueprint.BirthDate;
-            DeathDate = blueprint.DeathDate;
-            GrowthAmount = blueprint.GrowthAmount;
-            ParentId = blueprint.ParentId;
-            IsAlive = blueprint.IsAlive;
         }
 
         private int GrowthAmount { get; }
 
-        public override bool IsEatableBy(ICreature other)
+        public override bool IsEatableBy(Creature other)
         {
             return true;
         }
@@ -38,23 +28,6 @@ namespace Evolution.Domain
 
             Weight -= neededAmount;
             if (Weight <= 0) Die();
-        }
-
-        public PlantBlueprint GetBlueprint()
-        {
-            return new PlantBlueprint
-            {
-                Id = Id,
-                Name = Name,
-                Weight = Weight,
-                BirthDate = BirthDate,
-                DeathDate = DeathDate,
-                GrowthAmount = GrowthAmount,
-                ParentId = ParentId,
-                UpdatedAt = DateTime.UtcNow,
-                IsAlive = IsAlive,
-                Location = Location
-            };
         }
 
         private void Die()

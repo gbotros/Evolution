@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
 {
-    public class Animal : Creature, IAnimal
+    public class Animal : Creature
     {
         private const int MaxSpeed = 1000; // 1000 step per game hour
         private const int MinSpeed = 1;
@@ -13,27 +13,8 @@ namespace Evolution.Domain
 
         private const uint SpeedMutationAmplitude = 5;
 
-        public Animal(
-            AnimalBlueprint blueprint,
-            ILocation location,
-            IGameCalender gameCalender,
-            ILogger<Animal> logger) : base(gameCalender)
+        public Animal(ILogger<Animal> logger)
         {
-            Id = blueprint.Id;
-            Name = blueprint.Name;
-            Weight = blueprint.Weight;
-            Speed = blueprint.Speed;
-            Energy = blueprint.Energy;
-            BirthDate = blueprint.BirthDate;
-            DeathDate = blueprint.DeathDate;
-            IsAlive = blueprint.IsAlive;
-            Steps = blueprint.Steps;
-            ChildrenCount = blueprint.ChildrenCount;
-            Location = location;
-            ParentId = blueprint.ParentId;
-
-            GameCalender = gameCalender;
-
             Logger = logger;
         }
 
@@ -43,7 +24,6 @@ namespace Evolution.Domain
         public int Steps { get; private set; }
 
         private int Energy { get; set; }
-        private IGameCalender GameCalender { get; }
         private ILogger<Animal> Logger { get; }
 
         private int StepCost => Speed * 2; // Energy unit
@@ -60,26 +40,7 @@ namespace Evolution.Domain
             throw new NotImplementedException();
         }
 
-        public AnimalBlueprint GetBlueprint()
-        {
-            return new AnimalBlueprint
-            {
-                Id = Id,
-                IsAlive = IsAlive,
-                Speed = Speed,
-                BirthDate = BirthDate,
-                DeathDate = DeathDate,
-                Energy = Energy,
-                Name = Name,
-                Weight = Weight,
-                Steps = Steps,
-                UpdatedAt = DateTime.UtcNow,
-                ParentId = ParentId,
-                ChildrenCount = ChildrenCount
-            };
-        }
-
-        public override bool IsEatableBy(ICreature other)
+        public override bool IsEatableBy(Creature other)
         {
             return false;
         }
@@ -91,7 +52,7 @@ namespace Evolution.Domain
 
         private static int ConvertEnergyToFood(int energy)
         {
-            return (int) Math.Ceiling((decimal) energy / 100);
+            return (int)Math.Ceiling((decimal)energy / 100);
         }
 
         private static int ConvertFoodToEnergy(int food)
@@ -125,15 +86,15 @@ namespace Evolution.Domain
             }
         }
 
-        private IEnumerable<ICreature> GetAvailableFood()
+        private IEnumerable<Creature> GetAvailableFood()
         {
-            return Location.Community.Where(c => c.IsEatableBy(this));
+            return CreaturesWithinVisionLimit.Where(c => c.Location == Location && c.IsEatableBy(this));
         }
 
         private int GetMutatedSpeed()
         {
-            var minMutation = -1 * (int) SpeedMutationAmplitude;
-            var maxMutation = (int) SpeedMutationAmplitude + 1;
+            var minMutation = -1 * (int)SpeedMutationAmplitude;
+            var maxMutation = (int)SpeedMutationAmplitude + 1;
             var mutation = new Random().Next(minMutation, maxMutation);
 
             var mutantSpeed = Speed + mutation;
@@ -144,9 +105,17 @@ namespace Evolution.Domain
             return mutantSpeed;
         }
 
-        private IEnumerable<ILocation> GetNeighbors()
+        private Location GetRandomNeighbor()
         {
-            return Location.Neighbours;
+            var neighbours = Location.Neighbours;
+            var neighboursCount = neighbours.Count();
+            if (neighboursCount == 0) return Location;
+
+            var newLocationIndex = new Random().Next(0, neighboursCount);
+            var newLocation = Location.Neighbours.ElementAt(newLocationIndex);
+
+
+            return newLocation;
         }
 
         private int HowMuchCanIEat()
@@ -173,14 +142,9 @@ namespace Evolution.Domain
 
         private void Move()
         {
-            var neighboursCount = GetNeighbors().Count();
-            if (neighboursCount == 0) return;
-
-            var newLocationIndex = new Random().Next(0, neighboursCount);
-            var newLocation = Location.Neighbours.ElementAt(newLocationIndex);
+            var newLocation = GetRandomNeighbor();
 
             Location = newLocation;
-            Location.Move(this, newLocation);
 
             Steps++;
             Energy -= StepCost;
@@ -197,23 +161,21 @@ namespace Evolution.Domain
             ChildrenCount++;
             // TODO: different animals can have different reproduction cost
             Energy /= 2; // Son gets 50% of the Parent Energy
-            var sonBlueprint = new AnimalBlueprint
-            {
-                Id = Guid.NewGuid(),
-                Name = $"{Name}:s{ChildrenCount}",
-                Energy = Energy, // Son gets 50% of the Parent Energy
-                BirthDate = DateTime.UtcNow,
-                DeathDate = null,
-                IsAlive = true,
-                Speed = GetMutatedSpeed(),
-                Location = Location,
-                ParentId = Id
-            };
+                         // var sonBlueprint = new AnimalBlueprint
+                         // {
+                         //     Id = Guid.NewGuid(),
+                         //     Name = $"{Name}:s{ChildrenCount}",
+                         //     Energy = Energy, // Son gets 50% of the Parent Energy
+                         //     BirthDate = DateTime.UtcNow,
+                         //     DeathDate = null,
+                         //     IsAlive = true,
+                         //     Speed = GetMutatedSpeed(),
+                         //     Location = Location,
+                         //     ParentId = Id
+                         // };
 
-            var son = new Animal(sonBlueprint, Location, GameCalender, Logger);
-            Location.Locate(son);
-
-            Logger.LogDebug($"{Name} gave birth to {son.Name}");
+            // TODO: Domain even gave birth
+            // Logger.LogDebug($"{Name} gave birth to {son.Name}");
         }
 
         private void SatisfyMyNeeds()
@@ -222,5 +184,6 @@ namespace Evolution.Domain
             if (IsHungry() && IsFoodAvailable()) Eat();
             else Move();
         }
+
     }
 }

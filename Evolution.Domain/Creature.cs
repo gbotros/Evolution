@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Evolution.Domain.Common;
 
 namespace Evolution.Domain
 {
-    public abstract class Creature : ICreature
+    public abstract class Creature : IAggregateRoot
     {
-        protected Creature(IGameCalender gameCalender)
+        protected Creature()
         {
-            GameCalender = gameCalender;
         }
 
-        public double AgeInDays => GameCalender.CalculateDifferenceInGameDays(BirthDate, DateTime.UtcNow);
-         
-        public override bool Equals(object obj)
+        public GameDays Age => new GameDays(DateTime.UtcNow - BirthDate);
+
+        public override bool Equals(object o)
         {
-            var other = obj as Creature;
+            var other = o as Creature;
 
             if (ReferenceEquals(other, null))
                 return false;
@@ -59,12 +60,14 @@ namespace Evolution.Domain
         public string Name { get; protected set; }
         public Guid? ParentId { get; protected set; }
         public int Weight { get; protected set; }
-        public ILocation Location { get; protected set; }
-        private IGameCalender GameCalender { get; }
+        public Location Location { get; protected set; }
 
-        public abstract bool IsEatableBy(ICreature other);
+        public abstract bool IsEatableBy(Creature other);
+
+        protected IReadOnlyCollection<Creature> CreaturesWithinVisionLimit { get; }
 
         public abstract void Act();
         public abstract void EatInto(int neededAmount);
     }
+
 }
