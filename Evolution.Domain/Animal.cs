@@ -7,15 +7,21 @@ namespace Evolution.Domain
 {
     public class Animal : Creature
     {
-        private const int MaxSpeed = 1000; // 1000 step per game hour
+        private const int MaxSpeed = 1000; // 1000 action per game hour
         private const int MinSpeed = 1;
         private const int MaxEnergy = 500; // on default speed 12K Energy is enough for 200 steps
 
         private const uint SpeedMutationAmplitude = 5;
 
-        public Animal(ILogger<Animal> logger)
+        public Animal(
+            Guid id,
+            string name,
+            Location location,
+            Guid? parentId,
+            ILogger<Animal> logger) : base(id, name, location, parentId, logger)
         {
-            Logger = logger;
+            Energy = MaxEnergy;
+            Speed = 2;
         }
 
         public int ChildrenCount { get; private set; }
@@ -24,7 +30,6 @@ namespace Evolution.Domain
         public int Steps { get; private set; }
 
         private int Energy { get; set; }
-        private ILogger<Animal> Logger { get; }
 
         private int StepCost => Speed * 2; // Energy unit
 

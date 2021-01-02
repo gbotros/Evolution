@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Evolution.Domain.Common;
+using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
 {
@@ -9,6 +10,23 @@ namespace Evolution.Domain
     {
         protected Creature()
         {
+        }
+
+        protected Creature(
+            Guid id,
+            string name,
+            Location location,
+            Guid? parentId,
+            ILogger<Animal> logger)
+        {
+            if (id == Guid.Empty) throw new ApplicationException("Id can't be empty");
+            if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
+
+            Id = id;
+            Name = name;
+            ParentId = parentId;
+            Location = location;
+            Logger = logger;
         }
 
         public GameDays Age => new GameDays(DateTime.UtcNow - BirthDate);
@@ -56,12 +74,14 @@ namespace Evolution.Domain
         public DateTime BirthDate { get; protected set; }
         public DateTime? DeathDate { get; protected set; }
         public Guid Id { get; protected set; }
+
         public bool IsAlive { get; protected set; }
         public string Name { get; protected set; }
         public Guid? ParentId { get; protected set; }
         public int Weight { get; protected set; }
         public Location Location { get; protected set; }
 
+        protected ILogger<Animal> Logger { get; }
         public abstract bool IsEatableBy(Creature other);
 
         protected IReadOnlyCollection<Creature> CreaturesWithinVisionLimit { get; }

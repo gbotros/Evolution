@@ -10,13 +10,16 @@ namespace Evolution.Domain
 
         private const int FirstRow = 0;
         private const int FirstColumn = 0;
-        private const int LastRow = 25;
-        private const int LastColumn = 25;
+        private int LastRow;
+        private int LastColumn;
 
         public Location(int row, int column)
         {
             Row = row;
             Column = column;
+
+            LastColumn = GameSettings.World.Width - 1;
+            LastRow = GameSettings.World.Height - 1;
         }
 
         public Location()
