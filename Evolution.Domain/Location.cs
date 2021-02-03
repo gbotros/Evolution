@@ -14,8 +14,9 @@ namespace Evolution.Domain
         private int LastColumn;
         private int WorldWidth;
         private int WorldHeight;
+        private int digits;
 
-        public Location(int row, int column, int worldWidth, int worldHeight)
+        public Location(int row, int column, int worldWidth, int worldHeight) : this()
         {
             if (worldWidth < 1 || worldHeight < 1) throw new ApplicationException("World cannot be smaller than one cell");
 
@@ -29,21 +30,46 @@ namespace Evolution.Domain
 
             Row = row;
             Column = column;
-
         }
 
         public Location()
         {
-
         }
 
-        private const string IntFormat = "D2";
-
-        public string Name => $"Cell ({Row.ToString(IntFormat)}, {Column.ToString(IntFormat)})";
+        public string Name => $"Cell ({Row.ToString($"D{Digits}")}, {Column.ToString($"D{Digits}")})";
 
         public int Row { get; }
 
         public int Column { get; }
+
+        public IReadOnlyCollection<Location> Neighbours
+        {
+            get
+            {
+                var neighbours = new List<Location>(){
+                    Up,
+                    Down,
+                    Right,
+                    Left,
+                    UpLeft,
+                    UpRight,
+                    DownLeft,
+                    DownRight
+                };
+
+                return neighbours.Where(l => l != null).ToList().AsReadOnly();
+            }
+        }
+
+        protected override bool EqualsCore(Location other)
+        {
+            return Row == other.Row && Column == other.Column;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            return Name.GetHashCode();
+        }
 
         private Location Up
         {
@@ -128,34 +154,19 @@ namespace Evolution.Domain
             return valid;
         }
 
-        public IReadOnlyCollection<Location> Neighbours
+        private int Digits
         {
             get
             {
-                var neighbours = new List<Location>(){
-                    Up,
-                    Down,
-                    Right,
-                    Left,
-                    UpLeft,
-                    UpRight,
-                    DownLeft,
-                    DownRight
-                };
+                if (digits > 0) return digits;
 
-                return neighbours.Where(l => l != null).ToList().AsReadOnly();
+                var max = Math.Max(LastRow, LastColumn);
+
+                digits = max.ToString().Length;
+                return digits;
             }
         }
 
-        protected override bool EqualsCore(Location other)
-        {
-            return Row == other.Row && Column == other.Column;
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            return Name.GetHashCode();
-        }
     }
 
 

@@ -76,7 +76,7 @@ namespace Evolution.Domain.Tests
         }
 
         [Fact]
-        public void Name()
+        public void NameCell_0_0_OneCellWorld()
         {
 
             // arrange
@@ -85,7 +85,7 @@ namespace Evolution.Domain.Tests
             var location = new Location(0, 0, worldWidth, worldHeight);
 
             // set expectation
-            var expectedName = "Cell (00, 00)";
+            var expectedName = "Cell (0, 0)";
 
             // act
             var actualName = location.Name;
@@ -94,6 +94,62 @@ namespace Evolution.Domain.Tests
             Assert.Equal(expectedName, actualName);
         }
 
+        [Fact]
+        public void NameCell_99_99_OneHundredCellWorld()
+        {
+
+            // arrange
+            var worldWidth = 100;
+            var worldHeight = 100;
+            var location = new Location(99, 99, worldWidth, worldHeight);
+
+            // set expectation
+            var expectedName = "Cell (99, 99)";
+
+            // act
+            var actualName = location.Name;
+
+            // assert
+            Assert.Equal(expectedName, actualName);
+        }
+
+        [Fact]
+        public void NameCell_99_99_OneThousandCellWorld()
+        {
+
+            // arrange
+            var worldWidth = 1000;
+            var worldHeight = 1000;
+            var location = new Location(99, 99, worldWidth, worldHeight);
+
+            // set expectation
+            var expectedName = "Cell (099, 099)";
+
+            // act
+            var actualName = location.Name;
+
+            // assert
+            Assert.Equal(expectedName, actualName);
+        }
+
+        [Fact]
+        public void NameCell_100_100()
+        {
+
+            // arrange
+            var worldWidth = 101;
+            var worldHeight = 101;
+            var location = new Location(100, 100, worldWidth, worldHeight);
+
+            // set expectation
+            var expectedName = "Cell (100, 100)";
+
+            // act
+            var actualName = location.Name;
+
+            // assert
+            Assert.Equal(expectedName, actualName);
+        }
 
         [Fact]
         public void LocationMustBeWithinWorldBoundaries()
@@ -107,6 +163,17 @@ namespace Evolution.Domain.Tests
             Assert.Throws<ApplicationException>(() => new Location(0, 0, 0, 1));
             Assert.Throws<ApplicationException>(() => new Location(0, 0, 1, 0));
             Assert.Throws<ApplicationException>(() => new Location(0, 0, 0, 0));
+        }
+
+        [Fact]
+        public void EqualOperator()
+        {
+            var location1 = new Location(0, 0, 2, 2);
+            var location2 = new Location(0, 0, 5, 5);
+            var location3 = new Location(1, 0, 5, 5);
+
+            Assert.True(location1 == location2);
+            Assert.True(location1 != location3);
         }
     }
 }
