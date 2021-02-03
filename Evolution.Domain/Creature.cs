@@ -9,15 +9,16 @@ namespace Evolution.Domain
     public abstract class Creature : IAggregateRoot
     {
         protected Creature()
-        {
+{
         }
 
         protected Creature(
             Guid id,
             string name,
             Location location,
+            IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
             Guid? parentId,
-            ILogger<Animal> logger)
+            ILogger<Creature> logger)
         {
             if (id == Guid.Empty) throw new ApplicationException("Id can't be empty");
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
@@ -26,6 +27,7 @@ namespace Evolution.Domain
             Name = name;
             ParentId = parentId;
             Location = location;
+            CreaturesWithinVisionLimit = creaturesWithinVisionLimit;
             Logger = logger;
         }
 
@@ -81,8 +83,8 @@ namespace Evolution.Domain
         public int Weight { get; protected set; }
         public Location Location { get; protected set; }
 
-        protected ILogger<Animal> Logger { get; }
-        public abstract bool IsEatableBy(Creature other);
+        protected ILogger<Creature> Logger { get; }
+        public abstract bool IsEatableBy(Type otherType);
 
         protected IReadOnlyCollection<Creature> CreaturesWithinVisionLimit { get; }
 

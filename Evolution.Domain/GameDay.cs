@@ -36,5 +36,24 @@ namespace Evolution.Domain
         {
             return Value.GetHashCode();
         }
+
+        public static bool operator >(GameDays a, GameDays b)
+        {
+            return a.Value > b.Value;
+        }
+
+        public static bool operator <(GameDays a, GameDays b)
+        {
+            return a.Value < b.Value;
+        }
+        public static bool operator >=(GameDays a, GameDays b)
+        {
+            return a.Value >= b.Value;
+        }
+
+        public static bool operator <=(GameDays a, GameDays b)
+        {
+            return a.Value <= b.Value;
+        }
     }
 }

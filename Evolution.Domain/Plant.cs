@@ -11,9 +11,9 @@ namespace Evolution.Domain
 
         private int GrowthAmount { get; }
 
-        public override bool IsEatableBy(Creature other)
+        public override bool IsEatableBy(Type otherType)
         {
-            return true;
+            return otherType == typeof(Animal);
         }
 
         public override void Act()
