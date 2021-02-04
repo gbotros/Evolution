@@ -19,7 +19,7 @@ namespace Evolution.Domain.Tests
         }
 
         [Fact]
-        public void ActMove()
+        public void Act_Move()
         {
             // setup mocks
             calenderMock.Setup(c => c.Now).Returns(DateTime.UtcNow);
@@ -32,14 +32,65 @@ namespace Evolution.Domain.Tests
             var animal = new Animal(Guid.NewGuid(), "1st Animal", location, null, null, null, calenderMock.Object, loggerMock.Object);
             var initialEnegry = animal.Energy;
 
-            // assert
+            // act
             animal.Act();
 
-            // act
+            // assert
             Console.WriteLine(animal.Location.Name);
-            Assert.True(animal.Location == location2, animal.Location.Name);
+            Assert.True(animal.Location == location2);
             Assert.True(animal.Energy < initialEnegry);
+            Assert.Equal(1, animal.Steps);
         }
+
+        [Fact]
+        public void Act_Move_With_No_Place_Available()
+        {
+            // setup mocks
+            calenderMock.Setup(c => c.Now).Returns(DateTime.UtcNow);
+
+            // arrange
+            var worldWidth = 1;
+            var worldHeight = 1;
+            var location = new Location(0, 0, worldWidth, worldHeight);
+            var animal = new Animal(Guid.NewGuid(), "1st Animal", location, null, null, null, calenderMock.Object, loggerMock.Object);
+            var initialEnegry = animal.Energy;
+
+            // act
+            animal.Act();
+
+            // assert
+            Assert.True(animal.Location == location);
+            Assert.True(animal.Energy < initialEnegry);
+            Assert.Equal(0, animal.Steps);
+        }
+
+        [Fact]
+        public void AnimalWithoutFoodWouldDieOutOfStarvation()
+        {
+            // setup mocks
+            calenderMock.Setup(c => c.Now).Returns(DateTime.UtcNow);
+
+            // arrange
+            var worldWidth = 1;
+            var worldHeight = 1;
+            var location = new Location(0, 0, worldWidth, worldHeight);
+            var animal = new Animal(Guid.NewGuid(), "1st Animal", location, null, null, null, calenderMock.Object, loggerMock.Object);
+
+            // act
+            var stepsNeededToBeDieWithoutFood = 100;
+            for (int i = 1; i <= stepsNeededToBeDieWithoutFood; i++)
+            {
+                Assert.True(animal.IsAlive);
+                animal.Act();
+            }
+
+            // assert
+            Assert.True(animal.Energy == 0);
+            Assert.False(animal.IsAlive);
+        }
+
+
+
 
     }
 }

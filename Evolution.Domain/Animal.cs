@@ -11,14 +11,23 @@ namespace Evolution.Domain
         private const int DefaultSpeed = 500;
         private const int MaxSpeed = 1000;
 
-        // DefaultStepCost = DefaultSpeed * 2;
         private const int MinEnergy = 1;
-        private const int DefaultEnergy = 1_00_000; // enough for 100 step on default values
-        private const int MaxEnergy = 10_000_000; // enough for 10_000 step on default values
+        // DefaultStepCost = DefaultSpeed * 2;
+        // enough for 100 step on default values
+        private const int DefaultEnergy = 1_00_000;
+
+        // one food enough for 10 step on default values
+        private const int OneFoodToEnergy = 5_000;
+        private const double OneEnergyToFood = 1 / 5_000;
+
+        // equal to 200% DefaultEnergy
+        // enough for 200 step on default values
+        private const int DefaultFoodStorageCapacity = 20;
 
         private const uint SpeedMutationAmplitude = 5;
 
         private readonly GameDays AdulthoodAge = new GameDays(10);
+
 
         public Animal(
             Guid id,
@@ -30,7 +39,9 @@ namespace Evolution.Domain
             IGameCalender calender,
             ILogger<Animal> logger) : base(id, name, location, creaturesWithinVisionLimit, parentId, calender, logger)
         {
+            IsAlive = true;
             Energy = DefaultEnergy;
+            FoodStorageCapacity = DefaultFoodStorageCapacity;
             Speed = speed ?? DefaultSpeed;
         }
 
@@ -39,15 +50,37 @@ namespace Evolution.Domain
         public int Speed { get; }
         public int Steps { get; private set; }
 
-        public int Energy { get; private set; }
+        public int StoredFood { get; private set; }
+        public int FoodStorageCapacity { get; private set; }
+
+        private int energy;
+        public int Energy
+        {
+            get
+            {
+                return energy;
+            }
+
+            private set
+            {
+                energy = value > 0 ? value : 0;
+                if (Energy < MinEnergy) Die();
+            }
+        }
 
         private int StepCost => Speed * 2; // Energy unit
 
         public override void Act()
         {
-            Logger.LogDebug($"Animal {Name} started Act");
+            if (!IsAlive)
+            {
+                Logger.LogDebug($"Dead Animal {Name} Can not Act");
+                return;
+            }
 
-            SatisfyMyNeeds();
+            Logger.LogDebug($"Animal {Name} started Act");
+            SatisfyEssinsialNeeds();
+            Digst();
         }
 
         public override void EatInto(int neededAmount)
@@ -60,19 +93,36 @@ namespace Evolution.Domain
             return false;
         }
 
+        private void Digst()
+        {
+            if (StoredFood <= 0) return;
+
+            var hungaryThreeShold = DefaultEnergy * 0.75;
+            if (Energy > hungaryThreeShold) return;
+
+            var requiredEnergy = DefaultEnergy - Energy;
+            var requiredFoodUnits = (int)Math.Ceiling(ConvertEnergyToFood(requiredEnergy));
+
+            var foodUnitsInTransaction = Math.Min(requiredFoodUnits, StoredFood);
+            var energyUnitsInTransaction = ConvertFoodToEnergy(foodUnitsInTransaction);
+
+            StoredFood -= foodUnitsInTransaction;
+            Energy += energyUnitsInTransaction;
+        }
+
         private bool CanReproduce()
         {
             return IsAdult() && !IsHungry();
         }
 
-        private static int ConvertEnergyToFood(int energy)
+        private static double ConvertEnergyToFood(int energy)
         {
-            return (int)Math.Ceiling((decimal)energy / 100);
+            return energy * OneEnergyToFood;
         }
 
         private static int ConvertFoodToEnergy(int food)
         {
-            return food * 100;
+            return food * OneFoodToEnergy;
         }
 
         private void Die()
@@ -91,12 +141,13 @@ namespace Evolution.Domain
 
             foreach (var food in foods)
             {
-                var neededFood = HowMuchCanIEat();
+                var neededFood = FoodStorageCapacity - StoredFood;
                 var availableFood = Math.Min(neededFood, food.Weight);
-                food.EatInto(availableFood);
 
-                Energy += ConvertFoodToEnergy(availableFood);
-                Logger.LogDebug($"Creature {Name} ate {availableFood} Food - current Energy {Energy}");
+                food.EatInto(availableFood);
+                StoredFood += availableFood;
+
+                Logger.LogDebug($"Creature {Name} ate {availableFood} Food");
                 if (!IsHungry()) break;
             }
         }
@@ -124,19 +175,13 @@ namespace Evolution.Domain
         {
             var neighbours = Location.Neighbours;
             var neighboursCount = neighbours.Count();
-            if (neighboursCount == 0) return Location;
+            if (neighboursCount == 0) return null;
 
             var newLocationIndex = new Random().Next(0, neighboursCount);
             var newLocation = Location.Neighbours.ElementAt(newLocationIndex);
 
 
             return newLocation;
-        }
-
-        private int HowMuchCanIEat()
-        {
-            var neededEnergy = MaxEnergy - Energy;
-            return ConvertEnergyToFood(neededEnergy);
         }
 
         private bool IsAdult()
@@ -152,21 +197,23 @@ namespace Evolution.Domain
 
         private bool IsHungry()
         {
-            return Energy < MaxEnergy / 2;
+            return StoredFood < FoodStorageCapacity;
         }
 
         private void Move()
         {
             var newLocation = GetRandomNeighbor();
 
-            Location = newLocation;
+            if (newLocation != null)
+            {
+                Location = newLocation;
+                Steps++;
+            }
 
-            Steps++;
             Energy -= StepCost;
             Logger.LogDebug(
                 $"Creature {Name} moved to cell {Location.Name} at step number {Steps} - current Energy = {Energy}");
 
-            if (Energy <= 0) Die();
         }
 
         private void Reproduce()
@@ -193,7 +240,7 @@ namespace Evolution.Domain
             // Logger.LogDebug($"{Name} gave birth to {son.Name}");
         }
 
-        private void SatisfyMyNeeds()
+        private void SatisfyEssinsialNeeds()
         {
             if (CanReproduce()) Reproduce();
             else if (IsHungry() && IsFoodAvailable()) Eat();
