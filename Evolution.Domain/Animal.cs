@@ -7,10 +7,14 @@ namespace Evolution.Domain
 {
     public class Animal : Creature
     {
-        private const int MaxSpeed = 1000;
         private const int MinSpeed = 1;
         private const int DefaultSpeed = 500;
-        private const int MaxEnergy = 500;
+        private const int MaxSpeed = 1000;
+
+        // DefaultStepCost = DefaultSpeed * 2;
+        private const int MinEnergy = 1;
+        private const int DefaultEnergy = 1_00_000; // enough for 100 step on default values
+        private const int MaxEnergy = 10_000_000; // enough for 10_000 step on default values
 
         private const uint SpeedMutationAmplitude = 5;
 
@@ -21,21 +25,13 @@ namespace Evolution.Domain
             string name,
             Location location,
             IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
-            ILogger<Animal> logger) : this(id, name, location, null, null, DefaultSpeed, logger)
-        {
-        }
-
-        public Animal(
-            Guid id,
-            string name,
-            Location location,
-            IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
             Guid? parentId,
-            int speed,
-            ILogger<Animal> logger) : base(id, name, location, creaturesWithinVisionLimit, parentId, logger)
+            int? speed,
+            IGameCalender calender,
+            ILogger<Animal> logger) : base(id, name, location, creaturesWithinVisionLimit, parentId, calender, logger)
         {
-            Energy = MaxEnergy;
-            Speed = speed;
+            Energy = DefaultEnergy;
+            Speed = speed ?? DefaultSpeed;
         }
 
         public int ChildrenCount { get; private set; }
@@ -82,7 +78,7 @@ namespace Evolution.Domain
         private void Die()
         {
             IsAlive = false;
-            DeathDate = DateTime.UtcNow;
+            DeathTime = DateTime.UtcNow;
 
             Logger.LogDebug($"Creature {Name} Died after {Steps} steps.");
         }
@@ -193,14 +189,14 @@ namespace Evolution.Domain
                          //     ParentId = Id
                          // };
 
-            // TODO: Domain even gave birth
+            // TODO: Domain event gave birth
             // Logger.LogDebug($"{Name} gave birth to {son.Name}");
         }
 
         private void SatisfyMyNeeds()
         {
             if (CanReproduce()) Reproduce();
-            if (IsHungry() && IsFoodAvailable()) Eat();
+            else if (IsHungry() && IsFoodAvailable()) Eat();
             else Move();
         }
 

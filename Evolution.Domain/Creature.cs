@@ -9,7 +9,7 @@ namespace Evolution.Domain
     public abstract class Creature : IAggregateRoot
     {
         protected Creature()
-{
+        {
         }
 
         protected Creature(
@@ -18,6 +18,7 @@ namespace Evolution.Domain
             Location location,
             IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
             Guid? parentId,
+            IGameCalender calender,
             ILogger<Creature> logger)
         {
             if (id == Guid.Empty) throw new ApplicationException("Id can't be empty");
@@ -27,11 +28,14 @@ namespace Evolution.Domain
             Name = name;
             ParentId = parentId;
             Location = location;
-            CreaturesWithinVisionLimit = creaturesWithinVisionLimit;
+            CreaturesWithinVisionLimit = creaturesWithinVisionLimit ?? new List<Creature>();
+            CreationTime = calender.Now;
+
+            Calender = calender;
             Logger = logger;
         }
 
-        public GameDays Age => new GameDays(DateTime.UtcNow - BirthDate);
+        public GameDays Age => new GameDays(Calender.Now - CreationTime);
 
         public override bool Equals(object o)
         {
@@ -73,8 +77,8 @@ namespace Evolution.Domain
             return (GetType().ToString() + Id).GetHashCode();
         }
 
-        public DateTime BirthDate { get; protected set; }
-        public DateTime? DeathDate { get; protected set; }
+        public DateTime CreationTime { get; protected set; }
+        public DateTime? DeathTime { get; protected set; }
         public Guid Id { get; protected set; }
 
         public bool IsAlive { get; protected set; }
@@ -87,6 +91,7 @@ namespace Evolution.Domain
         public abstract bool IsEatableBy(Type otherType);
 
         protected IReadOnlyCollection<Creature> CreaturesWithinVisionLimit { get; }
+        protected IGameCalender Calender { get; }
 
         public abstract void Act();
         public abstract void EatInto(int neededAmount);

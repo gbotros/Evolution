@@ -9,21 +9,27 @@ namespace Evolution.Domain.Tests
     public class AnimalTests
     {
         Mock<ILogger<Animal>> loggerMock;
+        Mock<IGameCalender> calenderMock;
 
         public AnimalTests()
         {
             loggerMock = new Mock<ILogger<Animal>>();
+            calenderMock = new Mock<IGameCalender>();
+
         }
 
         [Fact]
-        public void AnimalCanMove()
+        public void ActMove()
         {
+            // setup mocks
+            calenderMock.Setup(c => c.Now).Returns(DateTime.UtcNow);
+
             // arrange
             var worldWidth = 2;
             var worldHeight = 1;
             var location = new Location(0, 0, worldWidth, worldHeight);
             var location2 = new Location(0, 1, worldWidth, worldHeight);
-            var animal = new Animal(Guid.NewGuid(), "1st Animal", location, null, loggerMock.Object);
+            var animal = new Animal(Guid.NewGuid(), "1st Animal", location, null, null, null, calenderMock.Object, loggerMock.Object);
             var initialEnegry = animal.Energy;
 
             // assert
