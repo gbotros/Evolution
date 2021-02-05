@@ -1,12 +1,33 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
 {
     public class Plant : Creature
     {
-        public Plant() : base()
+
+        private int DefaultGrowthAmount = 10;
+
+        public Plant(Guid id,
+            string name,
+            Location location,
+            IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
+            Guid? parentId,
+            IGameCalender calender,
+            ILogger<Plant> logger)
+            : base(
+              id,
+              name,
+              location,
+              creaturesWithinVisionLimit,
+              parentId,
+              calender,
+              logger)
         {
+            GrowthAmount = DefaultGrowthAmount;
+            Weight = DefaultGrowthAmount;
         }
 
         private int GrowthAmount { get; }
@@ -22,12 +43,20 @@ namespace Evolution.Domain
             Grow();
         }
 
-        public override void EatInto(int neededAmount)
+        public override int EatInto(int desiredAmount)
         {
-            if (Weight - neededAmount <= 0) throw new ApplicationException("not enough amount to be eaten in the plant");
-
-            Weight -= neededAmount;
-            if (Weight <= 0) Die();
+            if (desiredAmount >= Weight)
+            {
+                var originalWeight = Weight;
+                Weight = 0;
+                Die();
+                return originalWeight;
+            }
+            else
+            {
+                Weight -= desiredAmount;
+                return desiredAmount;
+            }
         }
 
         private void Die()

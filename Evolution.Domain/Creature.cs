@@ -26,9 +26,10 @@ namespace Evolution.Domain
 
             Id = id;
             Name = name;
-            ParentId = parentId;
             Location = location;
             CreaturesWithinVisionLimit = creaturesWithinVisionLimit ?? new List<Creature>();
+            ParentId = parentId;
+
             CreationTime = calender.Now;
 
             Calender = calender;
@@ -94,7 +95,7 @@ namespace Evolution.Domain
         protected IGameCalender Calender { get; }
 
         public abstract void Act();
-        public abstract void EatInto(int neededAmount);
+        public abstract int EatInto(int desiredAmount);
     }
 
 }
