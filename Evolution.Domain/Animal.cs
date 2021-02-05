@@ -18,7 +18,7 @@ namespace Evolution.Domain
 
         // one food enough for 10 step on default values
         private const int OneFoodToEnergy = 5_000;
-        private const double OneEnergyToFood = 1 / 5_000;
+        private const double OneEnergyToFood = 1d / 5_000d;
 
         // equal to 200% DefaultEnergy
         // enough for 200 step on default values
@@ -83,7 +83,7 @@ namespace Evolution.Domain
             Digst();
         }
 
-        public override void EatInto(int neededAmount)
+        public override int EatInto(int desiredAmount)
         {
             throw new NotImplementedException();
         }
@@ -242,9 +242,18 @@ namespace Evolution.Domain
 
         private void SatisfyEssinsialNeeds()
         {
-            if (CanReproduce()) Reproduce();
-            else if (IsHungry() && IsFoodAvailable()) Eat();
-            else Move();
+            if (CanReproduce())
+            {
+                Reproduce();
+            }
+            else if (IsHungry() && IsFoodAvailable())
+            {
+                Eat();
+            }
+            else
+            {
+                Move();
+            }
         }
 
     }
