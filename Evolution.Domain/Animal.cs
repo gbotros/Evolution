@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Evolution.Domain.Events;
 using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
@@ -221,23 +222,20 @@ namespace Evolution.Domain
             if (!CanReproduce()) return;
 
             ChildrenCount++;
-            // TODO: different animals can have different reproduction cost
-            Energy /= 2; // Son gets 50% of the Parent Energy
-                         // var sonBlueprint = new AnimalBlueprint
-                         // {
-                         //     Id = Guid.NewGuid(),
-                         //     Name = $"{Name}:s{ChildrenCount}",
-                         //     Energy = Energy, // Son gets 50% of the Parent Energy
-                         //     BirthDate = DateTime.UtcNow,
-                         //     DeathDate = null,
-                         //     IsAlive = true,
-                         //     Speed = GetMutatedSpeed(),
-                         //     Location = Location,
-                         //     ParentId = Id
-                         // };
+            // TODO: different animals can have different reproduction cost and can have different number of children
+            Energy /= 2; // Son cost 50% of the Parent Energy
+            var sonBornEvent = new AnimalBornEvent
+            (
+                id: Guid.NewGuid(),
+                name: $"{Name}:s{ChildrenCount}",
+                location: Location,
+                parentId: Id,
+                speed: GetMutatedSpeed(),
+                creationTime: Calender.Now
+            );
 
-            // TODO: Domain event gave birth
-            // Logger.LogDebug($"{Name} gave birth to {son.Name}");
+            RaiseEvent(sonBornEvent);
+            Logger.LogDebug($"{Name} gave birth to {sonBornEvent.Name}");
         }
 
         private void SatisfyEssinsialNeeds()

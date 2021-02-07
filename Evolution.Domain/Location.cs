@@ -32,7 +32,7 @@ namespace Evolution.Domain
             Column = column;
         }
 
-        public Location()
+        protected Location()
         {
         }
 

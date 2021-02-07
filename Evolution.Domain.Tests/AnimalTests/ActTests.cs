@@ -4,15 +4,15 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace Evolution.Domain.Tests
+namespace Evolution.Domain.Tests.AnimalTests
 {
-    public class AnimalTests
+    public class ActTests
     {
         Mock<ILogger<Animal>> animalLoggerMock;
         Mock<ILogger<Plant>> plantLoggerMock;
         Mock<IGameCalender> calenderMock;
 
-        public AnimalTests()
+        public ActTests()
         {
             animalLoggerMock = new Mock<ILogger<Animal>>();
             plantLoggerMock = new Mock<ILogger<Plant>>();
@@ -101,8 +101,8 @@ namespace Evolution.Domain.Tests
             var worldWidth = 2;
             var worldHeight = 1;
             var location = new Location(0, 0, worldWidth, worldHeight);
-            var food_100 = new Plant(Guid.NewGuid(), "tree 1", location, null, null, calenderMock.Object, plantLoggerMock.Object);
-            var food = new List<Creature>() { food_100 };
+            var food_1 = new Plant(Guid.NewGuid(), "tree 1", location, null, null, calenderMock.Object, plantLoggerMock.Object);
+            var food = new List<Creature>() { food_1 };
             var animal = new Animal(Guid.NewGuid(), "1st Animal", location, food, null, null, calenderMock.Object, animalLoggerMock.Object);
 
             // act
@@ -118,6 +118,7 @@ namespace Evolution.Domain.Tests
             Assert.True(animal.Energy > 0);
             Assert.True(animal.IsAlive);
             Assert.True(animal.Steps > stepsNeededToBeDieWithoutFood);
+            Assert.Equal(0, food_1.Weight);
         }
 
     }

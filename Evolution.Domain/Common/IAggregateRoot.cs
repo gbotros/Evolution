@@ -1,7 +1,7 @@
-﻿namespace Evolution.Domain.Common 
+﻿namespace Evolution.Domain.Common
 {
     public interface IAggregateRoot
     {
-        
+
     }
 }

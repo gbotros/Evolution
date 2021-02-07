@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
 {
-    public abstract class Creature : IAggregateRoot
+    public abstract class Creature : Entity, IAggregateRoot
     {
         protected Creature()
         {
@@ -19,9 +19,8 @@ namespace Evolution.Domain
             IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
             Guid? parentId,
             IGameCalender calender,
-            ILogger<Creature> logger)
+            ILogger<Creature> logger) : base(id)
         {
-            if (id == Guid.Empty) throw new ApplicationException("Id can't be empty");
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
 
             Id = id;
@@ -29,6 +28,7 @@ namespace Evolution.Domain
             Location = location;
             CreaturesWithinVisionLimit = creaturesWithinVisionLimit ?? new List<Creature>();
             ParentId = parentId;
+            IsAlive = true;
 
             CreationTime = calender.Now;
 
@@ -38,49 +38,8 @@ namespace Evolution.Domain
 
         public GameDays Age => new GameDays(Calender.Now - CreationTime);
 
-        public override bool Equals(object o)
-        {
-            var other = o as Creature;
-
-            if (ReferenceEquals(other, null))
-                return false;
-
-            if (ReferenceEquals(this, other))
-                return true;
-
-            if (GetType() != other.GetType())
-                return false;
-
-            if (Id == Guid.Empty || other.Id == Guid.Empty)
-                return false;
-
-            return Id == other.Id;
-        }
-
-        public static bool operator ==(Creature a, Creature b)
-        {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
-                return true;
-
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
-                return false;
-
-            return a.Equals(b);
-        }
-
-        public static bool operator !=(Creature a, Creature b)
-        {
-            return !(a == b);
-        }
-
-        public override int GetHashCode()
-        {
-            return (GetType().ToString() + Id).GetHashCode();
-        }
-
         public DateTime CreationTime { get; protected set; }
         public DateTime? DeathTime { get; protected set; }
-        public Guid Id { get; protected set; }
 
         public bool IsAlive { get; protected set; }
         public string Name { get; protected set; }
