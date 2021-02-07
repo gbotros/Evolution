@@ -25,4 +25,9 @@
     <ProjectReference Include="..\Evolution.Domain\Evolution.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AnimalTests\" />
+    <Folder Include="LocationTests\" />
+    <Folder Include="PlantTests\" />
+  </ItemGroup>
 </Project>
