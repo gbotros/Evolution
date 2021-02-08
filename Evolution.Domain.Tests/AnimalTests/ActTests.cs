@@ -105,21 +105,15 @@ namespace Evolution.Domain.Tests.AnimalTests
             var food_1 = new Plant(Guid.NewGuid(), "tree 1", location, null, calenderMock.Object, plantLoggerMock.Object);
             var food = new List<IPlantFood>() { food_1 };
             var animal = new Animal(Guid.NewGuid(), "1st Animal", location, food, null, null, calenderMock.Object, animalLoggerMock.Object);
+            var initialFoodAmount = food_1.Weight;
 
             // act
-            var stepsNeededToBeDieWithoutFood = 100;
-            var extraSteps = 10;
-            for (int i = 1; i <= stepsNeededToBeDieWithoutFood + extraSteps; i++)
-            {
-                Assert.True(animal.IsAlive);
-                animal.Act();
-            }
+            animal.Act();
 
             // assert
-            Assert.True(animal.Energy > 0);
             Assert.True(animal.IsAlive);
-            Assert.True(animal.Steps > stepsNeededToBeDieWithoutFood);
-            Assert.Equal(0, food_1.Weight);
+            Assert.True(animal.StoredFood > 0);
+            Assert.True(food_1.Weight < initialFoodAmount);
         }
 
     }
