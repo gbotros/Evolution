@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Evolution.Domain.Common;
 using Evolution.Domain.Events;
 using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
 {
-    public class Animal : Creature
+
+    public class Animal : AggregateRoot
     {
         private const int MinSpeed = 1;
         private const int DefaultSpeed = 500;
@@ -34,17 +36,45 @@ namespace Evolution.Domain
             Guid id,
             string name,
             Location location,
-            IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
+            IReadOnlyCollection<IPlantFood> food,
             Guid? parentId,
             int? speed,
             IGameCalender calender,
-            ILogger<Animal> logger) : base(id, name, location, creaturesWithinVisionLimit, parentId, calender, logger)
+            ILogger<Animal> logger) : base(id)
         {
+            if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
+
+            Id = id;
+            Name = name;
+            Location = location;
+            ParentId = parentId;
+            Food = food ?? new List<IPlantFood>();
+
             IsAlive = true;
+            CreationTime = calender.Now;
             Energy = DefaultEnergy;
             FoodStorageCapacity = DefaultFoodStorageCapacity;
             Speed = speed ?? DefaultSpeed;
+
+            Calender = calender;
+            Logger = logger;
         }
+
+        public GameDays Age => new GameDays(Calender.Now - CreationTime);
+
+        public DateTime CreationTime { get; private set; }
+        public DateTime? DeathTime { get; private set; }
+
+        public bool IsAlive { get; private set; }
+        public string Name { get; private set; }
+        public Guid? ParentId { get; private set; }
+        public int Weight { get; private set; }
+        public Location Location { get; private set; }
+        public IReadOnlyCollection<IPlantFood> Food { get; private set; }
+
+        protected ILogger<Animal> Logger { get; }
+
+        protected IGameCalender Calender { get; }
 
         public int ChildrenCount { get; private set; }
 
@@ -71,7 +101,7 @@ namespace Evolution.Domain
 
         private int StepCost => Speed * 2; // Energy unit
 
-        public override void Act()
+        public void Act()
         {
             if (!IsAlive)
             {
@@ -84,12 +114,12 @@ namespace Evolution.Domain
             Digst();
         }
 
-        public override int EatInto(int desiredAmount)
+        public int EatInto(int desiredAmount)
         {
             throw new NotImplementedException();
         }
 
-        public override bool IsEatableBy(Type otherType)
+        public bool IsEatableBy(Type otherType)
         {
             return false;
         }
@@ -153,9 +183,9 @@ namespace Evolution.Domain
             }
         }
 
-        private IEnumerable<Creature> GetAvailableFood()
+        private IEnumerable<IPlantFood> GetAvailableFood()
         {
-            return CreaturesWithinVisionLimit.Where(c => c.Location == Location && c.IsEatableBy(GetType()));
+            return Food;
         }
 
         private int GetMutatedSpeed()

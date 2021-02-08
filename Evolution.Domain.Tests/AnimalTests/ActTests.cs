@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Evolution.Domain.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -101,8 +102,8 @@ namespace Evolution.Domain.Tests.AnimalTests
             var worldWidth = 2;
             var worldHeight = 1;
             var location = new Location(0, 0, worldWidth, worldHeight);
-            var food_1 = new Plant(Guid.NewGuid(), "tree 1", location, null, null, calenderMock.Object, plantLoggerMock.Object);
-            var food = new List<Creature>() { food_1 };
+            var food_1 = new Plant(Guid.NewGuid(), "tree 1", location, null, calenderMock.Object, plantLoggerMock.Object);
+            var food = new List<IPlantFood>() { food_1 };
             var animal = new Animal(Guid.NewGuid(), "1st Animal", location, food, null, null, calenderMock.Object, animalLoggerMock.Object);
 
             // act

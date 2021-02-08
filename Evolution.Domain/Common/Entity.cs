@@ -3,7 +3,7 @@ using Evolution.Domain.Events;
 
 namespace Evolution.Domain.Common
 {
-    public class Entity
+    public abstract class Entity
     {
         protected Entity()
         {
@@ -21,7 +21,7 @@ namespace Evolution.Domain.Common
 
         public override bool Equals(object o)
         {
-            var other = o as Creature;
+            var other = o as Entity;
 
             if (ReferenceEquals(other, null))
                 return false;
@@ -58,12 +58,6 @@ namespace Evolution.Domain.Common
         {
             return (GetType().ToString() + Id).GetHashCode();
         }
-
-
-        public void RaiseEvent(IDomainEvent domainEvent)
-        {
-        }
-
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Evolution.Domain.Events
 {
-    public class AnimalBornEvent : IDomainEvent
+    public sealed class AnimalBornEvent : IDomainEvent
     {
         public AnimalBornEvent(
             Guid id,

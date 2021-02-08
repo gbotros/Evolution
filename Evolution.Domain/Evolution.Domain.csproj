@@ -14,5 +14,7 @@
 
   <ItemGroup>
     <Folder Include="Events\" />
+    <Folder Include="AnimalAggregate\" />
+    <Folder Include="PlantAggregate\" />
   </ItemGroup>
 </Project>

@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Evolution.Domain.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain
 {
-    public class Plant : Creature
+    public class Plant : AggregateRoot, IPlantFood
     {
 
         private int DefaultGrowthAmount = 10;
@@ -13,37 +12,54 @@ namespace Evolution.Domain
         public Plant(Guid id,
             string name,
             Location location,
-            IReadOnlyCollection<Creature> creaturesWithinVisionLimit,
             Guid? parentId,
             IGameCalender calender,
             ILogger<Plant> logger)
-            : base(
-              id,
-              name,
-              location,
-              creaturesWithinVisionLimit,
-              parentId,
-              calender,
-              logger)
+            : base(id)
         {
+            if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
+
+            Name = name;
+            Location = location;
+            ParentId = parentId;
+            IsAlive = true;
+
+            CreationTime = calender.Now;
             GrowthAmount = DefaultGrowthAmount;
             Weight = DefaultGrowthAmount;
+
+            Calender = calender;
+            Logger = logger;
         }
 
+        public GameDays Age => new GameDays(Calender.Now - CreationTime);
+
+        public DateTime CreationTime { get; private set; }
+        public DateTime? DeathTime { get; private set; }
+
+        public bool IsAlive { get; private set; }
+        public string Name { get; private set; }
+        public Guid? ParentId { get; private set; }
+        public int Weight { get; private set; }
+        public Location Location { get; private set; }
         private int GrowthAmount { get; }
 
-        public override bool IsEatableBy(Type otherType)
+        private ILogger<Plant> Logger { get; }
+        private IGameCalender Calender { get; }
+
+
+        public bool IsEatableBy(Type otherType)
         {
             return otherType == typeof(Animal);
         }
 
-        public override void Act()
+        public void Act()
         {
             if (!IsAlive) return;
             Grow();
         }
 
-        public override int EatInto(int desiredAmount)
+        public int EatInto(int desiredAmount)
         {
             if (desiredAmount >= Weight)
             {
