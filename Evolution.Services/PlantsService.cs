@@ -38,5 +38,7 @@ namespace Evolution.Services
             await Context.Plants.AddAsync(newPlant);
             await Context.SaveChangesAsync();
         }
+
+        public async Task<Plant> Get(Guid plantId) => await Context.Plants.FindAsync(plantId);
     }
 }

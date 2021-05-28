@@ -40,6 +40,7 @@ namespace Evolution.Apis
             }
 
             app.UseHttpsRedirection();
+            app.UseHsts();
 
             app.UseRouting();
 

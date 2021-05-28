@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Evolution.Domain.PlantAggregate;
 using Evolution.Services;
 
 namespace Evolution.Apis.Controllers
@@ -19,16 +20,13 @@ namespace Evolution.Apis.Controllers
         }
         
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return null;
-        }
-        
+        public async Task<Plant> Get(Guid id) => await Service.Get(id);
+
         [HttpPost]
-        public void Post() => Service.CreateNew();
+        public async Task Post(Guid? parentId) => await Service.CreateNew(parentId);
 
         [HttpPut]
-        public void Put([FromBody] Guid id) => Service.Act(id);
+        public async Task Put([FromBody] Guid id) => await Service.Act(id);
 
     }
 }
