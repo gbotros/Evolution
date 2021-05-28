@@ -1,4 +1,4 @@
-namespace Evolution.Domain
+namespace Evolution.Domain.Common
 {
     public static class GameSettings
     {

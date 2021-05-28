@@ -1,7 +1,6 @@
 using System;
-using Evolution.Domain.Common;
 
-namespace Evolution.Domain
+namespace Evolution.Domain.Common
 {
     public class GameDays : ValueObject<GameDays>
     {

@@ -1,21 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Evolution.Domain.Common;
 
-namespace Evolution.Domain
+namespace Evolution.Domain.Common
 {
     public class Location : ValueObject<Location>
     {
-
-        private int FirstRow = 0;
-        private int FirstColumn = 0;
-        private int LastRow;
-        private int LastColumn;
-        private int WorldWidth;
-        private int WorldHeight;
+        private const int FirstRow = 0;
+        private const int FirstColumn = 0;
+        private readonly int LastRow;
+        private readonly int LastColumn;
+        private readonly int WorldWidth;
+        private readonly int WorldHeight;
         private int digits;
-
+        
         public Location(int row, int column, int worldWidth, int worldHeight) : this()
         {
             if (worldWidth < 1 || worldHeight < 1) throw new ApplicationException("World cannot be smaller than one cell");
@@ -60,7 +58,7 @@ namespace Evolution.Domain
                 return neighbours.Where(l => l != null).ToList().AsReadOnly();
             }
         }
-
+        
         protected override bool EqualsCore(Location other)
         {
             return Row == other.Row && Column == other.Column;

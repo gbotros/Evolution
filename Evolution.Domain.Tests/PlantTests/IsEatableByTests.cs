@@ -1,4 +1,7 @@
 ﻿using System;
+using Evolution.Domain.AnimalAggregate;
+using Evolution.Domain.Common;
+using Evolution.Domain.PlantAggregate;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;

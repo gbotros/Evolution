@@ -1,8 +1,9 @@
 using System;
+using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
 using Microsoft.Extensions.Logging;
 
-namespace Evolution.Domain
+namespace Evolution.Domain.PlantAggregate
 {
     public class Plant : AggregateRoot, IPlantFood
     {

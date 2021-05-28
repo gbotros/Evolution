@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using Evolution.Domain.Common;
 using Xunit;
 
-namespace Evolution.Domain.LocationTests
+namespace Evolution.Domain.Tests.LocationTests
 {
     public class NeighboursTests
     {

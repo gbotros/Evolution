@@ -5,7 +5,7 @@ using Evolution.Domain.Common;
 using Evolution.Domain.Events;
 using Microsoft.Extensions.Logging;
 
-namespace Evolution.Domain
+namespace Evolution.Domain.AnimalAggregate
 {
 
     public class Animal : AggregateRoot

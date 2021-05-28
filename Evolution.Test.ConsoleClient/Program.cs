@@ -1,4 +1,5 @@
 ﻿using System;
+using Evolution.Data;
 
 namespace Evolution.Test.ConsoleClient
 {

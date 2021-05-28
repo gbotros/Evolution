@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Evolution.Domain
+namespace Evolution.Domain.Common
 {
     public class GameCalender : IGameCalender
     {

@@ -1,4 +1,6 @@
 ﻿using System;
+using Evolution.Domain.Common;
+
 namespace Evolution.Domain.Events
 {
     public sealed class AnimalBornEvent : IDomainEvent
