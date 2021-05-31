@@ -1,6 +1,4 @@
-﻿using Evolution.Domain.Common;
-
-namespace Evolution.Services
+﻿namespace Evolution.Domain.Common
 {
     public interface ILocationService
     {

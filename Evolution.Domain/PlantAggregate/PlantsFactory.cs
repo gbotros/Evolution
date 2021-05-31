@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using Evolution.Domain.Common;
-using Evolution.Services;
 
 namespace Evolution.Domain.PlantAggregate
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Evolution.Domain.Common;
-using Evolution.Services;
 
 namespace Evolution.Domain.AnimalAggregate
 {
