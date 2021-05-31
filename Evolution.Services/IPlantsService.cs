@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Evolution.Domain.PlantAggregate;
+using Evolution.Dtos;
 
 namespace Evolution.Services
 {
     public interface IPlantsService
     {
-        Task<Plant> Get(Guid plantId);
+        Task<IList<PlantDto>> Get();
+        Task<PlantDto> Get(Guid plantId);
         Task Act(Guid plantId);
         Task CreateNew(Guid? parentId);
     }

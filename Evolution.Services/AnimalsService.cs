@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Evolution.Data;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
+using Evolution.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Services
 {
@@ -38,6 +42,40 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
-        public async Task<Animal> Get(Guid id) => await Context.Animals.FindAsync(id);
+        public async Task<IList<AnimalDto>> Get()
+        {
+             var animals = await Context.Animals.ToListAsync();
+             return animals.Select(MapToDto).ToList();
+        }
+
+        public async Task<AnimalDto> Get(Guid id)
+        {
+            var animal = await Context.Animals.FindAsync(id);
+            return MapToDto(animal);
+        }
+
+        private AnimalDto MapToDto(Animal animal)
+        {
+            return new AnimalDto()
+            {
+                IsAlive = animal.IsAlive,
+                Weight = animal.Weight,
+                ChildrenCount = animal.ChildrenCount,
+                CreationTime = animal.CreationTime,
+                DeathTime = animal.DeathTime,
+                Energy = animal.Energy,
+                FoodStorageCapacity = animal.FoodStorageCapacity,
+                Name = animal.Name,
+                ParentId = animal.ParentId,
+                Speed = animal.Speed,
+                Steps = animal.Steps,
+                StoredFood = animal.StoredFood,
+                Location = new LocationDto()
+                {
+                    Column = animal.Location.Column,
+                    Row = animal.Location.Row
+                }
+            };
+        }
     }
 }

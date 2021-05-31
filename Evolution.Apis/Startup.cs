@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,8 @@ namespace Evolution.Apis
 {
     public class Startup
     {
+        private const string corsAllowedHosts = "corsAllowedHosts";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,6 +30,19 @@ namespace Evolution.Apis
             });
 
             services.AddApplicationServices(Configuration);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: corsAllowedHosts,
+                    builder =>
+                    {
+                        var hosts = Configuration.GetValue<string>("corsAllowedHosts")
+                            .Split(";")
+                            .Where(s=> !string.IsNullOrWhiteSpace(s))
+                            .ToArray();
+                        builder.WithOrigins(hosts);
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +55,8 @@ namespace Evolution.Apis
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Evolution.Apis v1"));
             }
 
+            app.UseCors(corsAllowedHosts);
+
             app.UseHttpsRedirection();
             app.UseHsts();
 
@@ -50,6 +68,7 @@ namespace Evolution.Apis
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

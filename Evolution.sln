@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Apis", "Evolution
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Web", "Evolution.Web\Evolution.Web.csproj", "{D7124C1B-DA94-42EC-94B3-3F5CD0B714EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Dtos", "Evolution.Dtos\Evolution.Dtos.csproj", "{F7F99FF8-0151-45A1-93E4-1237628FEC62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{D7124C1B-DA94-42EC-94B3-3F5CD0B714EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7124C1B-DA94-42EC-94B3-3F5CD0B714EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7124C1B-DA94-42EC-94B3-3F5CD0B714EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7F99FF8-0151-45A1-93E4-1237628FEC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7F99FF8-0151-45A1-93E4-1237628FEC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7F99FF8-0151-45A1-93E4-1237628FEC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7F99FF8-0151-45A1-93E4-1237628FEC62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
