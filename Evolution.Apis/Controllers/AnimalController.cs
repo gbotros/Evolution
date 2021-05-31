@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.PlantAggregate;
 using Evolution.Services;
 
@@ -8,20 +9,20 @@ namespace Evolution.Apis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantController : ControllerBase
+    public class AnimalController : ControllerBase
     {
-        private IPlantsService Service { get; }
+        private IAnimalsService Service { get; }
 
-        public PlantController(IPlantsService service)
+        public AnimalController(IAnimalsService service)
         {
             Service = service;
         }
         
         [HttpGet]
-        public async Task<Plant> Get(Guid id) => await Service.Get(id);
+        public async Task<Animal> Get(Guid id) => await Service.Get(id);
 
         [HttpPost]
-        public async Task Post(Guid? parentId) => await Service.CreateNew(parentId);
+        public async Task Post(string name) => await Service.CreateNew(name);
 
         [HttpPut]
         public async Task Put([FromBody] Guid id) => await Service.Act(id);

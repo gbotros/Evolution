@@ -10,12 +10,12 @@ namespace Evolution.Domain.Tests.PlantTests
     public class EatIntoTests
     {
         Mock<ILogger<Plant>> plantLoggerMock;
-        Mock<IGameCalender> calenderMock;
+        DateTime now;
 
         public EatIntoTests()
         {
             plantLoggerMock = new Mock<ILogger<Plant>>();
-            calenderMock = new Mock<IGameCalender>();
+            now = DateTime.UtcNow;
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace Evolution.Domain.Tests.PlantTests
             var worldWidth = 1;
             var worldHeight = 1;
             var location = new Location(0, 0, worldWidth, worldHeight);
-            var plant = new Plant(Guid.NewGuid(), "p1", location, null, calenderMock.Object, plantLoggerMock.Object);
+            var plant = new Plant(Guid.NewGuid(), "p1", location, null, now);
 
             var fullWeight = plant.Weight;
 
@@ -48,7 +48,7 @@ namespace Evolution.Domain.Tests.PlantTests
             var worldWidth = 1;
             var worldHeight = 1;
             var location = new Location(0, 0, worldWidth, worldHeight);
-            var plant = new Plant(Guid.NewGuid(), "p1", location, null, calenderMock.Object, plantLoggerMock.Object);
+            var plant = new Plant(Guid.NewGuid(), "p1", location, null, now);
 
 
             var fullWeight = plant.Weight;

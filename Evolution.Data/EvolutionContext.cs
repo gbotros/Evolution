@@ -1,5 +1,4 @@
-﻿using Evolution.Domain;
-using Evolution.Domain.AnimalAggregate;
+﻿using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.PlantAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

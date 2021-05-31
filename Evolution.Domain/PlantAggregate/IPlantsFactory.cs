@@ -2,7 +2,7 @@
 
 namespace Evolution.Domain.PlantAggregate
 {
-    public interface IPlantFactory
+    public interface IPlantsFactory
     {
         Plant CreateNew(Guid? parentId);
     }

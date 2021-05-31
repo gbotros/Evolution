@@ -1,9 +1,9 @@
 using System;
 using Evolution.Data;
+using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
 using Evolution.Domain.PlantAggregate;
 using Evolution.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,11 +16,16 @@ namespace Evolution.Apis
             services.AddSingleton(CreateWorldSize(Configuration));
 
             services.AddScoped<IPlantsService, PlantsService>();
-            services.AddScoped<IPlantFactory, PlantFactory>();
+            services.AddScoped<IPlantsFactory, PlantsFactory>();
+            services.AddScoped<IAnimalsService, AnimalsService>();
+            services.AddScoped<IAnimalsFactory, AnimalsesFactory>();
+            services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IGameCalender, GameCalender>();
+
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+              
+            services.AddScoped(provider => new EvolutionContext(connectionString, true));
             
-            services.AddDbContext<EvolutionContext>(
-                options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
         }
 
         private static WorldSize CreateWorldSize(IConfiguration Configuration)

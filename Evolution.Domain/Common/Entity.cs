@@ -1,5 +1,4 @@
 ﻿using System;
-using Evolution.Domain.Events;
 
 namespace Evolution.Domain.Common
 {

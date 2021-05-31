@@ -1,7 +1,6 @@
 using System;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
-using Microsoft.Extensions.Logging;
 
 namespace Evolution.Domain.PlantAggregate
 {
@@ -14,8 +13,7 @@ namespace Evolution.Domain.PlantAggregate
             string name,
             Location location,
             Guid? parentId,
-            IGameCalender calender,
-            ILogger<Plant> logger)
+            DateTime creationTime)
             : base(id)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
@@ -25,15 +23,21 @@ namespace Evolution.Domain.PlantAggregate
             ParentId = parentId;
             IsAlive = true;
 
-            CreationTime = calender.Now;
+            CreationTime = creationTime;
             GrowthAmount = DefaultGrowthAmount;
             Weight = DefaultGrowthAmount;
-
-            Calender = calender;
-            Logger = logger;
+            
         }
 
-        public GameDays Age => new GameDays(Calender.Now - CreationTime);
+        protected Plant()
+        {
+            
+        }
+
+        public GameDays GetAge(DateTime now)
+        {
+            return new GameDays(now - CreationTime);
+        }
 
         public DateTime CreationTime { get; private set; }
         public DateTime? DeathTime { get; private set; }
@@ -44,10 +48,6 @@ namespace Evolution.Domain.PlantAggregate
         public int Weight { get; private set; }
         public Location Location { get; private set; }
         private int GrowthAmount { get; }
-
-        private ILogger<Plant> Logger { get; }
-        private IGameCalender Calender { get; }
-
 
         public bool IsEatableBy(Type otherType)
         {

@@ -9,11 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Events\" />
-    <Folder Include="AnimalAggregate\" />
   </ItemGroup>
 </Project>
