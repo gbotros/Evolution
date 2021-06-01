@@ -49,13 +49,13 @@ namespace Evolution.Domain.AnimalAggregate
             Speed = speed;
             ParentId = parentId;
         }
-        
+
         protected Animal()
         {
 
         }
 
-        public GameDays GetAge(DateTime now)
+        public GameDays GetAgeInDays(DateTime now)
         {
             return new GameDays(now - CreationTime);
         }
@@ -72,6 +72,9 @@ namespace Evolution.Domain.AnimalAggregate
 
         public int ChildrenCount { get; private set; }
 
+        /// <summary>
+        /// How many Action can this animal do in one game hour
+        /// </summary>
         public int Speed { get; }
         public int Steps { get; private set; }
 
@@ -90,6 +93,9 @@ namespace Evolution.Domain.AnimalAggregate
             }
         }
 
+        public DateTime LastAction { get; set; }
+        public DateTime NextAction { get; set; }
+
         private int StepCost => Speed * 2; // Energy unit
 
         public void Act(DateTime now)
@@ -101,6 +107,17 @@ namespace Evolution.Domain.AnimalAggregate
 
             SatisfyEssentialNeeds(now);
             Digest();
+
+            LastAction = now; // todo: check from unit tests
+            NextAction = CalculateNextActionTime(now);
+        }
+
+        private DateTime CalculateNextActionTime(DateTime now)
+        {
+            var velocity = 1d / Speed;
+            var timeSpan = GameDays.FromGameHours(velocity).TimeSpan;
+            var nextActionTime =  now + timeSpan;
+            return nextActionTime;
         }
 
         public int EatInto(int desiredAmount)
@@ -123,7 +140,7 @@ namespace Evolution.Domain.AnimalAggregate
 
             var foodUnitsInTransaction = Math.Min(requiredFoodUnits, StoredFood);
             var energyUnitsInTransaction = ConvertFoodToEnergy(foodUnitsInTransaction);
-            
+
             StoredFood -= foodUnitsInTransaction;
             Energy += energyUnitsInTransaction;
         }
@@ -201,7 +218,7 @@ namespace Evolution.Domain.AnimalAggregate
 
         private bool IsAdult(DateTime now)
         {
-            var age = GetAge(now);
+            var age = GetAgeInDays(now);
             return age >= AdulthoodAge;
         }
 

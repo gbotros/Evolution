@@ -34,7 +34,7 @@ namespace Evolution.Domain.PlantAggregate
             
         }
 
-        public GameDays GetAge(DateTime now)
+        public GameDays GetAgeInDays(DateTime now)
         {
             return new GameDays(now - CreationTime);
         }

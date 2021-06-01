@@ -105,7 +105,7 @@ namespace Evolution.Domain.Tests.AnimalTests
             var animal = new Animal(Guid.NewGuid(), "1st Animal", location, now, true, 1000, 100, 1, null);
             var initialFoodAmount = food.Sum(f=> f.Weight);
 
-            var animalFactory = new AnimalsesFactory(new Mock<IGameCalender>().Object, new Mock<ILocationService>().Object);
+            var animalFactory = new AnimalsFactory(new Mock<IGameCalender>().Object, new Mock<ILocationService>().Object);
             animalFactory.Initialize(animal, food);
 
             // act

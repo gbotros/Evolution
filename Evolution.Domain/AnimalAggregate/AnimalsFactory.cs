@@ -4,7 +4,7 @@ using Evolution.Domain.Common;
 
 namespace Evolution.Domain.AnimalAggregate
 {
-    public class AnimalsesFactory : IAnimalsFactory
+    public class AnimalsFactory : IAnimalsFactory
     {
 
         private const int DefaultSpeed = 500;
@@ -20,7 +20,7 @@ namespace Evolution.Domain.AnimalAggregate
         private IGameCalender GameCalender { get; }
         private ILocationService LocationService { get; }
 
-        public AnimalsesFactory(IGameCalender gameCalender, ILocationService locationService)
+        public AnimalsFactory(IGameCalender gameCalender, ILocationService locationService)
         {
             GameCalender = gameCalender;
             LocationService = locationService;
@@ -31,18 +31,16 @@ namespace Evolution.Domain.AnimalAggregate
             var id = Guid.NewGuid();
             var location = LocationService.GetRandom();
             var now = GameCalender.Now;
-            var isAlive = true;
 
-            return new Animal(id, name, location, now, isAlive, DefaultEnergy, DefaultFoodStorageCapacity, DefaultSpeed, null);
+            return new Animal(id, name, location, now, true, DefaultEnergy, DefaultFoodStorageCapacity, DefaultSpeed, null);
         }
 
         public Animal CreateNew(string name, Location location, int energy, int foodStorageCapacity, int speed, Guid? parentId)
         {
             var id = Guid.NewGuid();
             var now = GameCalender.Now;
-            var isAlive = true;
 
-            return new Animal(id, name, location, now, isAlive, energy, foodStorageCapacity, speed, parentId);
+            return new Animal(id, name, location, now, true, energy, foodStorageCapacity, speed, parentId);
         }
         
         public void Initialize(Animal animal, IReadOnlyCollection<IPlantFood> food)

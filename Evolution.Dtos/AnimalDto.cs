@@ -22,5 +22,7 @@ namespace Evolution.Dtos
         public int FoodStorageCapacity { get; set; }
 
         public int Energy { get; set; }
+        public DateTime LastAction { get; set; }
+        public DateTime NextAction { get; set; }
     }
 }

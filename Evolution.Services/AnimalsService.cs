@@ -70,6 +70,8 @@ namespace Evolution.Services
                 Speed = animal.Speed,
                 Steps = animal.Steps,
                 StoredFood = animal.StoredFood,
+                LastAction = animal.LastAction,
+                NextAction = animal.NextAction,
                 Location = new LocationDto()
                 {
                     Column = animal.Location.Column,

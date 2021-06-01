@@ -18,7 +18,7 @@ namespace Evolution.Apis
             services.AddScoped<IPlantsService, PlantsService>();
             services.AddScoped<IPlantsFactory, PlantsFactory>();
             services.AddScoped<IAnimalsService, AnimalsService>();
-            services.AddScoped<IAnimalsFactory, AnimalsesFactory>();
+            services.AddScoped<IAnimalsFactory, AnimalsFactory>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IGameCalender, GameCalender>();
 
