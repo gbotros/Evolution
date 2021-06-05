@@ -1,5 +1,6 @@
 ﻿using System;
 using Evolution.Domain.Common;
+using FluentAssertions;
 using Xunit;
 
 namespace Evolution.Domain.Tests.LocationTests
@@ -10,15 +11,17 @@ namespace Evolution.Domain.Tests.LocationTests
         [Fact]
         public void LocationMustBeWithinWorldBoundaries()
         {
-            // negative coordinates
-            Assert.Throws<ApplicationException>(() => new Location(-1, 0, 1, 1));
-            Assert.Throws<ApplicationException>(() => new Location(0, -1, 1, 1));
-            Assert.Throws<ApplicationException>(() => new Location(-1, -1, 1, 1));
+            var oneCellWorld = new WorldSize(1, 1);
 
-            // very small world
-            Assert.Throws<ApplicationException>(() => new Location(0, 0, 0, 1));
-            Assert.Throws<ApplicationException>(() => new Location(0, 0, 1, 0));
-            Assert.Throws<ApplicationException>(() => new Location(0, 0, 0, 0));
+            // negative coordinates
+            var l1 = new Location(-1, 0);
+            var l2 = new Location(0, -1);
+            var l3 = new Location(-1, -1);
+
+            l1.IsValid(oneCellWorld).Should().BeFalse();
+            l2.IsValid(oneCellWorld).Should().BeFalse();
+            l3.IsValid(oneCellWorld).Should().BeFalse();
+            
         }
 
     }

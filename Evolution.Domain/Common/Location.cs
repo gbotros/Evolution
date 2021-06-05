@@ -6,26 +6,10 @@ namespace Evolution.Domain.Common
 {
     public class Location : ValueObject<Location>
     {
-        private const int FirstRow = 0;
-        private const int FirstColumn = 0;
-        private readonly int LastRow;
-        private readonly int LastColumn;
-        private readonly int WorldWidth;
-        private readonly int WorldHeight;
-        private int digits;
-        
-        public Location(int row, int column, int worldWidth, int worldHeight) : this()
+        private static int NameFormattingDigitsCount { get; } = 4;
+
+        public Location(int row, int column) : this()
         {
-            if (worldWidth < 1 || worldHeight < 1) throw new ApplicationException("World cannot be smaller than one cell");
-
-            WorldWidth = worldWidth;
-            WorldHeight = worldHeight;
-            LastColumn = worldWidth - 1;
-            LastRow = worldHeight - 1;
-
-            if (row < 0 || column < 0) throw new ApplicationException("Cell cannot be created outside the world boundaries");
-            if (row > LastRow || column > LastColumn) throw new ApplicationException("Cell cannot be created outside the world boundaries");
-
             Row = row;
             Column = column;
         }
@@ -34,31 +18,46 @@ namespace Evolution.Domain.Common
         {
         }
 
-        public string Name => $"Cell ({Row.ToString($"D{Digits}")}, {Column.ToString($"D{Digits}")})";
+        public string Name => $"Cell ({Row.ToString($"D{NameFormattingDigitsCount}")}, {Column.ToString($"D{NameFormattingDigitsCount}")})";
 
         public int Row { get; }
 
         public int Column { get; }
 
-        public IReadOnlyCollection<Location> Neighbours
+        public IReadOnlyCollection<Location> GetNeighbours(WorldSize worldSize)
         {
-            get
-            {
-                var neighbours = new List<Location>(){
-                    Up,
-                    Down,
-                    Right,
-                    Left,
-                    UpLeft,
-                    UpRight,
-                    DownLeft,
-                    DownRight
+
+            var neighbours = new List<Location>(){
+                    GetUpLocation(),
+                    GetDownLocation(),
+                    GetRightLocation(),
+                    GetLeftLocation(),
+                    GetUpLeftLocation(),
+                    GetUpRightLocation(),
+                    GetDownLeftLocation(),
+                    GetDownRightLocation()
                 };
 
-                return neighbours.Where(l => l != null).ToList().AsReadOnly();
-            }
+            return neighbours.Where(l => l.IsValid(worldSize)).ToList().AsReadOnly();
         }
-        
+
+        public bool IsValid(WorldSize worldSize)
+        {
+            var worldWidth = worldSize.Width;
+            var worldHeight = worldSize.Height;
+            const int firstColumn = 0;
+            var lastColumn = worldWidth - 1;
+            const int firstRow = 0;
+            var lastRow = worldHeight - 1;
+
+            var valid = true;
+            valid &= Row >= firstColumn;
+            valid &= Column >= firstRow;
+            valid &= Row <= lastRow;
+            valid &= Column <= lastColumn;
+            return valid;
+        }
+
         protected override bool EqualsCore(Location other)
         {
             return Row == other.Row && Column == other.Column;
@@ -69,100 +68,45 @@ namespace Evolution.Domain.Common
             return Name.GetHashCode();
         }
 
-        private Location Up
+        private Location GetUpLocation()
         {
-            get
-            {
-                if (!IsValid(Row - 1, Column)) return null;
-                return new Location(Row - 1, Column, WorldWidth, WorldHeight);
-            }
+            return new Location(Row - 1, Column);
         }
 
-        private Location Down
+        private Location GetDownLocation()
         {
-            get
-            {
-                if (!IsValid(Row + 1, Column)) return null;
-                return new Location(Row + 1, Column, WorldWidth, WorldHeight);
-            }
+            return new Location(Row + 1, Column);
+
         }
 
-        private Location Right
+        private Location GetRightLocation()
         {
-            get
-            {
-
-                if (!IsValid(Row, Column + 1)) return null;
-                return new Location(Row, Column + 1, WorldWidth, WorldHeight);
-            }
+            return new Location(Row, Column + 1);
         }
 
-        private Location Left
+        private Location GetLeftLocation()
         {
-            get
-            {
-                if (!IsValid(Row, Column - 1)) return null;
-                return new Location(Row, Column - 1, WorldWidth, WorldHeight);
-            }
+            return new Location(Row, Column - 1);
         }
 
-        private Location UpRight
+        private Location GetUpRightLocation()
         {
-            get
-            {
-                if (!IsValid(Row - 1, Column + 1)) return null;
-                return new Location(Row - 1, Column + 1, WorldWidth, WorldHeight);
-            }
+            return new Location(Row - 1, Column + 1);
         }
 
-        private Location DownRight
+        private Location GetDownRightLocation()
         {
-            get
-            {
-                if (!IsValid(Row + 1, Column + 1)) return null;
-                return new Location(Row + 1, Column + 1, WorldWidth, WorldHeight);
-            }
+            return new Location(Row + 1, Column + 1);
         }
 
-        private Location UpLeft
+        private Location GetUpLeftLocation()
         {
-            get
-            {
-                if (!IsValid(Row - 1, Column - 1)) return null;
-                return new Location(Row - 1, Column - 1, WorldWidth, WorldHeight);
-            }
+            return new Location(Row - 1, Column - 1);
         }
 
-        private Location DownLeft
+        private Location GetDownLeftLocation()
         {
-            get
-            {
-                if (!IsValid(Row + 1, Column - 1)) return null;
-                return new Location(Row + 1, Column - 1, WorldWidth, WorldHeight);
-            }
-        }
-
-        private bool IsValid(int row, int col)
-        {
-            var valid = true;
-            valid &= row >= FirstRow;
-            valid &= col >= FirstColumn;
-            valid &= row <= LastRow;
-            valid &= col <= LastColumn;
-            return valid;
-        }
-
-        private int Digits
-        {
-            get
-            {
-                if (digits > 0) return digits;
-
-                var max = Math.Max(LastRow, LastColumn);
-
-                digits = max.ToString().Length;
-                return digits;
-            }
+            return new Location(Row + 1, Column - 1);
         }
 
     }

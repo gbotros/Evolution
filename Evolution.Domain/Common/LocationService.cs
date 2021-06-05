@@ -18,7 +18,7 @@ namespace Evolution.Domain.Common
         {
             var row = random.Next(WorldSize.Height - 1);
             var col = random.Next(WorldSize.Width - 1);
-            var location = new Location(row, col, WorldSize.Width, WorldSize.Height);
+            var location = new Location(row, col);
             return location;
         }
     }

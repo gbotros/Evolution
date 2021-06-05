@@ -4,6 +4,8 @@ namespace Evolution.Dtos
 {
     public class AnimalDto
     {
+
+        public Guid Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? DeathTime { get; set; }
 

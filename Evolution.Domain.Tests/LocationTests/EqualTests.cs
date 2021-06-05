@@ -5,10 +5,9 @@ namespace Evolution.Domain.Tests.LocationTests
 {
     public class EqualTests
     {
-
-        Location location1 = new Location(0, 0, 2, 2);
-        Location location2 = new Location(0, 0, 5, 5);
-        Location location3 = new Location(1, 0, 5, 5);
+        readonly Location location1 = new Location(0, 0);
+        readonly Location location2 = new Location(0, 0);
+        readonly Location location3 = new Location(1, 0);
 
         [Fact]
         public void EqualOperator_True()

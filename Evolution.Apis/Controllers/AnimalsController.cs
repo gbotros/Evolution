@@ -27,10 +27,12 @@ namespace Evolution.Apis.Controllers
         public async Task<AnimalDto> Get(Guid id) => await Service.Get(id);
 
         [HttpPost]
+        [Route("{id}")]
         public async Task Post(string name) => await Service.CreateNew(name);
 
         [HttpPut]
-        public async Task Put([FromBody] Guid id) => await Service.Act(id);
+        [Route("{id}")]
+        public async Task Put([FromRoute] Guid id) => await Service.Act(id);
 
     }
 }

@@ -98,14 +98,14 @@ namespace Evolution.Domain.AnimalAggregate
 
         private int StepCost => Speed * 2; // Energy unit
 
-        public void Act(DateTime now)
+        public void Act(DateTime now, WorldSize worldSize)
         {
             if (!IsAlive)
             {
                 return;
             }
 
-            SatisfyEssentialNeeds(now);
+            SatisfyEssentialNeeds(now, worldSize);
             Digest();
 
             LastAction = now; // todo: check from unit tests
@@ -203,14 +203,14 @@ namespace Evolution.Domain.AnimalAggregate
             return mutantSpeed;
         }
 
-        private Location GetRandomNeighbor()
+        private Location GetRandomNeighbor(WorldSize worldSize)
         {
-            var neighbours = Location.Neighbours;
+            var neighbours = Location.GetNeighbours(worldSize);
             var neighboursCount = neighbours.Count();
             if (neighboursCount == 0) return null;
 
             var newLocationIndex = new Random().Next(0, neighboursCount);
-            var newLocation = Location.Neighbours.ElementAt(newLocationIndex);
+            var newLocation = neighbours.ElementAt(newLocationIndex);
 
 
             return newLocation;
@@ -233,9 +233,9 @@ namespace Evolution.Domain.AnimalAggregate
             return StoredFood < FoodStorageCapacity;
         }
 
-        private void Move()
+        private void Move(WorldSize worldSize)
         {
-            var newLocation = GetRandomNeighbor();
+            var newLocation = GetRandomNeighbor(worldSize);
 
             if (newLocation != null)
             {
@@ -264,7 +264,7 @@ namespace Evolution.Domain.AnimalAggregate
             RaiseEvent(sonBornEvent);
         }
 
-        private void SatisfyEssentialNeeds(DateTime now)
+        private void SatisfyEssentialNeeds(DateTime now, WorldSize worldSize)
         {
             if (CanReproduce(now))
             {
@@ -276,7 +276,7 @@ namespace Evolution.Domain.AnimalAggregate
             }
             else
             {
-                Move();
+                Move(worldSize);
             }
         }
 

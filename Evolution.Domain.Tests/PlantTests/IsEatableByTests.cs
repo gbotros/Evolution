@@ -23,9 +23,7 @@ namespace Evolution.Domain.Tests.PlantTests
         public void IsEatableBy_Animal_True()
         {
             // arrange
-            var worldWidth = 1;
-            var worldHeight = 1;
-            var location = new Location(0, 0, worldWidth, worldHeight);
+            var location = new Location(0, 0);
             var plant = new Plant(Guid.NewGuid(), "p1", location, null, now);
 
             // act
@@ -39,9 +37,7 @@ namespace Evolution.Domain.Tests.PlantTests
         public void IsEatableBy_Plant_False()
         {
             // arrange
-            var worldWidth = 1;
-            var worldHeight = 1;
-            var location = new Location(0, 0, worldWidth, worldHeight);
+            var location = new Location(0, 0 );
             var plant = new Plant(Guid.NewGuid(), "p1", location, null, now);
 
             // act
@@ -55,9 +51,7 @@ namespace Evolution.Domain.Tests.PlantTests
         public void IsEatableBy_AnyObject_False()
         {
             // arrange
-            var worldWidth = 1;
-            var worldHeight = 1;
-            var location = new Location(0, 0, worldWidth, worldHeight);
+            var location = new Location(0, 0 );
             var plant = new Plant(Guid.NewGuid(), "p1", location, null, now);
 
             // act

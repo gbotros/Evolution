@@ -22,9 +22,7 @@ namespace Evolution.Domain.Tests.PlantTests
         public void EatInto_DeadPlant_NoChange()
         {
             // arrange
-            var worldWidth = 1;
-            var worldHeight = 1;
-            var location = new Location(0, 0, worldWidth, worldHeight);
+            var location = new Location(0, 0);
             var plant = new Plant(Guid.NewGuid(), "p1", location, null, now);
 
             var fullWeight = plant.Weight;
@@ -45,9 +43,7 @@ namespace Evolution.Domain.Tests.PlantTests
         public void EatInto_LivePlant_WeightReduced()
         {
             // arrange
-            var worldWidth = 1;
-            var worldHeight = 1;
-            var location = new Location(0, 0, worldWidth, worldHeight);
+            var location = new Location(0, 0);
             var plant = new Plant(Guid.NewGuid(), "p1", location, null, now);
 
 

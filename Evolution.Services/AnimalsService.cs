@@ -13,13 +13,20 @@ namespace Evolution.Services
     public class AnimalsService : IAnimalsService
     {
         private EvolutionContext Context { get; }
+        private WorldSize WorldSize { get; }
         private IAnimalsFactory AnimalsFactory { get; }
         private ILocationService LocationService { get; }
         private IGameCalender GameCalender { get; }
 
-        public AnimalsService(EvolutionContext context, IAnimalsFactory animalsFactory, ILocationService locationService, IGameCalender gameCalender)
+        public AnimalsService(
+            EvolutionContext context,
+            WorldSize worldSize,
+            IAnimalsFactory animalsFactory, 
+            ILocationService locationService,
+            IGameCalender gameCalender)
         {
             Context = context;
+            WorldSize = worldSize;
             AnimalsFactory = animalsFactory;
             LocationService = locationService;
             GameCalender = gameCalender;
@@ -30,7 +37,7 @@ namespace Evolution.Services
             var animal = await Context.Animals.FindAsync(id);
             if (animal == null) return;
 
-            animal.Act(GameCalender.Now);
+            animal.Act(GameCalender.Now, WorldSize);
 
             await Context.SaveChangesAsync();
         }
@@ -58,6 +65,7 @@ namespace Evolution.Services
         {
             return new AnimalDto()
             {
+                Id = animal.Id,
                 IsAlive = animal.IsAlive,
                 Weight = animal.Weight,
                 ChildrenCount = animal.ChildrenCount,
