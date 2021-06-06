@@ -34,7 +34,7 @@ namespace Evolution.Domain.AnimalAggregate
 
             return new Animal(id, name, location, now, true, DefaultEnergy, DefaultFoodStorageCapacity, DefaultSpeed, null);
         }
-
+        
         public Animal CreateNew(string name, Location location, int energy, int foodStorageCapacity, int speed, Guid? parentId)
         {
             var id = Guid.NewGuid();

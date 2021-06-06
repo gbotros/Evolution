@@ -1,0 +1,15 @@
+﻿<div>
+    <div class="@(Plant.IsAlive ? "" : "text-red-300")">
+        🌲 @Plant.Weight
+    </div>
+    @if (Plant.IsAlive)
+    {
+        <Button @onclick="@(e => Act(@Plant.Id))" class="hover:bg-blue-500 rounded">
+            ▶️
+        </Button>
+        <Button @onclick="@(e => Kill(@Plant.Id))" class="hover:bg-blue-500 rounded">
+            💀
+        </Button>
+    }
+
+</div>

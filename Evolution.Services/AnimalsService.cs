@@ -36,6 +36,11 @@ namespace Evolution.Services
         {
             var animal = await Context.Animals.FindAsync(id);
             if (animal == null) return;
+            var food = Context.Plants.Where(p =>
+                p.IsAlive
+                && p.Location.Row == animal.Location.Row
+                && p.Location.Column == animal.Location.Column).ToList();
+            AnimalsFactory.Initialize(animal, food);
 
             animal.Act(GameCalender.Now, WorldSize);
 

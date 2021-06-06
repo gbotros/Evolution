@@ -17,7 +17,7 @@ namespace Evolution.Domain.PlantAggregate
             GameCalender = gameCalender;
         }
 
-        public Plant CreateNew(Guid? parentId)
+        public Plant CreateNew(Guid? parentId = null)
         {
             var id = Guid.NewGuid();
             var location = LocationService.GetRandom();

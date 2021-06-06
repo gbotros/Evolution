@@ -4,6 +4,6 @@ namespace Evolution.Domain.PlantAggregate
 {
     public interface IPlantsFactory
     {
-        Plant CreateNew(Guid? parentId);
+        Plant CreateNew(Guid? parentId = null);
     }
 }

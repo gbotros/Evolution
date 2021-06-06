@@ -46,7 +46,8 @@ namespace Evolution.Data.Migrations
                     ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Weight = table.Column<int>(type: "int", nullable: false),
                     Row = table.Column<int>(type: "int", nullable: true),
-                    Column = table.Column<int>(type: "int", nullable: true)
+                    Column = table.Column<int>(type: "int", nullable: true),
+                    GrowthAmount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

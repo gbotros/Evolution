@@ -30,9 +30,9 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
-        public async Task CreateNew(Guid? parentId)
+        public async Task CreateNew()
         {
-            var newPlant = PlantsFactory.CreateNew(parentId);
+            var newPlant = PlantsFactory.CreateNew();
             await Context.Plants.AddAsync(newPlant);
             await Context.SaveChangesAsync();
         }
@@ -53,6 +53,7 @@ namespace Evolution.Services
         {
             return new PlantDto()
             {
+                Id = plant.Id,
                 CreationTime = plant.CreationTime,
                 DeathTime = plant.DeathTime,
                 IsAlive = plant.IsAlive,

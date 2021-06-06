@@ -10,6 +10,6 @@ namespace Evolution.Services
         Task<IList<PlantDto>> Get();
         Task<PlantDto> Get(Guid plantId);
         Task Act(Guid plantId);
-        Task CreateNew(Guid? parentId);
+        Task CreateNew();
     }
 }

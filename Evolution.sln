@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Apis", "Evolution
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Web", "Evolution.Web\Evolution.Web.csproj", "{D7124C1B-DA94-42EC-94B3-3F5CD0B714EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Dtos", "Evolution.Dtos\Evolution.Dtos.csproj", "{F7F99FF8-0151-45A1-93E4-1237628FEC62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Dtos", "Evolution.Dtos\Evolution.Dtos.csproj", "{F7F99FF8-0151-45A1-93E4-1237628FEC62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

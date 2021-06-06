@@ -47,7 +47,7 @@ namespace Evolution.Domain.PlantAggregate
         public Guid? ParentId { get; private set; }
         public int Weight { get; private set; }
         public Location Location { get; private set; }
-        private int GrowthAmount { get; }
+        public int GrowthAmount { get; private set; }
 
         public bool IsEatableBy(Type otherType)
         {

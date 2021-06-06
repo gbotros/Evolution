@@ -27,10 +27,11 @@ namespace Evolution.Apis.Controllers
         public async Task<PlantDto> Get(Guid id) => await Service.Get(id);
 
         [HttpPost]
-        public async Task Post(Guid? parentId) => await Service.CreateNew(parentId);
+        public async Task Post() => await Service.CreateNew();
 
         [HttpPut]
-        public async Task Put([FromBody] Guid id) => await Service.Act(id);
+        [Route("{id}")]
+        public async Task Put([FromRoute] Guid id) => await Service.Act(id);
 
     }
 }

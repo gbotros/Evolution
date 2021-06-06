@@ -84,6 +84,9 @@ namespace Evolution.Data.Migrations
                     b.Property<DateTime?>("DeathTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("GrowthAmount")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsAlive")
                         .HasColumnType("bit");
 

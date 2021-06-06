@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evolution.Data.Migrations
 {
     [DbContext(typeof(EvolutionContext))]
-    [Migration("20210606002459_init")]
+    [Migration("20210606072839_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,9 @@ namespace Evolution.Data.Migrations
 
                     b.Property<DateTime?>("DeathTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("GrowthAmount")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsAlive")
                         .HasColumnType("bit");
