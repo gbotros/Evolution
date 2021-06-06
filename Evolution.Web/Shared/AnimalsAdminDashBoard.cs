@@ -13,7 +13,7 @@ namespace Evolution.Web.Shared
     public partial class AnimalsAdminDashBoard : ComponentBase
     {
 
-        public AnimalDto[] animals;
+        public List<AnimalDto> animals = new();
         public string newAnimalName;
 
         [Inject]
@@ -22,22 +22,31 @@ namespace Evolution.Web.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            animals = await Http.GetFromJsonAsync<AnimalDto[]>(animalsUrl);
+            await ReLoadAnimals();
         }
 
         public async Task CreateNew()
         {
             var response = await Http.PostAsJsonAsync($"{animalsUrl}", newAnimalName);
+            await ReLoadAnimals();
+            await ReLoadAnimals();
         }
 
         public async Task Kill(Guid id)
         {
             await Http.DeleteAsync($"{animalsUrl}/{id}");
+            await ReLoadAnimals();
         }
 
         public async Task Act(Guid id)
         {
             await Http.PutAsJsonAsync($"{animalsUrl}/{id}", "");
+            await ReLoadAnimals();
+        }
+
+        private async Task ReLoadAnimals()
+        {
+            animals = await Http.GetFromJsonAsync<List<AnimalDto>>(animalsUrl);
         }
     }
 }

@@ -2,26 +2,65 @@
 
 <h1>Animals</h1>
 
-<input   @bind-value="@newAnimalName" 
-         placeholder="Enter new animal name"  
-         class="border border-gray-400 p-2 rounded-lg" />
-<Button @onclick="@(e => CreateNew())" 
-         class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+<input @bind-value="@newAnimalName"
+       placeholder="Enter new animal name"
+       class="border border-gray-400 p-2 rounded-lg" />
+<Button @onclick="@(e => CreateNew())"
+        class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
     Create new
 </Button>
 
-@if (animals == null)
+@if (!animals.Any())
 {
-    <p><em>Loading jungle ...</em></p>
+    <div> Loading jungle ... </div>
 }
 else
 {
 
+    <div class="flex flex-row  items-center bg-blue-300">
+        <div class="flex-1">
+            Name
+        </div>
+        <div class="flex-1">
+            Location
+        </div>
+        <div class="flex-1">
+            Energy
+        </div>
+        <div class="flex-1">
+            Speed
+        </div>
+        <div class="flex-1">
+            Steps
+        </div>
+        <div class="flex-1">
+            IsAlive
+        </div>
+        <div class="flex-1">
+            Kill me :(
+        </div>
+        <div class="flex-1">
+            Act
+        </div>
+    </div>
+
     @foreach (var animal in animals)
     {
-        <div name="animal-@animal.Id" class="flex flex-row">
+        <div name="animal-@animal.Id" class="flex flex-row items-center @(animal.IsAlive ? "bg-green-300" : "bg-red-300")">
             <div class="flex-1">
                 @animal.Name
+            </div>
+            <div class="flex-1">
+                @animal.Location.Name
+            </div>
+            <div class="flex-1">
+                @animal.Energy
+            </div>
+            <div class="flex-1">
+                @animal.Speed
+            </div>
+            <div class="flex-1">
+                @animal.Steps
             </div>
             <div class="flex-1">
                 @animal.IsAlive

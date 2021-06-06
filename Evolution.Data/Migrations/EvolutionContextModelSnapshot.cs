@@ -55,6 +55,9 @@ namespace Evolution.Data.Migrations
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Speed")
+                        .HasColumnType("int");
+
                     b.Property<int>("Steps")
                         .HasColumnType("int");
 

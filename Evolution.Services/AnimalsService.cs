@@ -90,7 +90,8 @@ namespace Evolution.Services
                 Location = new LocationDto()
                 {
                     Column = animal.Location.Column,
-                    Row = animal.Location.Row
+                    Row = animal.Location.Row,
+                    Name = animal.Location.Name
                 }
             };
         }

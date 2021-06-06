@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evolution.Data.Migrations
 {
     [DbContext(typeof(EvolutionContext))]
-    [Migration("20210528051041_init")]
+    [Migration("20210606002459_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,11 +45,20 @@ namespace Evolution.Data.Migrations
                     b.Property<bool>("IsAlive")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("LastAction")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("NextAction")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Speed")
+                        .HasColumnType("int");
 
                     b.Property<int>("Steps")
                         .HasColumnType("int");

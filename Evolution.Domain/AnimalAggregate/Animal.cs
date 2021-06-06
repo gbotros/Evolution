@@ -76,7 +76,7 @@ namespace Evolution.Domain.AnimalAggregate
         /// <summary>
         /// How many Action can this animal do in one game hour
         /// </summary>
-        public int Speed { get; }
+        public int Speed { get; private set; }
         public int Steps { get; private set; }
 
         public int StoredFood { get; private set; }

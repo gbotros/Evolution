@@ -21,10 +21,13 @@ namespace Evolution.Data.Migrations
                     Row = table.Column<int>(type: "int", nullable: true),
                     Column = table.Column<int>(type: "int", nullable: true),
                     ChildrenCount = table.Column<int>(type: "int", nullable: false),
+                    Speed = table.Column<int>(type: "int", nullable: false),
                     Steps = table.Column<int>(type: "int", nullable: false),
                     StoredFood = table.Column<int>(type: "int", nullable: false),
                     FoodStorageCapacity = table.Column<int>(type: "int", nullable: false),
-                    Energy = table.Column<int>(type: "int", nullable: false)
+                    Energy = table.Column<int>(type: "int", nullable: false),
+                    LastAction = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NextAction = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
