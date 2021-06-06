@@ -49,6 +49,13 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
+        public async Task Kill(Guid id)
+        {
+            var animal = await Context.Animals.FindAsync(id);
+            animal.Die();
+            await Context.SaveChangesAsync();
+        }
+
         public async Task<IList<AnimalDto>> Get()
         {
              var animals = await Context.Animals.ToListAsync();

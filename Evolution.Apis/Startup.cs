@@ -40,7 +40,10 @@ namespace Evolution.Apis
                             .Split(";")
                             .Where(s=> !string.IsNullOrWhiteSpace(s))
                             .ToArray();
-                        builder.WithOrigins(hosts);
+                        builder
+                            .WithOrigins(hosts)
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
                     });
             });
         }

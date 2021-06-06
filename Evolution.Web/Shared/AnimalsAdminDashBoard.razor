@@ -1,0 +1,43 @@
+﻿@page "/animals"
+
+<h1>Animals</h1>
+
+<input   @bind-value="@newAnimalName" 
+         placeholder="Enter new animal name"  
+         class="border border-gray-400 p-2 rounded-lg" />
+<Button @onclick="@(e => CreateNew())" 
+         class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+    Create new
+</Button>
+
+@if (animals == null)
+{
+    <p><em>Loading jungle ...</em></p>
+}
+else
+{
+
+    @foreach (var animal in animals)
+    {
+        <div name="animal-@animal.Id" class="flex flex-row">
+            <div class="flex-1">
+                @animal.Name
+            </div>
+            <div class="flex-1">
+                @animal.IsAlive
+            </div>
+            <div class="flex-1">
+                <Button @onclick="@(e => Kill(animal.Id))" class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                    Kill me :(
+                </Button>
+            </div>
+            <div class="flex-1">
+                <Button @onclick="@(e => Act(animal.Id))" class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                    Act
+                </Button>
+            </div>
+        </div>
+    }
+
+}
+

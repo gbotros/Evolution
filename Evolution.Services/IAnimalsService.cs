@@ -11,5 +11,6 @@ namespace Evolution.Services
         Task<AnimalDto> Get(Guid id);
         Task Act(Guid id);
         Task CreateNew(string name);
+        Task Kill(Guid id);
     }
 }

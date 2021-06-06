@@ -35,6 +35,7 @@ namespace Evolution.Domain.AnimalAggregate
             Guid? parentId) : base(id)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
+            if (speed <= 0) throw new ApplicationException("Speed can not be less than one action per game hour");
 
             Id = id;
             Name = name;
@@ -116,7 +117,7 @@ namespace Evolution.Domain.AnimalAggregate
         {
             var velocity = 1d / Speed;
             var timeSpan = GameDays.FromGameHours(velocity).TimeSpan;
-            var nextActionTime =  now + timeSpan;
+            var nextActionTime = now + timeSpan;
             return nextActionTime;
         }
 
@@ -128,6 +129,12 @@ namespace Evolution.Domain.AnimalAggregate
         public bool IsEatableBy(Type otherType)
         {
             return false;
+        }
+
+        public void Die()
+        {
+            IsAlive = false;
+            DeathTime = DateTime.UtcNow;
         }
 
         private void Digest()
@@ -158,12 +165,6 @@ namespace Evolution.Domain.AnimalAggregate
         private static int ConvertFoodToEnergy(int food)
         {
             return food * OneFoodToEnergy;
-        }
-
-        private void Die()
-        {
-            IsAlive = false;
-            DeathTime = DateTime.UtcNow;
         }
 
         private void Eat()
