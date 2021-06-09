@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Evolution.Domain.AnimalAggregate;
 using Evolution.Dtos;
 using Evolution.Services;
 

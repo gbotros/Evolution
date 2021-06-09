@@ -1,35 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Evolution.Domain.Events;
 
 namespace Evolution.Domain.Common
 {
-    public abstract class AggregateRoot : Entity
+    public abstract class AggregateRoot : Entity, IAggregateRoot
     {
 
-        private readonly List<IDomainEvent> domainEvents = new List<IDomainEvent>();
-        public IReadOnlyList<IDomainEvent> DomainEvents => domainEvents.AsReadOnly();
+
+        private readonly ConcurrentQueue<IDomainEvent> domainEvents = new();
+        public IProducerConsumerCollection<IDomainEvent> DomainEvents => domainEvents;
 
         protected AggregateRoot()
         {
 
         }
 
-        public AggregateRoot(Guid id) : base(id)
+        protected AggregateRoot(Guid id) : base(id)
         {
 
         }
 
         protected void RaiseEvent(IDomainEvent domainEvent)
         {
-            domainEvents.Add(domainEvent);
+            domainEvents.Enqueue(domainEvent);
         }
-
-        protected void ClearEvents()
-        {
-            domainEvents.Clear();
-        }
-
-
+        
     }
 }

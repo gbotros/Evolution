@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
 using Evolution.Dtos;
-using Evolution.Services;
 
 namespace Evolution.Apis.Controllers
 {

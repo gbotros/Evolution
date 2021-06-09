@@ -1,5 +1,4 @@
-﻿using System;
-using Evolution.Domain.Common;
+﻿using Evolution.Domain.Common;
 using FluentAssertions;
 using Xunit;
 

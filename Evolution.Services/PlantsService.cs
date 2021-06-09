@@ -11,10 +11,10 @@ namespace Evolution.Services
 {
     public class PlantsService : IPlantsService
     {
-        private EvolutionContext Context { get; }
+        private IEvolutionContext Context { get; }
         public IPlantsFactory PlantsFactory { get; }
 
-        public PlantsService(EvolutionContext context, IPlantsFactory plantsFactory)
+        public PlantsService(IEvolutionContext context, IPlantsFactory plantsFactory)
         {
             Context = context;
             PlantsFactory = plantsFactory;

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 using Evolution.Web.Models;
 using Evolution.Web.Services;
@@ -33,7 +34,7 @@ namespace Evolution.Web.Shared
             await AnimalsService.CreateNew(newAnimalName);
             await ReloadAnimals();
         }
-        
+
         public async Task CreateNewPlant()
         {
             await PlantsService.CreateNew();
@@ -41,29 +42,34 @@ namespace Evolution.Web.Shared
             await ReloadPlants();
         }
 
-        private void AutoAct()
+        private async Task AutoAct()
         {
-
-            var timer = new Timer(10000);
-            timer.Enabled = !timer.Enabled;
-            timer.Elapsed += async (object source, ElapsedEventArgs e) =>
+            while (true)
             {
                 var animals = WorldStore.GetAllLiveAnimals();
+                if(!animals.Any()) break;
+
                 foreach (var animal in animals)
                 {
                     await AnimalsService.Act(animal.Id);
                     await ReloadAnimals();
                     await InvokeAsync(StateHasChanged);
-                    await Task.Delay(500);
+                    await Task.Delay(100);
                 }
-                //var plants = WorldStore.GetAllLivePlants();
-                //foreach (var plant in plants)
-                //{
-                //    await PlantsService.Act(plant.Id);
-                //    await ReloadPlants();
-                //    await InvokeAsync(StateHasChanged);
-                //}
-            };
+            }
+            //var timer = new Timer(1);
+            //timer.Enabled = !timer.Enabled;
+            //timer.Elapsed += async (object source, ElapsedEventArgs e) =>
+            //{
+
+            //    //var plants = WorldStore.GetAllLivePlants();
+            //    //foreach (var plant in plants)
+            //    //{
+            //    //    await PlantsService.Act(plant.Id);
+            //    //    await ReloadPlants();
+            //    //    await InvokeAsync(StateHasChanged);
+            //    //}
+            //};
         }
 
         private async Task ReloadAnimals()

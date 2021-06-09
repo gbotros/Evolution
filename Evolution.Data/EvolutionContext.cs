@@ -1,22 +1,38 @@
-﻿using Evolution.Domain.AnimalAggregate;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Evolution.Domain.AnimalAggregate;
+using Evolution.Domain.Common;
 using Evolution.Domain.PlantAggregate;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Evolution.Data
 {
-    public class EvolutionContext : DbContext
+    public class EvolutionContext : DbContext, IEvolutionContext
     {
-        private string ConnectionString { get; }
-        private bool UseConsoleLogger { get; }
-
         public DbSet<Animal> Animals { get; set; }
         public DbSet<Plant> Plants { get; set; }
+        
+        private EvolutionContextOptions Options { get; }
 
-        public EvolutionContext(string connectionString, bool useConsoleLogger)
+        private IMediator Mediator { get; }
+        //private IDomainEventDispatcher Dispatcher { get; }
+
+        public EvolutionContext(
+            EvolutionContextOptions options,
+            IMediator mediator)
         {
-            ConnectionString = connectionString;
-            UseConsoleLogger = useConsoleLogger;
+            Options = options;
+            Mediator = mediator;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await DispatchDomainEvents();
+            var res = await base.SaveChangesAsync(cancellationToken);
+            return res;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,9 +46,9 @@ namespace Evolution.Data
             });
 
             optionsBuilder
-                .UseSqlServer(ConnectionString);
+                .UseSqlServer(Options.ConnectionString);
 
-            if (UseConsoleLogger)
+            if (Options.UseConsoleLogger)
             {
                 optionsBuilder
                     .UseLoggerFactory(loggerFactory)
@@ -76,6 +92,21 @@ namespace Evolution.Data
             });
         }
 
+        private async Task DispatchDomainEvents()
+        {
+            var roots = ChangeTracker.Entries<IAggregateRoot>()
+                .Select(po => po.Entity)
+                .Where(po => po.DomainEvents.Any())
+                .ToArray();
+
+            foreach (var r in roots)
+            {
+                while (r.DomainEvents.TryTake(out var dv))
+                {
+                    await Mediator.Publish(dv);  //Dispatcher.Dispatch(dv);
+                }
+            }
+        }
     }
 }
 

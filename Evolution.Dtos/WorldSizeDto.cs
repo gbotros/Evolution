@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Evolution.Dtos
+﻿namespace Evolution.Dtos
 {
     public class WorldSizeDto
     {

@@ -12,14 +12,14 @@ namespace Evolution.Services
 {
     public class AnimalsService : IAnimalsService
     {
-        private EvolutionContext Context { get; }
+        private IEvolutionContext Context { get; }
         private WorldSize WorldSize { get; }
         private IAnimalsFactory AnimalsFactory { get; }
         private ILocationService LocationService { get; }
         private IGameCalender GameCalender { get; }
 
         public AnimalsService(
-            EvolutionContext context,
+            IEvolutionContext context,
             WorldSize worldSize,
             IAnimalsFactory animalsFactory, 
             ILocationService locationService,
@@ -43,7 +43,7 @@ namespace Evolution.Services
             AnimalsFactory.Initialize(animal, food);
 
             animal.Act(GameCalender.Now, WorldSize);
-
+            
             await Context.SaveChangesAsync();
         }
 

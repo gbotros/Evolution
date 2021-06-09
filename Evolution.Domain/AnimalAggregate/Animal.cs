@@ -20,7 +20,8 @@ namespace Evolution.Domain.AnimalAggregate
 
         private const uint SpeedMutationAmplitude = 5;
 
-        private readonly GameDays AdulthoodAge = new GameDays(10);
+        // TODO: review the math 
+        private readonly GameDays AdulthoodAge = new GameDays(0.01d);
 
 
         public Animal(
@@ -256,11 +257,12 @@ namespace Evolution.Domain.AnimalAggregate
             Energy /= 2; // Son cost 50% of the Parent Energy
             var sonBornEvent = new AnimalBornEvent
             (
-                name: $"{Name}:s{ChildrenCount}",
-                location: Location,
-                parentId: Id,
-                speed: GetMutatedSpeed()
-            );
+                $"{Name}:s{ChildrenCount}",
+                new Location(Location.Row, Location.Column),
+                Energy,
+                FoodStorageCapacity, // TODO: allow mutations
+                GetMutatedSpeed(),
+                Id);
 
             RaiseEvent(sonBornEvent);
         }

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Evolution.Data\Evolution.Data.csproj" />
     <ProjectReference Include="..\Evolution.Dtos\Evolution.Dtos.csproj" />
   </ItemGroup>

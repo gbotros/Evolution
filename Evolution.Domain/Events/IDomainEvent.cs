@@ -1,6 +1,8 @@
-﻿namespace Evolution.Domain.Events
+﻿using MediatR;
+
+namespace Evolution.Domain.Events
 {
-    public interface IDomainEvent
+    public interface IDomainEvent : INotification
     {
     }
 }

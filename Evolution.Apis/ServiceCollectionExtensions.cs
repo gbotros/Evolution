@@ -1,9 +1,11 @@
 using System;
+using System.Reflection;
 using Evolution.Data;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
 using Evolution.Domain.PlantAggregate;
 using Evolution.Services;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,9 +25,10 @@ namespace Evolution.Apis
             services.AddScoped<IGameCalender, GameCalender>();
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-              
-            services.AddScoped(provider => new EvolutionContext(connectionString, true));
+            services.AddSingleton(new EvolutionContextOptions(connectionString, true));
+            services.AddScoped<IEvolutionContext, EvolutionContext>();
             
+            services.AddMediatR(typeof(AnimalBornEventHandler).GetTypeInfo().Assembly);
         }
 
         private static WorldSize CreateWorldSize(IConfiguration Configuration)

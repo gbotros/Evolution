@@ -9,7 +9,7 @@ namespace Evolution.Domain.Common
 
         }
 
-        public Entity(Guid id) : this()
+        protected Entity(Guid id) : this()
         {
             if (id == Guid.Empty) throw new ApplicationException("Id can't be empty");
 

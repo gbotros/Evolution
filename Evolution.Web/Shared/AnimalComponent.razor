@@ -1,20 +1,21 @@
 ﻿<div>
-    <div class="@(Animal.IsAlive ? "" : "text-red-300")">
-        @Animal.Name
+        <div class="@(Animal.IsAlive ? "" : "text-red-300")">
+            @Animal.Name
 
+            @if (Animal.IsAlive)
+            {
+                <span> | E: @(Animal.Energy/1000) K</span>
+                <span> | S: @Animal.Steps</span>
+            }
+        </div>
         @if (Animal.IsAlive)
         {
-            <span> | E: @Animal.Energy</span>
+            <Button @onclick="@(e => Act(@Animal.Id))" class="hover:bg-blue-500 rounded">
+                ▶️
+            </Button>
+            <Button @onclick="@(e => Kill(@Animal.Id))" class="hover:bg-blue-500 rounded">
+                💀
+            </Button>
         }
-    </div>
-    @if (Animal.IsAlive)
-    {
-        <Button @onclick="@(e => Act(@Animal.Id))" class="hover:bg-blue-500 rounded">
-            ▶️
-        </Button>
-        <Button @onclick="@(e => Kill(@Animal.Id))" class="hover:bg-blue-500 rounded">
-            💀
-        </Button>
-    }
 
-</div>
+    </div>
