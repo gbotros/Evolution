@@ -26,17 +26,17 @@ namespace Evolution.Domain.PlantAggregate
             CreationTime = creationTime;
             GrowthAmount = DefaultGrowthAmount;
             Weight = DefaultGrowthAmount;
-            
+
         }
 
         protected Plant()
         {
-            
+
         }
 
-        public GameDays GetAgeInDays(DateTime now)
+        public double GetAge(DateTime now)
         {
-            return new GameDays(now - CreationTime);
+            return (now - CreationTime).TotalSeconds;
         }
 
         public DateTime CreationTime { get; private set; }

@@ -25,6 +25,5 @@ namespace Evolution.Domain.Common
         {
             domainEvents.Enqueue(domainEvent);
         }
-        
     }
 }

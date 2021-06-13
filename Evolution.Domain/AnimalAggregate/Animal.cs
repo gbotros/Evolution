@@ -20,9 +20,7 @@ namespace Evolution.Domain.AnimalAggregate
 
         private const uint SpeedMutationAmplitude = 5;
 
-        // TODO: review the math 
-        private readonly GameDays AdulthoodAge = new GameDays(0.01d);
-
+        private readonly int AdulthoodAge = 30; // sec
 
         public Animal(
             Guid id,
@@ -57,11 +55,6 @@ namespace Evolution.Domain.AnimalAggregate
 
         }
 
-        public GameDays GetAgeInDays(DateTime now)
-        {
-            return new GameDays(now - CreationTime);
-        }
-
         public DateTime CreationTime { get; private set; }
         public DateTime? DeathTime { get; private set; }
 
@@ -75,7 +68,7 @@ namespace Evolution.Domain.AnimalAggregate
         public int ChildrenCount { get; private set; }
 
         /// <summary>
-        /// How many Action can this animal do in one game hour
+        /// How many Action can this animal do in one hour Example Speed => 3600 equal t0 one action per sec
         /// </summary>
         public int Speed { get; private set; }
         public int Steps { get; private set; }
@@ -113,11 +106,19 @@ namespace Evolution.Domain.AnimalAggregate
             LastAction = now; // todo: check from unit tests
             NextAction = CalculateNextActionTime(now);
         }
+        public bool IsAdult(DateTime now)
+        {
+            return GetAge(now) >= AdulthoodAge;
+        }
 
+        public double GetAge(DateTime now)
+        {
+            return (now - CreationTime).TotalSeconds;
+        }
         private DateTime CalculateNextActionTime(DateTime now)
         {
             var velocity = 1d / Speed;
-            var timeSpan = GameDays.FromGameHours(velocity).TimeSpan;
+            var timeSpan = TimeSpan.FromHours(velocity);
             var nextActionTime = now + timeSpan;
             return nextActionTime;
         }
@@ -218,13 +219,7 @@ namespace Evolution.Domain.AnimalAggregate
 
             return newLocation;
         }
-
-        private bool IsAdult(DateTime now)
-        {
-            var age = GetAgeInDays(now);
-            return age >= AdulthoodAge;
-        }
-
+        
         private bool IsFoodAvailable()
         {
             var food = GetAvailableFood().ToList();
