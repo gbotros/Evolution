@@ -15,20 +15,17 @@ namespace Evolution.Services
         private IEvolutionContext Context { get; }
         private WorldSize WorldSize { get; }
         private IAnimalsFactory AnimalsFactory { get; }
-        private ILocationService LocationService { get; }
         private IGameCalender GameCalender { get; }
 
         public AnimalsService(
             IEvolutionContext context,
             WorldSize worldSize,
-            IAnimalsFactory animalsFactory, 
-            ILocationService locationService,
+            IAnimalsFactory animalsFactory,
             IGameCalender gameCalender)
         {
             Context = context;
             WorldSize = worldSize;
             AnimalsFactory = animalsFactory;
-            LocationService = locationService;
             GameCalender = gameCalender;
         }
 
@@ -43,7 +40,7 @@ namespace Evolution.Services
             AnimalsFactory.Initialize(animal, food);
 
             animal.Act(GameCalender.Now, WorldSize);
-            
+
             await Context.SaveChangesAsync();
         }
 
@@ -61,10 +58,16 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
+        public async Task DeleteAll()
+        {
+            Context.Animals.RemoveRange(Context.Animals);
+            await Context.SaveChangesAsync();
+        }
+
         public async Task<IList<AnimalDto>> Get()
         {
-             var animals = await Context.Animals.ToListAsync();
-             return animals.Select(MapToDto).ToList();
+            var animals = await Context.Animals.ToListAsync();
+            return animals.Select(MapToDto).ToList();
         }
 
         public async Task<AnimalDto> Get(Guid id)

@@ -18,6 +18,8 @@ namespace Evolution.Web.Models
 
             foreach (var animal in animals)
             {
+                if(!animal.IsAlive) continue;
+
                 var key = GenerateLocationStoreKey(animal.Location);
 
                 if (AnimalsStore.ContainsKey(key))
@@ -38,6 +40,8 @@ namespace Evolution.Web.Models
 
             foreach (var plant in plants)
             {
+                if (!plant.IsAlive) continue;
+
                 var key = GenerateLocationStoreKey(plant.Location);
 
                 if (PlantsStore.ContainsKey(key))

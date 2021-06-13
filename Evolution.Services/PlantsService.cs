@@ -37,6 +37,12 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
+        public async Task DeleteAll()
+        {
+            Context.Plants.RemoveRange(Context.Plants);
+            await Context.SaveChangesAsync();
+        }
+
         public async Task<IList<PlantDto>> Get()
         {
             var plants = await Context.Plants.ToListAsync();

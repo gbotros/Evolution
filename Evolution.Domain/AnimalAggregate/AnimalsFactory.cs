@@ -6,12 +6,12 @@ namespace Evolution.Domain.AnimalAggregate
 {
     public class AnimalsFactory : IAnimalsFactory
     {
-
-        private const int DefaultSpeed = 500;
+        // how many action per game hour
+        private const int DefaultSpeed = 60; // one action per real second
 
         // DefaultStepCost = DefaultSpeed * 2;
         // enough for 100 step on default values
-        private const int DefaultEnergy = 1_00_000;
+        private const int DefaultEnergy = 10_000;
 
         // equal to 200% DefaultEnergy
         // enough for 200 step on default values

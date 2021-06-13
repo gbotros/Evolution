@@ -45,6 +45,6 @@ namespace Evolution.Web.Services
         Task Kill(Guid id);
         Task Act(Guid id);
         Task<List<PlantDto>> GetAll();
-
+        
     }
 }

@@ -11,5 +11,6 @@ namespace Evolution.Services
         Task<PlantDto> Get(Guid plantId);
         Task Act(Guid plantId);
         Task CreateNew();
+        Task DeleteAll();
     }
 }

@@ -5,7 +5,7 @@ using Evolution.Dtos;
 
 namespace Evolution.Web.Services
 {
-    public class WorldSizeService : IWorldSizeService 
+    public class WorldSizeService : IWorldSizeService
     {
         private HttpClient Client { get; }
         private const string worldSizeUrl = "worldSize";
@@ -14,7 +14,7 @@ namespace Evolution.Web.Services
         {
             Client = client;
         }
-        
+
         public async Task<WorldSizeDto> GetWorldSize()
         {
             return await Client.GetFromJsonAsync<WorldSizeDto>(worldSizeUrl);

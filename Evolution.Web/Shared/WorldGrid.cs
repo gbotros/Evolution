@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using Evolution.Dtos;
 using Evolution.Web.Models;
 using Evolution.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -11,14 +13,13 @@ namespace Evolution.Web.Shared
     {
         public string newAnimalName;
 
-        [Inject]
-        private IAnimalsService AnimalsService { get; set; }
-        [Inject]
-        private IPlantsService PlantsService { get; set; }
-        [Inject]
-        private IWorldSizeService WorldSizeService { get; set; }
-        [Inject]
-        private WorldStore WorldStore { get; set; }
+        [Inject] private IAnimalsService AnimalsService { get; set; }
+        [Inject] private IPlantsService PlantsService { get; set; }
+        [Inject] private IWorldSizeService WorldSizeService { get; set; }
+        [Inject] private WorldStore WorldStore { get; set; }
+
+        private bool autoPlayMode { get; set; } = false;
+        private Timer plantsTimer { get; set; } = new(10000);
 
         protected override async Task OnInitializedAsync()
         {
@@ -27,6 +28,8 @@ namespace Evolution.Web.Shared
             await ReloadAnimals();
             await ReloadPlants();
             WorldStore.IsLoading = false;
+
+            plantsTimer.Elapsed += OnPlantsTimerOnElapsed;
         }
 
         public async Task CreateNewAnimal()
@@ -42,34 +45,27 @@ namespace Evolution.Web.Shared
             await ReloadPlants();
         }
 
-        private async Task AutoAct()
+        private async Task AutoPlay()
         {
-            while (true)
+            autoPlayMode = !autoPlayMode;
+            plantsTimer.Enabled = autoPlayMode;
+            if (!autoPlayMode) return;
+
+            List<AnimalDto> animals;
+            do
             {
-                var animals = WorldStore.GetAllLiveAnimals();
-                if(!animals.Any()) break;
+                animals = WorldStore.GetAllLiveAnimals();
+                if (!animals.Any()) break;
 
                 foreach (var animal in animals)
                 {
                     await AnimalsService.Act(animal.Id);
-                    await ReloadAnimals();
-                    await InvokeAsync(StateHasChanged);
-                    await Task.Delay(100);
+                    await Task.Delay(10);
                 }
-            }
-            //var timer = new Timer(1);
-            //timer.Enabled = !timer.Enabled;
-            //timer.Elapsed += async (object source, ElapsedEventArgs e) =>
-            //{
+                await ReloadAnimals();
+                await InvokeAsync(StateHasChanged);
+            } while (animals.Any() && autoPlayMode);
 
-            //    //var plants = WorldStore.GetAllLivePlants();
-            //    //foreach (var plant in plants)
-            //    //{
-            //    //    await PlantsService.Act(plant.Id);
-            //    //    await ReloadPlants();
-            //    //    await InvokeAsync(StateHasChanged);
-            //    //}
-            //};
         }
 
         private async Task ReloadAnimals()
@@ -84,6 +80,23 @@ namespace Evolution.Web.Shared
             var plants = await PlantsService.GetAll();
             WorldStore.SetPlants(plants);
             StateHasChanged();
+        }
+
+        private async void OnPlantsTimerOnElapsed(object source, ElapsedEventArgs e)
+        {
+            var plants = WorldStore.GetAllLivePlants();
+            if (!plants.Any())
+            {
+                await CreateNewPlant();
+                await CreateNewPlant();
+            }
+            foreach (var plant in plants)
+            {
+                await PlantsService.Act(plant.Id);
+                await InvokeAsync(StateHasChanged);
+            }
+
+            await ReloadPlants();
         }
     }
 }

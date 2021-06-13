@@ -1,11 +1,16 @@
-﻿<div>
+﻿🐓
+
+
+@*<div>
         <div class="@(Animal.IsAlive ? "" : "text-red-300")">
+            🐓
+
             @Animal.Name
 
             @if (Animal.IsAlive)
             {
-                <span> | E: @(Animal.Energy/1000) K</span>
-                <span> | S: @Animal.Steps</span>
+                <span> @(Animal.Energy/1000)K</span>
+                <span> |S:@Animal.Steps|</span>
             }
         </div>
         @if (Animal.IsAlive)
@@ -18,4 +23,4 @@
             </Button>
         }
 
-    </div>
+    </div>*@

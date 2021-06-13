@@ -182,6 +182,7 @@ namespace Evolution.Domain.AnimalAggregate
                 food.EatInto(availableFood);
                 StoredFood += availableFood;
 
+                Weight += availableFood;
                 if (!IsHungry()) break;
             }
         }
@@ -194,8 +195,8 @@ namespace Evolution.Domain.AnimalAggregate
         private int GetMutatedSpeed()
         {
             var minMutation = -1 * (int)SpeedMutationAmplitude;
-            var maxMutation = (int)SpeedMutationAmplitude + 1;
-            var mutation = new Random().Next(minMutation, maxMutation);
+            var maxMutation = (int)SpeedMutationAmplitude;
+            var mutation = new Random().Next(minMutation, maxMutation + 1);
 
             var mutantSpeed = Speed + mutation;
 
@@ -260,8 +261,8 @@ namespace Evolution.Domain.AnimalAggregate
                 $"{Name}:s{ChildrenCount}",
                 new Location(Location.Row, Location.Column),
                 Energy,
-                FoodStorageCapacity, // TODO: allow mutations
                 GetMutatedSpeed(),
+                FoodStorageCapacity, // TODO: allow mutations
                 Id);
 
             RaiseEvent(sonBornEvent);
