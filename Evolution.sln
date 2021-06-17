@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Domain", "Evoluti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Domain.Tests", "Evolution.Domain.Tests\Evolution.Domain.Tests.csproj", "{EF9E0BFD-84C3-4C75-AAFD-6539747F1F22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Test.ConsoleClient", "Evolution.Test.ConsoleClient\Evolution.Test.ConsoleClient.csproj", "{72ACCACE-5E1F-4707-A0E3-BD209D0FF69B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Services", "Evolution.Services\Evolution.Services.csproj", "{3819B5CB-AD02-4D53-9ABE-D6491FE2E4FE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Data", "Evolution.Data\Evolution.Data.csproj", "{7692C634-34AE-435E-8376-63D0870770F7}"
@@ -19,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Web", "Evolution.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Dtos", "Evolution.Dtos\Evolution.Dtos.csproj", "{F7F99FF8-0151-45A1-93E4-1237628FEC62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Processor", "Evolution.Processor\Evolution.Processor.csproj", "{9AEC7C38-D59F-4BE5-9B8E-6C5C2CF6B63A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evolution.Processor", "Evolution.Processor\Evolution.Processor.csproj", "{9AEC7C38-D59F-4BE5-9B8E-6C5C2CF6B63A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{EF9E0BFD-84C3-4C75-AAFD-6539747F1F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF9E0BFD-84C3-4C75-AAFD-6539747F1F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF9E0BFD-84C3-4C75-AAFD-6539747F1F22}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72ACCACE-5E1F-4707-A0E3-BD209D0FF69B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72ACCACE-5E1F-4707-A0E3-BD209D0FF69B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72ACCACE-5E1F-4707-A0E3-BD209D0FF69B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72ACCACE-5E1F-4707-A0E3-BD209D0FF69B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3819B5CB-AD02-4D53-9ABE-D6491FE2E4FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3819B5CB-AD02-4D53-9ABE-D6491FE2E4FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3819B5CB-AD02-4D53-9ABE-D6491FE2E4FE}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -44,17 +44,17 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
-        public async Task<bool> Act()
+        public async Task<string> Act()
         {
-            var nextAnimalId = Context.Animals
+            var nextAnimal = Context.Animals
                 .Where(a => a.IsAlive)
                 .OrderBy(a => a.NextAction)
-                .FirstOrDefault(a => a.NextAction <= GameCalender.Now)
-                ?.Id;
-            if (!nextAnimalId.HasValue) return false;
+                .FirstOrDefault(a => a.NextAction <= GameCalender.Now);
 
-            await Act(nextAnimalId.Value);
-            return true;
+            if (nextAnimal == null) return null;
+
+            await Act(nextAnimal.Id);
+            return nextAnimal.Name;
         }
 
         public async Task CreateNew(string name)

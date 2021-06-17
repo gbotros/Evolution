@@ -19,7 +19,7 @@ namespace Evolution.Web.Shared
         [Inject] private WorldStore WorldStore { get; set; }
 
         private bool autoPlayMode { get; set; } = false;
-        private Timer Timer { get; set; } = new(500);
+        private Timer Timer { get; set; } = new(1000);
 
         protected override async Task OnInitializedAsync()
         {

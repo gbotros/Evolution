@@ -10,7 +10,7 @@ namespace Evolution.Services
         Task<IList<AnimalDto>> Get();
         Task<AnimalDto> Get(Guid id);
         Task Act(Guid id);
-        Task<bool> Act();
+        Task<string> Act();
         Task CreateNew(string name);
         Task Kill(Guid id);
         Task DeleteAll( );
