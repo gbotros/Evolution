@@ -13,6 +13,7 @@ namespace Evolution.Web.Shared
         [Inject] private IWorldService WorldService { get; set; }
         [Inject] private IAnimalsDefaultsService AnimalsDefaultsService { get; set; }
         [Inject] private WorldStore WorldStore { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; }
 
         public AnimalDefaultsDto D { get; } = new AnimalDefaultsDto();
 
@@ -22,7 +23,7 @@ namespace Evolution.Web.Shared
             await ResetAnimalsDefaults();
             StateHasChanged();
 
-            NavigationManager.NavigateTo("reset");
+            NavigationManager.NavigateTo("/");
         }
 
         private async Task DeleteAllCreatures()
