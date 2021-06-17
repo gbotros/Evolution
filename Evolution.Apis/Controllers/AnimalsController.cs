@@ -7,7 +7,7 @@ using Evolution.Services;
 
 namespace Evolution.Apis.Controllers
 {
-    [Route("apis/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AnimalsController : ControllerBase
     {
@@ -29,9 +29,12 @@ namespace Evolution.Apis.Controllers
         public async Task Post([FromBody] string name) => await Service.CreateNew(name);
 
         [HttpPut]
+        public async Task Put() => await Service.Act();
+
+        [HttpPut]
         [Route("{id}")]
         public async Task Put([FromRoute] Guid id) => await Service.Act(id);
-        
+
         [HttpDelete]
         [Route("{id}")]
         public async Task Delete([FromRoute] Guid id) => await Service.Kill(id);

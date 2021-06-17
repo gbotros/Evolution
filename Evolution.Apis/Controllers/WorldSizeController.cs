@@ -4,7 +4,7 @@ using Evolution.Dtos;
 
 namespace Evolution.Apis.Controllers
 {
-    [Route("apis/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class WorldSizeController : ControllerBase
     {

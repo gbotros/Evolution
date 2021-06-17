@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Evolution.Processor": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

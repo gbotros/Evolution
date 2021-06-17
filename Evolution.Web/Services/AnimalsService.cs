@@ -36,6 +36,6 @@ namespace Evolution.Web.Services
         {
             return await Client.GetFromJsonAsync<List<AnimalDto>>(animalsUrl);
         }
-        
+
     }
 }

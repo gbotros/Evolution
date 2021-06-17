@@ -9,6 +9,7 @@ namespace Evolution.Services
     {
         Task<IList<PlantDto>> Get();
         Task<PlantDto> Get(Guid plantId);
+        Task GrowAll();
         Task Act(Guid plantId);
         Task CreateNew();
         Task DeleteAll();

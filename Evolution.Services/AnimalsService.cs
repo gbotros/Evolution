@@ -44,6 +44,19 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
+        public async Task<bool> Act()
+        {
+            var nextAnimalId = Context.Animals
+                .Where(a => a.IsAlive)
+                .OrderBy(a => a.NextAction)
+                .FirstOrDefault(a => a.NextAction <= GameCalender.Now)
+                ?.Id;
+            if (!nextAnimalId.HasValue) return false;
+
+            await Act(nextAnimalId.Value);
+            return true;
+        }
+
         public async Task CreateNew(string name)
         {
             var newAnimal = AnimalsFactory.CreateNew(name);
@@ -86,15 +99,20 @@ namespace Evolution.Services
                 ChildrenCount = animal.ChildrenCount,
                 CreationTime = animal.CreationTime,
                 DeathTime = animal.DeathTime,
+                MinEnergy = animal.MinEnergy,
+                MaxEnergy = animal.MaxEnergy,
                 Energy = animal.Energy,
                 FoodStorageCapacity = animal.FoodStorageCapacity,
                 Name = animal.Name,
                 ParentId = animal.ParentId,
+                MinSpeed = animal.MinSpeed,
+                MaxSpeed = animal.MaxSpeed,
                 Speed = animal.Speed,
                 Steps = animal.Steps,
                 StoredFood = animal.StoredFood,
                 LastAction = animal.LastAction,
                 NextAction = animal.NextAction,
+                LastChildAt = animal.LastChildAt,
                 Location = new LocationDto()
                 {
                     Column = animal.Location.Column,

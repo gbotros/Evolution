@@ -1,4 +1,21 @@
-﻿🐓
+﻿
+<div>
+
+    <div class="bg-gray-50 rounded-sm ">
+        <div id="energyBar-@Animal.Id" class="rounded-sm text-xs @GetEnergyPercentageColor()" style="width: @GetEnergyPercentage()%; height: 5px;">
+            @*@GetEnergyPercentage()%*@
+        </div>
+    </div>
+    <div name="food" class="flex flex-wrap">
+        @for (int i = 1; i <= Animal.FoodStorageCapacity; i++)
+        {
+            <div class="rounded-sm border border-gray-300 @((i <= Animal.StoredFood) ? "bg-green-500" : "border-gray-500")" style="width: 5px; height: 5px"></div>
+        }
+    </div>
+    <div> 🐓 </div>
+
+</div>
+
 
 
 @*<div>

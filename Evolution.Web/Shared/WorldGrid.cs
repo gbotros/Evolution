@@ -19,7 +19,7 @@ namespace Evolution.Web.Shared
         [Inject] private WorldStore WorldStore { get; set; }
 
         private bool autoPlayMode { get; set; } = false;
-        private Timer plantsTimer { get; set; } = new(10000);
+        private Timer Timer { get; set; } = new(500);
 
         protected override async Task OnInitializedAsync()
         {
@@ -29,12 +29,13 @@ namespace Evolution.Web.Shared
             await ReloadPlants();
             WorldStore.IsLoading = false;
 
-            plantsTimer.Elapsed += OnPlantsTimerOnElapsed;
+            Timer.Enabled = true;
+            Timer.Elapsed += OnTimerElapsed;
         }
 
         public async Task CreateNewAnimal()
         {
-            await AnimalsService.CreateNew(newAnimalName);
+            await AnimalsService.CreateNew(newAnimalName ?? "Animal");
             await ReloadAnimals();
         }
 
@@ -45,28 +46,49 @@ namespace Evolution.Web.Shared
             await ReloadPlants();
         }
 
-        private async Task AutoPlay()
-        {
-            autoPlayMode = !autoPlayMode;
-            plantsTimer.Enabled = autoPlayMode;
-            if (!autoPlayMode) return;
+        //private async Task AutoPlay()
+        //{
+        //    autoPlayMode = !autoPlayMode;
+        //    plantsTimer.Enabled = autoPlayMode;
+        //    if (!autoPlayMode) return;
 
-            List<AnimalDto> animals;
-            do
-            {
-                animals = WorldStore.GetAllLiveAnimals();
-                if (!animals.Any()) break;
+        //    List<AnimalDto> animals;
+        //    do
+        //    {
+        //        animals = WorldStore.GetAllLiveAnimals();
+        //        if (!animals.Any()) break;
 
-                foreach (var animal in animals)
-                {
-                    await AnimalsService.Act(animal.Id);
-                    await Task.Delay(10);
-                }
-                await ReloadAnimals();
-                await InvokeAsync(StateHasChanged);
-            } while (animals.Any() && autoPlayMode);
+        //        foreach (var animal in animals)
+        //        {
+        //            await AnimalsService.Act(animal.Id);
+        //            await Task.Delay(10);
+        //        }
+        //        await ReloadAnimals();
+        //        await InvokeAsync(StateHasChanged);
+        //    } while (animals.Any() && autoPlayMode);
 
-        }
+        //}        //private async Task AutoPlay()
+        //{
+        //    autoPlayMode = !autoPlayMode;
+        //    plantsTimer.Enabled = autoPlayMode;
+        //    if (!autoPlayMode) return;
+
+        //    List<AnimalDto> animals;
+        //    do
+        //    {
+        //        animals = WorldStore.GetAllLiveAnimals();
+        //        if (!animals.Any()) break;
+
+        //        foreach (var animal in animals)
+        //        {
+        //            await AnimalsService.Act(animal.Id);
+        //            await Task.Delay(10);
+        //        }
+        //        await ReloadAnimals();
+        //        await InvokeAsync(StateHasChanged);
+        //    } while (animals.Any() && autoPlayMode);
+
+        //}
 
         private async Task ReloadAnimals()
         {
@@ -96,6 +118,12 @@ namespace Evolution.Web.Shared
                 await InvokeAsync(StateHasChanged);
             }
 
+            await ReloadPlants();
+        }
+
+        private async void OnTimerElapsed(object source, ElapsedEventArgs e)
+        {
+            await ReloadAnimals();
             await ReloadPlants();
         }
     }

@@ -18,7 +18,7 @@ namespace Evolution.Web.Models
 
             foreach (var animal in animals)
             {
-                if(!animal.IsAlive) continue;
+                if (!animal.IsAlive) continue;
 
                 var key = GenerateLocationStoreKey(animal.Location);
 
@@ -75,6 +75,24 @@ namespace Evolution.Web.Models
         {
             var key = GenerateLocationStoreKey(row, column);
             return PlantsStore.ContainsKey(key) ? PlantsStore[key] : new List<PlantDto>();
+        }
+
+        public int GetAnimalsCount()
+        {
+            return AnimalsStore.Values.Select(l => l.Count).Sum();
+        }
+
+        public double GetAnimalsAvgSpeed()
+        {
+            var animals = AnimalsStore.Values.SelectMany(l => l).ToList();
+            if (!animals.Any()) return 0;
+
+            return animals.Average(a => a.Speed);
+        }
+
+        public int GetAvailableFood()
+        {
+            return PlantsStore.Values.Sum(l => l.Sum(p => p.Weight));
         }
 
         private string GenerateLocationStoreKey(LocationDto location)

@@ -8,46 +8,50 @@ namespace Evolution.Domain.AnimalAggregate
 {
     public class Animal : AggregateRoot
     {
-        private const int MinSpeed = 1;
-        private const int MaxSpeed = 1000;
-
-        private const int MinEnergy = 1;
-        private const int MaxEnergy = 1_00_000;
-
-        // one food enough for 10 step on default values
-        private const int OneFoodToEnergy = 5_000;
-        private const double OneEnergyToFood = 1d / 5_000d;
-
-        private const uint SpeedMutationAmplitude = 5;
-
-        private readonly int AdulthoodAge = 30; // sec
 
         public Animal(
             Guid id,
+            Guid? parentId,
             string name,
             Location location,
             DateTime creationTime,
             bool isAlive,
+            int minSpeed,
+            int maxSpeed,
+            int speed,
+            uint speedMutationAmplitude,
+            int minEnergy,
+            int maxEnergy,
             int energy,
             int foodStorageCapacity,
-            int speed,
-            Guid? parentId) : base(id)
+            int oneFoodToEnergy,
+            int adulthoodAge
+        ) : base(id)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
             if (speed <= 0) throw new ApplicationException("Speed can not be less than one action per game hour");
 
             Id = id;
+            ParentId = parentId;
             Name = name;
             Location = location;
-
-            //Food = food ?? new List<IPlantFood>();
-            IsAlive = isAlive;
-            Energy = energy;
-            FoodStorageCapacity = foodStorageCapacity;
-
             CreationTime = creationTime;
+            IsAlive = isAlive;
+
+            MinSpeed = minSpeed;
+            MaxSpeed = maxSpeed;
             Speed = speed;
-            ParentId = parentId;
+            SpeedMutationAmplitude = speedMutationAmplitude;
+
+            MinEnergy = minEnergy;
+            MaxEnergy = maxEnergy;
+            Energy = energy;
+
+            FoodStorageCapacity = foodStorageCapacity;
+            OneFoodToEnergy = oneFoodToEnergy;
+            AdulthoodAge = adulthoodAge;
+
+            NextAction = creationTime;
         }
 
         protected Animal()
@@ -55,12 +59,12 @@ namespace Evolution.Domain.AnimalAggregate
 
         }
 
-        public DateTime CreationTime { get; private set; }
+        public DateTime CreationTime { get; }
         public DateTime? DeathTime { get; private set; }
 
         public bool IsAlive { get; private set; }
         public string Name { get; private set; }
-        public Guid? ParentId { get; private set; }
+        public Guid? ParentId { get; }
         public int Weight { get; private set; }
         public Location Location { get; private set; }
         public IReadOnlyCollection<IPlantFood> Food { get; internal set; }
@@ -68,9 +72,11 @@ namespace Evolution.Domain.AnimalAggregate
         public int ChildrenCount { get; private set; }
 
         /// <summary>
-        /// How many Action can this animal do in one hour Example Speed => 3600 equal t0 one action per sec
+        /// How many Action can this animal do in one hour Example Speed => 3600 equal to one action per sec
         /// </summary>
         public int Speed { get; private set; }
+        public int MinSpeed { get; private set; }
+        public int MaxSpeed { get; private set; }
         public int Steps { get; private set; }
 
         public int StoredFood { get; private set; }
@@ -88,8 +94,20 @@ namespace Evolution.Domain.AnimalAggregate
             }
         }
 
-        public DateTime LastAction { get; set; }
-        public DateTime NextAction { get; set; }
+        public int MinEnergy { get; private set; }
+        public int MaxEnergy { get; private set; }
+
+        public DateTime LastAction { get; private set; }
+        public DateTime NextAction { get; private set; }
+
+        public bool IsAdult { get; private set; }
+
+        public int OneFoodToEnergy { get; private set; }
+
+        public uint SpeedMutationAmplitude { get; private set; }
+
+        public int AdulthoodAge { get; private set; }
+        public DateTime LastChildAt { get; private set; }
 
         private int StepCost => Speed * 2; // Energy unit
 
@@ -100,21 +118,19 @@ namespace Evolution.Domain.AnimalAggregate
                 return;
             }
 
+            UpdateIsAdult(now);
             SatisfyEssentialNeeds(now, worldSize);
             Digest();
 
             LastAction = now; // todo: check from unit tests
             NextAction = CalculateNextActionTime(now);
         }
-        public bool IsAdult(DateTime now)
-        {
-            return GetAge(now) >= AdulthoodAge;
-        }
 
         public double GetAge(DateTime now)
         {
             return (now - CreationTime).TotalSeconds;
         }
+
         private DateTime CalculateNextActionTime(DateTime now)
         {
             var velocity = 1d / Speed;
@@ -156,15 +172,21 @@ namespace Evolution.Domain.AnimalAggregate
 
         private bool CanReproduce(DateTime now)
         {
-            return IsAdult(now) && !IsHungry();
+            if (!IsAdult) return false;
+            if (IsHungry()) return false;
+
+            var afterBirthBreak = 30;//sec
+            if ((now - LastChildAt).TotalSeconds <= afterBirthBreak) return false;
+
+            return true;
         }
 
-        private static double ConvertEnergyToFood(int energy)
+        private double ConvertEnergyToFood(int energy)
         {
-            return energy * OneEnergyToFood;
+            return energy / (double)OneFoodToEnergy;
         }
 
-        private static int ConvertFoodToEnergy(int food)
+        private int ConvertFoodToEnergy(int food)
         {
             return food * OneFoodToEnergy;
         }
@@ -177,6 +199,7 @@ namespace Evolution.Domain.AnimalAggregate
 
             foreach (var food in foods)
             {
+                // TODO: Convert to DomainEvent
                 var neededFood = FoodStorageCapacity - StoredFood;
                 var availableFood = Math.Min(neededFood, food.Weight);
 
@@ -219,7 +242,7 @@ namespace Evolution.Domain.AnimalAggregate
 
             return newLocation;
         }
-        
+
         private bool IsFoodAvailable()
         {
             var food = GetAvailableFood().ToList();
@@ -249,6 +272,7 @@ namespace Evolution.Domain.AnimalAggregate
             if (!CanReproduce(now)) return;
 
             ChildrenCount++;
+            LastChildAt = now;
             // TODO: different animals can have different reproduction cost and can have different number of children
             Energy /= 2; // Son cost 50% of the Parent Energy
             var sonBornEvent = new AnimalBornEvent
@@ -279,5 +303,9 @@ namespace Evolution.Domain.AnimalAggregate
             }
         }
 
+        private void UpdateIsAdult(DateTime now)
+        {
+            IsAdult = IsAdult || GetAge(now) >= AdulthoodAge;
+        }
     }
 }

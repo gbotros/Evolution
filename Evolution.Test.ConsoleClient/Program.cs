@@ -50,12 +50,12 @@ namespace Evolution.Test.ConsoleClient
 
         public async Task<List<AnimalDto>> GetAll()
         {
-            return await Client.GetFromJsonAsync<List<AnimalDto>>("apis/animals");
+            return await Client.GetFromJsonAsync<List<AnimalDto>>("api/animals");
         }
 
         public async Task Act(Guid id)
         {
-          var response =  await Client.PutAsJsonAsync($"apis/animals/{id}", "");
+          var response =  await Client.PutAsJsonAsync($"api/animals/{id}", "");
         }
     }
 

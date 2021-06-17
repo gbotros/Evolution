@@ -1,5 +1,66 @@
 ﻿
+@using Radzen.Blazor;
+
+<div class="flex flex-col">
+    <div class="flex flex-row">
+        <div> Speed </div>
+        <div> <input @bind=@D.Speed type="number" step="1" min="@D.MinSpeed" max="@D.MaxSpeed" class="@Css.Input"> </div>
+    </div>
+    <div> @D.Speed Actions per hour </div>
+    <div> @((double)D.Speed/60/60) Actions per sec </div>
+    <div> Costs @(D.Speed * 2) Energy unit per action </div>
+</div>
+
+<div class="flex flex-col">
+    <div class="flex flex-row">
+        <div> Energy </div>
+        <div> <input @bind=@D.Energy type="number" step="1" min="@D.MinEnergy" max="@D.MaxEnergy" class="@Css.Input"> </div>
+    </div>
+    <div> @D.Energy Energy unit </div>
+    <div> Enough to @(D.Energy / (D.Speed*2)) Actions </div>
+</div>
+
+<div class="flex flex-col">
+    <div class="flex flex-row">
+        <div> FoodStorageCapacity </div>
+        <div> <input @bind=@D.FoodStorageCapacity type="number" step="1" min="0" max="100" class="@Css.Input"> </div>
+    </div>
+    <div> @D.FoodStorageCapacity Food </div>
+    <div> Equal to @(D.FoodStorageCapacity * D.OneFoodToEnergy) Energy </div>
+    <div> Enough to @((D.FoodStorageCapacity * D.OneFoodToEnergy) / (D.Speed * 2) ) Actions </div>
+</div>
+
+<div class="flex flex-col">
+    <div class="flex flex-row">
+        <div> OneFoodToEnergy  </div>
+        <div> <input @bind=@D.OneFoodToEnergy type="number" step="1" min="1" max="2_00_000" class="@Css.Input"> </div>
+    </div>
+    <div> @D.OneFoodToEnergy Energy uint per one food unit </div>
+    <div> @(D.OneFoodToEnergy /(D.Speed*2)) Actions per one food unit </div>
+</div>
+
+<div class="flex flex-col">
+    <div class="flex flex-row">
+        <div> SpeedMutationAmplitude </div>
+        <div> <input @bind=@D.SpeedMutationAmplitude type="number" step="1" min="0" max="1000" class="@Css.Input"> </div>
+    </div>
+    <div> Up to +-@D.SpeedMutationAmplitude speed mutation could happen on reproduction </div>
+
+
+</div>
+
+<div class="flex flex-col">
+    <div class="flex flex-row">
+        <div> AdulthoodAge</div>
+        <div> <input @bind=@D.AdulthoodAge type="number" step="1" min="1" max="100" class="@Css.Input"> </div>
+    </div>
+    <div> @D.AdulthoodAge Sec</div>
+</div>
+
 <Button @onclick="@(e => ResetTheWorld())"
-        class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+        class="@Css.Button">
     Reset The World
 </Button>
+
+
+

@@ -18,7 +18,6 @@ namespace Evolution.Data
         private EvolutionContextOptions Options { get; }
 
         private IMediator Mediator { get; }
-        //private IDomainEventDispatcher Dispatcher { get; }
 
         public EvolutionContext(
             EvolutionContextOptions options,
@@ -33,6 +32,11 @@ namespace Evolution.Data
             await DispatchDomainEvents();
             var res = await base.SaveChangesAsync(cancellationToken);
             return res;
+        }
+
+        public async Task GrowAll()
+        {
+            await Database.ExecuteSqlRawAsync("UPDATE Plants SET Weight = Weight + GrowthAmount WHERE IsAlive = 1");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

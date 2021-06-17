@@ -66,7 +66,7 @@ namespace Evolution.Domain.PlantAggregate
             {
                 var originalWeight = Weight;
                 Weight = 0;
-                Die();
+                // Die(); // TODO: check later if I want plant to die on weight zero
                 return originalWeight;
             }
             else

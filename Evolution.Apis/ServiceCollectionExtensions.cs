@@ -27,8 +27,10 @@ namespace Evolution.Apis
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddSingleton(new EvolutionContextOptions(connectionString, true));
             services.AddScoped<IEvolutionContext, EvolutionContext>();
-            
+
             services.AddMediatR(typeof(AnimalBornEventHandler).GetTypeInfo().Assembly);
+
+            services.AddSingleton(new AnimalDefaults());
         }
 
         private static WorldSize CreateWorldSize(IConfiguration Configuration)

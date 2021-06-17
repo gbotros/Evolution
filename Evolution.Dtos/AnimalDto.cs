@@ -16,14 +16,20 @@ namespace Evolution.Dtos
 
         public int ChildrenCount { get; set; }
 
+        public int MinSpeed { get; set; }
+        public int MaxSpeed { get; set; }
         public int Speed { get; set; }
         public int Steps { get; set; }
 
         public int StoredFood { get; set; }
         public int FoodStorageCapacity { get; set; }
 
+        public int MinEnergy { get; set; }
+        public int MaxEnergy { get; set; }
         public int Energy { get; set; }
         public DateTime LastAction { get; set; }
         public DateTime NextAction { get; set; }
+
+        public DateTime LastChildAt { get; set; }
     }
 }

@@ -19,6 +19,10 @@ namespace Evolution.Services
             Context = context;
             PlantsFactory = plantsFactory;
         }
+        public async Task GrowAll()
+        {
+            await Context.GrowAll();
+        }
 
         public async Task Act(Guid plantId)
         {

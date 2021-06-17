@@ -1,50 +1,62 @@
 ﻿@using Evolution.Web.Models
 
-<input @bind-value="@newAnimalName"
-       placeholder="Enter new animal name"
-       class="border border-gray-400 p-2 rounded-lg" />
-<Button @onclick="@(e => CreateNewAnimal())"
-        class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-    new Animal
-</Button>
-<Button @onclick="@(e => CreateNewPlant())"
-        class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-    new Plant
-</Button>
+<div>
+    <div>
+        <input @bind-value="@newAnimalName"
+               placeholder="Enter new animal name"
+               class="@Css.Input" />
+        <Button @onclick="@(e => CreateNewAnimal())"
+                class="@Css.Button">
+            new Animal
+        </Button>
+        <Button @onclick="@(e => CreateNewPlant())"
+                class="@Css.Button">
+            new Plant
+        </Button>
+    </div>
 
-<Button @onclick="@(e => AutoPlay())"
-         class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-    AutoPlay switch
-</Button>
-
-@if (WorldStore.IsLoading)
-{
-    <div> Loading... </div>
-}
-else
-{
-    @for (var r = 0; r < WorldStore.WorldSize.Height; r++)
-    {
-        <div name="row-@r" class="flex items-center">
-            @for (var c = 0; c < WorldStore.WorldSize.Width; c++)
-            {
-                <div name="col-@c" class="flex items-center">
-                    <div  name="cell-@r-@c" class="border-2 border-gray-50 rounded-sm @(!WorldStore.GetAnimalsAt(r, c).Any() ? "bg-gray-100" : "")" style="width: 100px; height: 100px;">
-                        ( @r , @c )
-
-                        @foreach (var animal in WorldStore.GetAnimalsAt(r, c))
-                        {
-                            <AnimalComponent Animal="@animal" OnActed="@ReloadAnimals"></AnimalComponent>
-                        }
-
-                        @foreach (var plant in WorldStore.GetPlantsAt(r, c))
-                        {
-                            <PlantComponent Plant="@plant" OnActed="@ReloadPlants"></PlantComponent>
-                        }
-
-                    </div>
-                </div>
-            }
+    @*<Button @onclick="@(e => AutoPlay())" class="@Css.Button"> AutoPlay switch </Button>*@
+    <div>
+        <div>
+            Count: @WorldStore.GetAnimalsCount();
         </div>
+        <div>
+            Avg Speed: @WorldStore.GetAnimalsAvgSpeed();
+        </div>
+        <div>
+            Food: @WorldStore.GetAvailableFood();
+        </div>
+    </div>
+
+    @if (WorldStore.IsLoading)
+    {
+        <div> Loading... </div>
     }
-}
+    else
+    {
+        @for (var r = 0; r < WorldStore.WorldSize.Height; r++)
+        {
+            <div name="row-@r" class="flex items-center">
+                @for (var c = 0; c < WorldStore.WorldSize.Width; c++)
+                {
+                    <div name="col-@c" class="flex items-center">
+                        <div name="cell-@r-@c" class="flex flex-wrap border-2 border-gray-50 rounded-sm @(!WorldStore.GetAnimalsAt(r, c).Any() ? "bg-gray-100" : "")" style="width: 100px; height: 100px;">
+                            ( @r , @c )
+
+                            @foreach (var plant in WorldStore.GetPlantsAt(r, c))
+                            {
+                                <PlantComponent Plant="@plant" OnActed="@ReloadPlants"></PlantComponent>
+                            }
+
+                            @foreach (var animal in WorldStore.GetAnimalsAt(r, c))
+                            {
+                                <AnimalComponent Animal="@animal" OnActed="@ReloadAnimals"></AnimalComponent>
+                            }
+
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>

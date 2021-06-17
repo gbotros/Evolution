@@ -8,8 +8,9 @@ namespace Evolution.Data
 {
     public interface IEvolutionContext
     {
-        public DbSet<Animal> Animals { get; set; }
-        public DbSet<Plant> Plants { get; set; }
+        DbSet<Animal> Animals { get; set; }
+        DbSet<Plant> Plants { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task GrowAll();
     }
 }

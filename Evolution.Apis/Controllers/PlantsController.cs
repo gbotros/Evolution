@@ -7,7 +7,7 @@ using Evolution.Services;
 
 namespace Evolution.Apis.Controllers
 {
-    [Route("apis/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PlantsController : ControllerBase
     {

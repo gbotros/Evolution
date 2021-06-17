@@ -34,6 +34,18 @@ namespace Evolution.Web.Shared
             await Connector.Kill(id);
             await OnActed.InvokeAsync(Animal);
         }
-        
+
+        private int GetEnergyPercentage()
+        {
+            return Animal.Energy * 100 / Animal.MaxEnergy;
+        }
+
+        private string GetEnergyPercentageColor()
+        {
+            var percentage = GetEnergyPercentage();
+            if (percentage > 30) return "bg-green-300";
+            if (percentage > 10) return "bg-yellow-300";
+            return "bg-red-300";
+        }
     }
 }

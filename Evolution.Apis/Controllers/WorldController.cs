@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Evolution.Services;
 
 namespace Evolution.Apis.Controllers
 {
-    [Route("apis/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class WorldController : ControllerBase
     {
