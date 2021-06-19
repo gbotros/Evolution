@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32.SafeHandles;
-
-namespace Evolution.Dtos
+﻿namespace Evolution.Dtos
 {
     public class AnimalDefaultsDto
     {

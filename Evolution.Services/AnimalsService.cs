@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Evolution.Data;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
-using Evolution.Domain.GameSettingsAggregate;
 using Evolution.Dtos;
 using Microsoft.EntityFrameworkCore;
 

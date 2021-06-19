@@ -1,5 +1,4 @@
 using System;
-using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
 
 namespace Evolution.Domain.GameSettingsAggregate
