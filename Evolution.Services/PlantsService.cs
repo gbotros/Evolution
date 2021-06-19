@@ -36,7 +36,8 @@ namespace Evolution.Services
 
         public async Task CreateNew()
         {
-            var newPlant = PlantsFactory.CreateNew();
+            var settings = Context.GameSettings.First();
+            var newPlant = PlantsFactory.CreateNew(settings);
             await Context.Plants.AddAsync(newPlant);
             await Context.SaveChangesAsync();
         }

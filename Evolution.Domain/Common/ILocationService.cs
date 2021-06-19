@@ -1,7 +1,9 @@
-﻿namespace Evolution.Domain.Common
+﻿using Evolution.Domain.GameSettingsAggregate;
+
+namespace Evolution.Domain.Common
 {
     public interface ILocationService
     {
-        Location GetRandom();
+        Location GetRandom(WorldSize worldSize);
     }
 }

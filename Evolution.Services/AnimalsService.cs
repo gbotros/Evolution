@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Evolution.Data;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
+using Evolution.Domain.GameSettingsAggregate;
 using Evolution.Dtos;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,33 +14,25 @@ namespace Evolution.Services
     public class AnimalsService : IAnimalsService
     {
         private IEvolutionContext Context { get; }
-        private WorldSize WorldSize { get; }
         private IAnimalsFactory AnimalsFactory { get; }
         private IGameCalender GameCalender { get; }
 
         public AnimalsService(
             IEvolutionContext context,
-            WorldSize worldSize,
             IAnimalsFactory animalsFactory,
             IGameCalender gameCalender)
         {
             Context = context;
-            WorldSize = worldSize;
             AnimalsFactory = animalsFactory;
             GameCalender = gameCalender;
         }
 
         public async Task Act(Guid id)
         {
-            var animal = await Context.Animals.FindAsync(id);
+            var animal = await LoadAnimal(id);
             if (animal == null) return;
-            var food = Context.Plants.Where(p =>
-                p.IsAlive
-                && p.Location.Row == animal.Location.Row
-                && p.Location.Column == animal.Location.Column).ToList();
-            AnimalsFactory.Initialize(animal, food);
 
-            animal.Act(GameCalender.Now, WorldSize);
+            animal.Act(GameCalender.Now);
 
             await Context.SaveChangesAsync();
         }
@@ -59,7 +52,8 @@ namespace Evolution.Services
 
         public async Task CreateNew(string name)
         {
-            var newAnimal = AnimalsFactory.CreateNew(name);
+            var settings = Context.GameSettings.First();
+            var newAnimal = AnimalsFactory.CreateNew(name, settings);
             await Context.Animals.AddAsync(newAnimal);
             await Context.SaveChangesAsync();
         }
@@ -120,6 +114,23 @@ namespace Evolution.Services
                     Name = animal.Location.Name
                 }
             };
+        }
+
+        private async Task<Animal> LoadAnimal(Guid id)
+        {
+            var animal = await Context
+                .Animals
+                .Include(a => a.Settings)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (animal == null) return null;
+            var food = Context.Plants.Where(p =>
+                p.IsAlive
+                && p.Location.Row == animal.Location.Row
+                && p.Location.Column == animal.Location.Column).ToList();
+            AnimalsFactory.Initialize(animal, food);
+
+            return animal;
         }
     }
 }

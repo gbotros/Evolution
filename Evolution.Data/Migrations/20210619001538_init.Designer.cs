@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evolution.Data.Migrations
 {
     [DbContext(typeof(EvolutionContext))]
-    [Migration("20210616063318_init")]
+    [Migration("20210619001538_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace Evolution.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Evolution.Domain.AnimalAggregate.Animal", b =>
@@ -75,6 +75,9 @@ namespace Evolution.Data.Migrations
                     b.Property<int>("OneFoodToEnergy")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("SettingsId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Speed")
                         .HasColumnType("int");
 
@@ -92,7 +95,20 @@ namespace Evolution.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SettingsId");
+
                     b.ToTable("Animals");
+                });
+
+            modelBuilder.Entity("Evolution.Domain.GameSettingsAggregate.GameSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameSettings");
                 });
 
             modelBuilder.Entity("Evolution.Domain.PlantAggregate.Plant", b =>
@@ -119,16 +135,25 @@ namespace Evolution.Data.Migrations
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("SettingsId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Weight")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SettingsId");
 
                     b.ToTable("Plants");
                 });
 
             modelBuilder.Entity("Evolution.Domain.AnimalAggregate.Animal", b =>
                 {
+                    b.HasOne("Evolution.Domain.GameSettingsAggregate.GameSettings", "Settings")
+                        .WithMany()
+                        .HasForeignKey("SettingsId");
+
                     b.OwnsOne("Evolution.Domain.Common.Location", "Location", b1 =>
                         {
                             b1.Property<Guid>("AnimalId")
@@ -151,10 +176,85 @@ namespace Evolution.Data.Migrations
                         });
 
                     b.Navigation("Location");
+
+                    b.Navigation("Settings");
+                });
+
+            modelBuilder.Entity("Evolution.Domain.GameSettingsAggregate.GameSettings", b =>
+                {
+                    b.OwnsOne("Evolution.Domain.GameSettingsAggregate.AnimalDefaults", "AnimalDefaults", b1 =>
+                        {
+                            b1.Property<Guid>("GameSettingsId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("AdulthoodAge")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Energy")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("FoodStorageCapacity")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("MaxEnergy")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("MaxSpeed")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("MinEnergy")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("MinSpeed")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("OneFoodToEnergy")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Speed")
+                                .HasColumnType("int");
+
+                            b1.Property<long>("SpeedMutationAmplitude")
+                                .HasColumnType("bigint");
+
+                            b1.HasKey("GameSettingsId");
+
+                            b1.ToTable("GameSettings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GameSettingsId");
+                        });
+
+                    b.OwnsOne("Evolution.Domain.GameSettingsAggregate.WorldSize", "WorldSize", b1 =>
+                        {
+                            b1.Property<Guid>("GameSettingsId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Height")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Width")
+                                .HasColumnType("int");
+
+                            b1.HasKey("GameSettingsId");
+
+                            b1.ToTable("GameSettings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GameSettingsId");
+                        });
+
+                    b.Navigation("AnimalDefaults");
+
+                    b.Navigation("WorldSize");
                 });
 
             modelBuilder.Entity("Evolution.Domain.PlantAggregate.Plant", b =>
                 {
+                    b.HasOne("Evolution.Domain.GameSettingsAggregate.GameSettings", "Settings")
+                        .WithMany()
+                        .HasForeignKey("SettingsId");
+
                     b.OwnsOne("Evolution.Domain.Common.Location", "Location", b1 =>
                         {
                             b1.Property<Guid>("PlantId")
@@ -177,6 +277,8 @@ namespace Evolution.Data.Migrations
                         });
 
                     b.Navigation("Location");
+
+                    b.Navigation("Settings");
                 });
 #pragma warning restore 612, 618
         }

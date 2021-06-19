@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿//using System.Threading.Tasks;
 
-namespace Evolution.Web.Services
-{
-    public interface IWorldService
-    {
-        Task Reset();
-    }
-}
+//namespace Evolution.Web.Services
+//{
+//    public interface IWorldService
+//    {
+//        Task Reset();
+//    }
+//}

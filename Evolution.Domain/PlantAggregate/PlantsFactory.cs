@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Evolution.Domain.Common;
+using Evolution.Domain.GameSettingsAggregate;
 
 namespace Evolution.Domain.PlantAggregate
 {
@@ -17,10 +18,10 @@ namespace Evolution.Domain.PlantAggregate
             GameCalender = gameCalender;
         }
 
-        public Plant CreateNew(Guid? parentId = null)
+        public Plant CreateNew(GameSettings settings, Guid? parentId = null)
         {
             var id = Guid.NewGuid();
-            var location = LocationService.GetRandom();
+            var location = LocationService.GetRandom(settings.WorldSize);
             var plantName = $"plant{DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)}";
             var plant = new Plant(id, plantName, location, parentId, GameCalender.Now);
 

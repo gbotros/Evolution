@@ -4,6 +4,7 @@ using Evolution.Data;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Services
 {
@@ -20,13 +21,23 @@ namespace Evolution.Services
 
         public async Task Handle(AnimalBornEvent notification, CancellationToken cancellationToken)
         {
+            var settings = await Context.GameSettings.FirstAsync(cancellationToken);
             var newAnimal = AnimalsFactory.CreateNew(
                 notification.Name,
+                notification.ParentId,
                 notification.Location,
+                settings,
                 notification.Energy,
                 notification.FoodStorageCapacity,
                 notification.Speed,
-                notification.ParentId);
+                notification.OneFoodToEnergy,
+                notification.AdulthoodAge,
+                notification.MinSpeed,
+                notification.MaxSpeed,
+                notification.SpeedMutationAmplitude,
+                notification.MinEnergy,
+                notification.MaxEnergy
+            );
 
             await Context.Animals.AddAsync(newAnimal, cancellationToken);
         }

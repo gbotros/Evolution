@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
+using Evolution.Domain.GameSettingsAggregate;
 using Evolution.Domain.PlantAggregate;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,8 @@ namespace Evolution.Data
     {
         public DbSet<Animal> Animals { get; set; }
         public DbSet<Plant> Plants { get; set; }
-        
+        public DbSet<GameSettings> GameSettings { get; set; }
+
         private EvolutionContextOptions Options { get; }
 
         private IMediator Mediator { get; }
@@ -64,12 +66,12 @@ namespace Evolution.Data
         {
             MapAnimals(modelBuilder);
             MapPlants(modelBuilder);
+            MapGameSettings(modelBuilder);
         }
 
         private static void MapAnimals(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Animal>(
-
                 animalEntityBuilder =>
                 {
                     animalEntityBuilder.OwnsOne(animal => animal.Location, navigationBuilder =>
@@ -77,7 +79,7 @@ namespace Evolution.Data
                         navigationBuilder.Property(l => l.Row).HasColumnName("Row");
                         navigationBuilder.Property(l => l.Column).HasColumnName("Column");
                     });
-
+                    
                     animalEntityBuilder.Ignore(animal => animal.Food);
                 }
 
@@ -90,10 +92,24 @@ namespace Evolution.Data
             {
                 plantEntityBuilder.OwnsOne(plant => plant.Location, navigationBuilder =>
                 {
-                    navigationBuilder.Property(location => location.Row).HasColumnName("Row");
-                    navigationBuilder.Property(location => location.Column).HasColumnName("Column");
+                    navigationBuilder.Property(l => l.Row).HasColumnName("Row");
+                    navigationBuilder.Property(l => l.Column).HasColumnName("Column");
                 });
+                
             });
+        }
+
+        private void MapGameSettings(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GameSettings>(
+
+                settingsEntityBuilder =>
+                {
+                    settingsEntityBuilder.OwnsOne(gs => gs.WorldSize);
+                    settingsEntityBuilder.OwnsOne(gs => gs.AnimalDefaults);
+                }
+
+            );
         }
 
         private async Task DispatchDomainEvents()

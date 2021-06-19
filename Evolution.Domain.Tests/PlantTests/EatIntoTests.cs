@@ -18,7 +18,7 @@ namespace Evolution.Domain.Tests.PlantTests
             now = DateTime.UtcNow;
         }
 
-        [Fact]
+        [Fact(Skip = "experimenting with immortal plants.")]
         public void EatInto_DeadPlant_NoChange()
         {
             // arrange

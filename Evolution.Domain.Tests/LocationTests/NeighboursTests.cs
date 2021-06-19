@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Evolution.Domain.Common;
+using Evolution.Domain.GameSettingsAggregate;
 using Xunit;
 
 namespace Evolution.Domain.Tests.LocationTests

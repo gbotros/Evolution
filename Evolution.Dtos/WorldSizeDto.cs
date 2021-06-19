@@ -2,7 +2,7 @@
 {
     public class WorldSizeDto
     {
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int Width { get; set; } = 10;
+        public int Height { get; set; } = 10;
     }
 }

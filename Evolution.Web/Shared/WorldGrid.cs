@@ -15,7 +15,7 @@ namespace Evolution.Web.Shared
 
         [Inject] private IAnimalsService AnimalsService { get; set; }
         [Inject] private IPlantsService PlantsService { get; set; }
-        [Inject] private IWorldSizeService WorldSizeService { get; set; }
+        [Inject] private IGameSettingsService GameSettingsService { get; set; }
         [Inject] private WorldStore WorldStore { get; set; }
 
         private bool autoPlayMode { get; set; } = false;
@@ -24,7 +24,7 @@ namespace Evolution.Web.Shared
         protected override async Task OnInitializedAsync()
         {
             WorldStore.IsLoading = true;
-            WorldStore.WorldSize = await WorldSizeService.GetWorldSize();
+            WorldStore.GameSettingsDto = await GameSettingsService.Get();
             await ReloadAnimals();
             await ReloadPlants();
             WorldStore.IsLoading = false;

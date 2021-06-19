@@ -1,9 +1,10 @@
 ﻿using System;
+using Evolution.Domain.GameSettingsAggregate;
 
 namespace Evolution.Domain.PlantAggregate
 {
     public interface IPlantsFactory
     {
-        Plant CreateNew(Guid? parentId = null);
+        Plant CreateNew(GameSettings settings, Guid? parentId = null);
     }
 }

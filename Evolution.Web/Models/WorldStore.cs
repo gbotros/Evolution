@@ -9,7 +9,7 @@ namespace Evolution.Web.Models
         private Dictionary<string, List<AnimalDto>> AnimalsStore { get; } = new();
         private Dictionary<string, List<PlantDto>> PlantsStore { get; } = new();
 
-        public WorldSizeDto WorldSize { get; set; } = new WorldSizeDto();
+        public GameSettingsDto GameSettingsDto { get; set; } = new GameSettingsDto();
         public bool IsLoading { get; set; } = false;
 
         public void SetAnimals(List<AnimalDto> animals)
@@ -103,8 +103,9 @@ namespace Evolution.Web.Models
         private string GenerateLocationStoreKey(int row, int column)
         {
             const int NameFormattingDigitsCount = 4;
-            return
-                $"Cell ({row.ToString($"D{NameFormattingDigitsCount}")}, {column.ToString($"D{NameFormattingDigitsCount}")})";
+            var key =
+                $"Cell ({row}, {column})";
+            return key;
 
         }
 

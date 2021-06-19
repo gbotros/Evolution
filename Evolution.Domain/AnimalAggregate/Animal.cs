@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Evolution.Domain.Common;
 using Evolution.Domain.Events;
+using Evolution.Domain.GameSettingsAggregate;
 
 namespace Evolution.Domain.AnimalAggregate
 {
     public class Animal : AggregateRoot
     {
-
         public Animal(
             Guid id,
             Guid? parentId,
@@ -16,6 +16,7 @@ namespace Evolution.Domain.AnimalAggregate
             Location location,
             DateTime creationTime,
             bool isAlive,
+            GameSettings settings,
             int minSpeed,
             int maxSpeed,
             int speed,
@@ -37,6 +38,7 @@ namespace Evolution.Domain.AnimalAggregate
             Location = location;
             CreationTime = creationTime;
             IsAlive = isAlive;
+            Settings = settings;
 
             MinSpeed = minSpeed;
             MaxSpeed = maxSpeed;
@@ -109,9 +111,11 @@ namespace Evolution.Domain.AnimalAggregate
         public int AdulthoodAge { get; private set; }
         public DateTime LastChildAt { get; private set; }
 
+        public GameSettings Settings { get; private set; }
+
         private int StepCost => Speed * 2; // Energy unit
 
-        public void Act(DateTime now, WorldSize worldSize)
+        public void Act(DateTime now)
         {
             if (!IsAlive)
             {
@@ -119,7 +123,7 @@ namespace Evolution.Domain.AnimalAggregate
             }
 
             UpdateIsAdult(now);
-            SatisfyEssentialNeeds(now, worldSize);
+            SatisfyEssentialNeeds(now);
             Digest();
 
             LastAction = now; // todo: check from unit tests
@@ -254,9 +258,9 @@ namespace Evolution.Domain.AnimalAggregate
             return StoredFood < FoodStorageCapacity;
         }
 
-        private void Move(WorldSize worldSize)
+        private void Move()
         {
-            var newLocation = GetRandomNeighbor(worldSize);
+            var newLocation = GetRandomNeighbor(Settings.WorldSize);
 
             if (newLocation != null)
             {
@@ -278,16 +282,23 @@ namespace Evolution.Domain.AnimalAggregate
             var sonBornEvent = new AnimalBornEvent
             (
                 $"{Name}:s{ChildrenCount}",
+                Id,
                 new Location(Location.Row, Location.Column),
                 Energy,
                 GetMutatedSpeed(),
-                FoodStorageCapacity, // TODO: allow mutations
-                Id);
+                FoodStorageCapacity,
+                OneFoodToEnergy,
+                AdulthoodAge,
+                Settings.AnimalDefaults.MinSpeed,
+                Settings.AnimalDefaults.MaxSpeed,
+                Settings.AnimalDefaults.SpeedMutationAmplitude,
+                Settings.AnimalDefaults.MinEnergy,
+                Settings.AnimalDefaults.MaxEnergy);
 
             RaiseEvent(sonBornEvent);
         }
 
-        private void SatisfyEssentialNeeds(DateTime now, WorldSize worldSize)
+        private void SatisfyEssentialNeeds(DateTime now)
         {
             if (CanReproduce(now))
             {
@@ -299,7 +310,7 @@ namespace Evolution.Domain.AnimalAggregate
             }
             else
             {
-                Move(worldSize);
+                Move();
             }
         }
 

@@ -3,6 +3,7 @@ using System.Reflection;
 using Evolution.Data;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
+using Evolution.Domain.GameSettingsAggregate;
 using Evolution.Domain.PlantAggregate;
 using Evolution.Services;
 using MediatR;
@@ -15,30 +16,21 @@ namespace Evolution.Apis
     {
         public static void AddApplicationServices(this IServiceCollection services, IConfiguration Configuration)
         {
-            services.AddSingleton(CreateWorldSize(Configuration));
+            services.AddSingleton<IGameCalender, GameCalender>();
 
             services.AddScoped<IPlantsService, PlantsService>();
             services.AddScoped<IPlantsFactory, PlantsFactory>();
             services.AddScoped<IAnimalsService, AnimalsService>();
             services.AddScoped<IAnimalsFactory, AnimalsFactory>();
             services.AddScoped<ILocationService, LocationService>();
-            services.AddScoped<IGameCalender, GameCalender>();
+            services.AddScoped<IGameSettingsService, GameSettingsService>();
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddSingleton(new EvolutionContextOptions(connectionString, true));
             services.AddScoped<IEvolutionContext, EvolutionContext>();
 
             services.AddMediatR(typeof(AnimalBornEventHandler).GetTypeInfo().Assembly);
-
-            services.AddSingleton(new AnimalDefaults());
         }
-
-        private static WorldSize CreateWorldSize(IConfiguration Configuration)
-        {
-            var width = Convert.ToInt32(Configuration["WorldSize:Width"]);
-            var height = Convert.ToInt32(Configuration["WorldSize:Height"]);
-            var worldSize = new WorldSize(width, height);
-            return worldSize;
-        }
+        
     }
 }

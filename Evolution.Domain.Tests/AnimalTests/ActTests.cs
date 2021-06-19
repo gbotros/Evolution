@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
+using Evolution.Domain.GameSettingsAggregate;
 using Evolution.Domain.PlantAggregate;
 using Moq;
 using Xunit;
@@ -12,10 +13,12 @@ namespace Evolution.Domain.Tests.AnimalTests
     public class ActTests
     {
         private DateTime now;
+        private GameSettings settings;
 
         public ActTests()
         {
             now = DateTime.UtcNow;
+            settings = new GameSettings(Guid.NewGuid(), new WorldSize(5, 5), new AnimalDefaults());
         }
 
         [Fact]
@@ -25,6 +28,7 @@ namespace Evolution.Domain.Tests.AnimalTests
 
             // arrange
             var worldSize = new WorldSize(2, 1);
+            settings = new GameSettings(Guid.NewGuid(), worldSize, new AnimalDefaults());
             var location = new Location(0, 0);
             var location2 = new Location(0, 1);
             var initialEnergy = 1000;
@@ -34,6 +38,7 @@ namespace Evolution.Domain.Tests.AnimalTests
                 location,
                 now,
                 true,
+                settings,
                 1,
                 100,
                 100,
@@ -46,7 +51,7 @@ namespace Evolution.Domain.Tests.AnimalTests
                 60);
 
             // act
-            animal.Act(now, worldSize);
+            animal.Act(now);
 
             // assert
             Assert.True(animal.Location == location2);
@@ -57,10 +62,9 @@ namespace Evolution.Domain.Tests.AnimalTests
         [Fact]
         public void Act_Move_With_No_Place_Available()
         {
-            // setup mocks
-
             // arrange
             var worldSize = new WorldSize(1, 1);
+            settings = new GameSettings(Guid.NewGuid(), worldSize, new AnimalDefaults());
             var location = new Location(0, 0);
             var initialEnergy = 1000;
             var animal = new Animal(
@@ -70,6 +74,7 @@ namespace Evolution.Domain.Tests.AnimalTests
                 location,
                 now,
                 true,
+                settings,
                 1,
                 100,
                 100,
@@ -82,7 +87,7 @@ namespace Evolution.Domain.Tests.AnimalTests
                 60);
 
             // act
-            animal.Act(now, worldSize);
+            animal.Act(now);
 
             // assert
             Assert.True(animal.Location == location);
@@ -107,6 +112,7 @@ namespace Evolution.Domain.Tests.AnimalTests
                 location,
                 now,
                 true,
+                settings,
                 1,
                 100,
                 speed,
@@ -123,7 +129,7 @@ namespace Evolution.Domain.Tests.AnimalTests
             for (int i = 1; i <= stepsNeededToDieWithoutFood; i++)
             {
                 Assert.True(animal.IsAlive);
-                animal.Act(now, worldSize);
+                animal.Act(now);
             }
 
             // assert
@@ -152,6 +158,7 @@ namespace Evolution.Domain.Tests.AnimalTests
                 location,
                 now,
                 true,
+                settings,
                 1,
                 100,
                 100,
@@ -164,11 +171,11 @@ namespace Evolution.Domain.Tests.AnimalTests
                 60);
             var initialFoodAmount = food.Sum(f => f.Weight);
 
-            var animalFactory = new AnimalsFactory(new AnimalDefaults(), new Mock<IGameCalender>().Object, new Mock<ILocationService>().Object);
+            var animalFactory = new AnimalsFactory(new Mock<IGameCalender>().Object, new Mock<ILocationService>().Object);
             animalFactory.Initialize(animal, food);
 
             // act
-            animal.Act(now, worldSize);
+            animal.Act(now);
             var foodWeight = food.Sum(f => f.Weight);
 
             // assert

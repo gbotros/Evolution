@@ -34,10 +34,10 @@
     }
     else
     {
-        @for (var r = 0; r < WorldStore.WorldSize.Height; r++)
+        @for (var r = 0; r < WorldStore.GameSettingsDto.WorldSize.Height; r++)
         {
             <div name="row-@r" class="flex items-center">
-                @for (var c = 0; c < WorldStore.WorldSize.Width; c++)
+                @for (var c = 0; c < WorldStore.GameSettingsDto.WorldSize.Width; c++)
                 {
                     <div name="col-@c" class="flex items-center">
                         <div name="cell-@r-@c" class="flex flex-wrap border-2 border-gray-50 rounded-sm @(!WorldStore.GetAnimalsAt(r, c).Any() ? "bg-gray-100" : "")" style="width: 100px; height: 100px;">

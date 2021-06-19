@@ -1,6 +1,7 @@
 using System;
 using Evolution.Domain.AnimalAggregate;
 using Evolution.Domain.Common;
+using Evolution.Domain.GameSettingsAggregate;
 
 namespace Evolution.Domain.PlantAggregate
 {
@@ -48,6 +49,7 @@ namespace Evolution.Domain.PlantAggregate
         public int Weight { get; private set; }
         public Location Location { get; private set; }
         public int GrowthAmount { get; private set; }
+        public GameSettings Settings { get; set; }
 
         public bool IsEatableBy(Type otherType)
         {

@@ -10,32 +10,28 @@ namespace Evolution.Web.Shared
 {
     public partial class ResetWorld
     {
-        [Inject] private IWorldService WorldService { get; set; }
-        [Inject] private IAnimalsDefaultsService AnimalsDefaultsService { get; set; }
+        [Inject] private IGameSettingsService GameSettingsService { get; set; }
         [Inject] private WorldStore WorldStore { get; set; }
         [Inject] private NavigationManager NavigationManager { get; set; }
 
-        public AnimalDefaultsDto D { get; } = new AnimalDefaultsDto();
+        public GameSettingsDto S { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            S = WorldStore.GameSettingsDto;
+        }
 
         private async Task ResetTheWorld()
         {
-            await DeleteAllCreatures();
             await ResetAnimalsDefaults();
             StateHasChanged();
 
             NavigationManager.NavigateTo("/");
         }
 
-        private async Task DeleteAllCreatures()
-        {
-            await WorldService.Reset();
-            WorldStore.SetAnimals(new List<AnimalDto>());
-            WorldStore.SetPlants(new List<PlantDto>());
-        }
-
         private async Task ResetAnimalsDefaults()
         {
-            await AnimalsDefaultsService.Reset(D);
+            await GameSettingsService.Reset(S);
         }
     }
 }

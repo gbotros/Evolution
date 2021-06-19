@@ -8,6 +8,29 @@ namespace Evolution.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "GameSettings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorldSize_Width = table.Column<int>(type: "int", nullable: true),
+                    WorldSize_Height = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_MinSpeed = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_MaxSpeed = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_Speed = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_MinEnergy = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_MaxEnergy = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_Energy = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_FoodStorageCapacity = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_OneFoodToEnergy = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_SpeedMutationAmplitude = table.Column<long>(type: "bigint", nullable: true),
+                    AnimalDefaults_AdulthoodAge = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameSettings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Animals",
                 columns: table => new
                 {
@@ -34,11 +57,18 @@ namespace Evolution.Data.Migrations
                     OneFoodToEnergy = table.Column<int>(type: "int", nullable: false),
                     SpeedMutationAmplitude = table.Column<long>(type: "bigint", nullable: false),
                     AdulthoodAge = table.Column<int>(type: "int", nullable: false),
-                    LastChildAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastChildAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SettingsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Animals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Animals_GameSettings_SettingsId",
+                        column: x => x.SettingsId,
+                        principalTable: "GameSettings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,12 +84,29 @@ namespace Evolution.Data.Migrations
                     Weight = table.Column<int>(type: "int", nullable: false),
                     Row = table.Column<int>(type: "int", nullable: true),
                     Column = table.Column<int>(type: "int", nullable: true),
-                    GrowthAmount = table.Column<int>(type: "int", nullable: false)
+                    GrowthAmount = table.Column<int>(type: "int", nullable: false),
+                    SettingsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Plants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Plants_GameSettings_SettingsId",
+                        column: x => x.SettingsId,
+                        principalTable: "GameSettings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Animals_SettingsId",
+                table: "Animals",
+                column: "SettingsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plants_SettingsId",
+                table: "Plants",
+                column: "SettingsId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -69,6 +116,9 @@ namespace Evolution.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Plants");
+
+            migrationBuilder.DropTable(
+                name: "GameSettings");
         }
     }
 }
