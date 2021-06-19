@@ -31,11 +31,14 @@ namespace Evolution.Data.Migrations
                     b.Property<int>("ChildrenCount")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DeathTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Energy")
-                        .HasColumnType("int");
+                    b.Property<double>("Energy")
+                        .HasColumnType("float");
 
                     b.Property<int>("FoodStorageCapacity")
                         .HasColumnType("int");
@@ -52,17 +55,17 @@ namespace Evolution.Data.Migrations
                     b.Property<DateTime>("LastChildAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MaxEnergy")
-                        .HasColumnType("int");
+                    b.Property<double>("MaxEnergy")
+                        .HasColumnType("float");
 
-                    b.Property<int>("MaxSpeed")
-                        .HasColumnType("int");
+                    b.Property<double>("MaxSpeed")
+                        .HasColumnType("float");
 
-                    b.Property<int>("MinEnergy")
-                        .HasColumnType("int");
+                    b.Property<double>("MinEnergy")
+                        .HasColumnType("float");
 
-                    b.Property<int>("MinSpeed")
-                        .HasColumnType("int");
+                    b.Property<double>("MinSpeed")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -73,11 +76,17 @@ namespace Evolution.Data.Migrations
                     b.Property<int>("OneFoodToEnergy")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Sense")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("SettingsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Speed")
-                        .HasColumnType("int");
+                    b.Property<double>("Speed")
+                        .HasColumnType("float");
 
                     b.Property<long>("SpeedMutationAmplitude")
                         .HasColumnType("bigint");
@@ -188,29 +197,32 @@ namespace Evolution.Data.Migrations
                             b1.Property<int>("AdulthoodAge")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("Energy")
-                                .HasColumnType("int");
+                            b1.Property<double>("Energy")
+                                .HasColumnType("float");
 
                             b1.Property<int>("FoodStorageCapacity")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("MaxEnergy")
-                                .HasColumnType("int");
+                            b1.Property<double>("MaxEnergy")
+                                .HasColumnType("float");
 
-                            b1.Property<int>("MaxSpeed")
-                                .HasColumnType("int");
+                            b1.Property<double>("MaxSpeed")
+                                .HasColumnType("float");
 
-                            b1.Property<int>("MinEnergy")
-                                .HasColumnType("int");
+                            b1.Property<double>("MinEnergy")
+                                .HasColumnType("float");
 
-                            b1.Property<int>("MinSpeed")
-                                .HasColumnType("int");
+                            b1.Property<double>("MinSpeed")
+                                .HasColumnType("float");
 
                             b1.Property<int>("OneFoodToEnergy")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("Speed")
+                            b1.Property<int>("Sense")
                                 .HasColumnType("int");
+
+                            b1.Property<double>("Speed")
+                                .HasColumnType("float");
 
                             b1.Property<long>("SpeedMutationAmplitude")
                                 .HasColumnType("bigint");

@@ -48,7 +48,8 @@ namespace Evolution.Domain.Tests.AnimalTests
                 initialEnergy,
                 1,
                 1,
-                60);
+                60,
+                1);
 
             // act
             animal.Act(now);
@@ -84,7 +85,8 @@ namespace Evolution.Domain.Tests.AnimalTests
                 initialEnergy,
                 1,
                 1,
-                60);
+                60,
+                1);
 
             // act
             animal.Act(now);
@@ -122,7 +124,8 @@ namespace Evolution.Domain.Tests.AnimalTests
                 initialEnergy,
                 1,
                 1,
-                60);
+                60,
+                1);
 
             // act
             var stepsNeededToDieWithoutFood = 100;
@@ -145,7 +148,7 @@ namespace Evolution.Domain.Tests.AnimalTests
             // arrange
             var worldSize = new WorldSize(2, 1);
             var location = new Location(0, 0);
-            var food = new List<IPlantFood>();
+            var food = new List<IFood>();
             for (int i = 0; i < 3; i++)
             {
                 var p = new Plant(Guid.NewGuid(), $"tree {i}", location, null, now);
@@ -168,7 +171,8 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1000,
                 10,
                 1,
-                60);
+                60,
+                1);
             var initialFoodAmount = food.Sum(f => f.Weight);
 
             var animalFactory = new AnimalsFactory(new Mock<IGameCalender>().Object, new Mock<ILocationService>().Object);

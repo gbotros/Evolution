@@ -17,16 +17,17 @@ namespace Evolution.Domain.AnimalAggregate
             DateTime creationTime,
             bool isAlive,
             GameSettings settings,
-            int minSpeed,
-            int maxSpeed,
-            int speed,
+            double minSpeed,
+            double maxSpeed,
+            double speed,
             uint speedMutationAmplitude,
-            int minEnergy,
-            int maxEnergy,
-            int energy,
+            double minEnergy,
+            double maxEnergy,
+            double energy,
             int foodStorageCapacity,
             int oneFoodToEnergy,
-            int adulthoodAge
+            int adulthoodAge,
+            int sense
         ) : base(id)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
@@ -54,6 +55,8 @@ namespace Evolution.Domain.AnimalAggregate
             AdulthoodAge = adulthoodAge;
 
             NextAction = creationTime;
+
+            Sense = sense;
         }
 
         protected Animal()
@@ -61,31 +64,31 @@ namespace Evolution.Domain.AnimalAggregate
 
         }
 
-        public DateTime CreationTime { get; }
+        public DateTime CreationTime { get; private set; }
         public DateTime? DeathTime { get; private set; }
 
         public bool IsAlive { get; private set; }
         public string Name { get; private set; }
-        public Guid? ParentId { get; }
+        public Guid? ParentId { get; private set; }
         public int Weight { get; private set; }
         public Location Location { get; private set; }
-        public IReadOnlyCollection<IPlantFood> Food { get; internal set; }
+        public IReadOnlyCollection<IFood> Food { get; internal set; }
 
         public int ChildrenCount { get; private set; }
 
         /// <summary>
-        /// How many Action can this animal do in one hour Example Speed => 3600 equal to one action per sec
+        /// How many Action can this animal do per sec
         /// </summary>
-        public int Speed { get; private set; }
-        public int MinSpeed { get; private set; }
-        public int MaxSpeed { get; private set; }
+        public double Speed { get; private set; }
+        public double MinSpeed { get; private set; }
+        public double MaxSpeed { get; private set; }
         public int Steps { get; private set; }
 
         public int StoredFood { get; private set; }
         public int FoodStorageCapacity { get; private set; }
 
-        private int energy;
-        public int Energy
+        private double energy;
+        public double Energy
         {
             get => energy;
 
@@ -96,8 +99,8 @@ namespace Evolution.Domain.AnimalAggregate
             }
         }
 
-        public int MinEnergy { get; private set; }
-        public int MaxEnergy { get; private set; }
+        public double MinEnergy { get; private set; }
+        public double MaxEnergy { get; private set; }
 
         public DateTime LastAction { get; private set; }
         public DateTime NextAction { get; private set; }
@@ -111,9 +114,11 @@ namespace Evolution.Domain.AnimalAggregate
         public int AdulthoodAge { get; private set; }
         public DateTime LastChildAt { get; private set; }
 
+        public int Sense { get; private set; }
+
         public GameSettings Settings { get; private set; }
 
-        private int StepCost => Speed * 2; // Energy unit
+        private double StepCost => Speed * 2; // Energy unit
 
         public void Act(DateTime now)
         {
@@ -135,10 +140,11 @@ namespace Evolution.Domain.AnimalAggregate
             return (now - CreationTime).TotalSeconds;
         }
 
+        // TODO: Unit tests
         private DateTime CalculateNextActionTime(DateTime now)
         {
             var velocity = 1d / Speed;
-            var timeSpan = TimeSpan.FromHours(velocity);
+            var timeSpan = TimeSpan.FromSeconds(velocity);
             var nextActionTime = now + timeSpan;
             return nextActionTime;
         }
@@ -185,12 +191,12 @@ namespace Evolution.Domain.AnimalAggregate
             return true;
         }
 
-        private double ConvertEnergyToFood(int energy)
+        private double ConvertEnergyToFood(double energy)
         {
-            return energy / (double)OneFoodToEnergy;
+            return energy / OneFoodToEnergy;
         }
 
-        private int ConvertFoodToEnergy(int food)
+        private double ConvertFoodToEnergy(double food)
         {
             return food * OneFoodToEnergy;
         }
@@ -199,7 +205,7 @@ namespace Evolution.Domain.AnimalAggregate
         {
             if (!IsFoodAvailable()) return;
 
-            var foods = GetAvailableFood().ToList();
+            var foods = GetAvailableFoodOnMyLocation();
 
             foreach (var food in foods)
             {
@@ -215,16 +221,20 @@ namespace Evolution.Domain.AnimalAggregate
             }
         }
 
-        private IEnumerable<IPlantFood> GetAvailableFood()
+        private List<IFood> GetAvailableFoodOnMyLocation()
         {
-            return Food ?? new List<IPlantFood>();
+            return Food.Where(f =>
+                f.Location.Row == Location.Row
+                && f.Location.Column == Location.Column
+                ).ToList();
         }
 
-        private int GetMutatedSpeed()
+        private double GetMutatedSpeed()
         {
+            var rand = new Random((int)DateTime.Now.Ticks);
             var minMutation = -1 * (int)SpeedMutationAmplitude;
             var maxMutation = (int)SpeedMutationAmplitude;
-            var mutation = new Random().Next(minMutation, maxMutation + 1);
+            var mutation = rand.NextDouble() * rand.Next(minMutation, maxMutation + 1);
 
             var mutantSpeed = Speed + mutation;
 
@@ -234,41 +244,81 @@ namespace Evolution.Domain.AnimalAggregate
             return mutantSpeed;
         }
 
-        private Location GetRandomNeighbor(WorldSize worldSize)
+        private Location GetRandomNeighbor()
         {
-            var neighbours = Location.GetNeighbours(worldSize);
+            var neighbours = Location.GetNeighbours(Settings.WorldSize);
             var neighboursCount = neighbours.Count();
-            if (neighboursCount == 0) return null;
+            if (neighboursCount == 0) return Location;
 
-            var newLocationIndex = new Random().Next(0, neighboursCount);
+            var newLocationIndex = new Random((int)DateTime.Now.Ticks).Next(0, neighboursCount);
             var newLocation = neighbours.ElementAt(newLocationIndex);
-
 
             return newLocation;
         }
 
+        private IFood GetClosestFood()
+        {
+            IFood closestFood = null;
+            var closestDistance = int.MaxValue;
+            foreach (var f in Food)
+            {
+                var deltaRow = Math.Abs(f.Location.Row - Location.Row);
+                var deltaColumn = Math.Abs(f.Location.Column - Location.Column);
+
+                var distance = Math.Max(deltaColumn, deltaRow);
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestFood = f;
+                }
+            }
+
+            return closestFood;
+        }
+
         private bool IsFoodAvailable()
         {
-            var food = GetAvailableFood().ToList();
+            var food = GetAvailableFoodOnMyLocation();
             return food.Sum(f => f.Weight) > 0;
         }
 
         private bool IsHungry()
         {
-            return StoredFood < FoodStorageCapacity;
+            // animal is hungary if he his Stomach  is half empty
+            return StoredFood < FoodStorageCapacity * .5;
         }
 
         private void Move()
         {
-            var newLocation = GetRandomNeighbor(Settings.WorldSize);
-
-            if (newLocation != null)
+            Location newLocation = null;
+            if (IsHungry())
             {
-                Location = newLocation;
-                Steps++;
+                var food = GetClosestFood();
+                newLocation = StepInDirection(food?.Location);
             }
+            
+            newLocation ??= GetRandomNeighbor();
 
+            Location = newLocation;
+            Steps++;
             Energy -= StepCost;
+        }
+
+        private Location StepInDirection(Location dLocation)
+        {
+            if (dLocation == null) return null;
+
+            var row = Location.Row;
+            var col = Location.Column;
+
+            if (dLocation.Row > row) row++;
+            else if (dLocation.Row < row) row--;
+
+            if (dLocation.Column > col) col++;
+            else if (dLocation.Column < col) col--;
+
+            return new Location(row, col);
         }
 
         private void Reproduce(DateTime now)
@@ -293,7 +343,8 @@ namespace Evolution.Domain.AnimalAggregate
                 Settings.AnimalDefaults.MaxSpeed,
                 Settings.AnimalDefaults.SpeedMutationAmplitude,
                 Settings.AnimalDefaults.MinEnergy,
-                Settings.AnimalDefaults.MaxEnergy);
+                Settings.AnimalDefaults.MaxEnergy,
+                Settings.AnimalDefaults.Sense);
 
             RaiseEvent(sonBornEvent);
         }

@@ -8,23 +8,24 @@ namespace Evolution.Domain.AnimalAggregate
     public interface IAnimalsFactory
     {
         Animal CreateNew(string name, GameSettings settings);
-        void Initialize(Animal animal, IReadOnlyCollection<IPlantFood> food);
+        void Initialize(Animal animal, IReadOnlyCollection<IFood> food);
 
         Animal CreateNew(
             string name,
             Guid? parentId,
             Location location,
             GameSettings settings,
-            int energy,
+            double energy,
             int foodStorageCapacity,
-            int speed,
+            double speed,
             int oneFoodToEnergy,
             int adulthoodAge,
-            int minSpeed,
-            int maxSpeed,
+            double minSpeed,
+            double maxSpeed,
             uint speedMutationAmplitude,
-            int minEnergy,
-            int maxEnergy);
+            double minEnergy,
+            double maxEnergy,
+            int sense);
 
     }
 }

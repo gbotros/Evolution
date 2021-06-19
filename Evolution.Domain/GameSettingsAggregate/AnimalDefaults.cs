@@ -4,14 +4,14 @@ namespace Evolution.Domain.GameSettingsAggregate
 {
     public class AnimalDefaults : ValueObject<AnimalDefaults>
     {
-        public int MinSpeed { get; set; }
-        public int MaxSpeed { get; set; }
-        // how many action per hour
-        public int Speed { get; set; }
+        public double MinSpeed { get; set; }
+        public double MaxSpeed { get; set; }
+        // how many action per sec
+        public double Speed { get; set; }
 
-        public int MinEnergy { get; set; }
-        public int MaxEnergy { get; set; }
-        public int Energy { get; set; }
+        public double MinEnergy { get; set; }
+        public double MaxEnergy { get; set; }
+        public double Energy { get; set; }
 
         public int FoodStorageCapacity { get; set; }
 
@@ -20,6 +20,7 @@ namespace Evolution.Domain.GameSettingsAggregate
         public uint SpeedMutationAmplitude { get; set; }
 
         public int AdulthoodAge { get; set; }
+        public int Sense { get; set; }
 
         protected override bool EqualsCore(AnimalDefaults other)
         {
@@ -33,7 +34,8 @@ namespace Evolution.Domain.GameSettingsAggregate
                 && FoodStorageCapacity == other.FoodStorageCapacity
                 && OneFoodToEnergy == other.OneFoodToEnergy
                 && SpeedMutationAmplitude == other.SpeedMutationAmplitude
-                && AdulthoodAge == other.AdulthoodAge;
+                && AdulthoodAge == other.AdulthoodAge
+                && Sense == other.Sense;
         }
 
         protected override int GetHashCodeCore()

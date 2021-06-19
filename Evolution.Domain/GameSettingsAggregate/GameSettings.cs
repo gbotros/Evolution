@@ -11,14 +11,14 @@ namespace Evolution.Domain.GameSettingsAggregate
 
         }
 
-        public GameSettings(Guid id, WorldSize worldSize, AnimalDefaults animalDefaults)
+        public GameSettings(Guid id, WorldSize worldSize = null, AnimalDefaults animalDefaults = null)
         {
             Id = id;
-            WorldSize = worldSize;
-            AnimalDefaults = animalDefaults;
+            WorldSize = worldSize ?? new WorldSize();
+            AnimalDefaults = animalDefaults ?? new AnimalDefaults();
         }
 
-        public WorldSize WorldSize { get; private set; }
-        public AnimalDefaults AnimalDefaults { get; private set; }
+        public WorldSize WorldSize { get; set; }
+        public AnimalDefaults AnimalDefaults { get; set; }
     }
 }

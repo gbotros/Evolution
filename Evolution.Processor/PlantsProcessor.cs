@@ -16,7 +16,7 @@ namespace Evolution.Processor
         }
 
         [FunctionName("PlantAct")]
-        public async Task Run([TimerTrigger("0/60 * * * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0/10 * * * * *")] TimerInfo myTimer, ILogger log)
         {
             //if (myTimer.IsPastDue) log.LogInformation("Timer is running late!");
             //log.LogInformation($"Plants Timer triggered at: {DateTime.Now}");

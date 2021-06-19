@@ -9,16 +9,17 @@ namespace Evolution.Domain.Events
             string name,
             Guid parentId,
             Location location,
-            int energy,
-            int speed,
+            double energy,
+            double speed,
             int foodStorageCapacity,
             int oneFoodToEnergy,
-            int adulthoodAge, 
-            int minSpeed, 
-            int maxSpeed, 
-            uint speedMutationAmplitude, 
-            int minEnergy, 
-            int maxEnergy)
+            int adulthoodAge,
+            double minSpeed,
+            double maxSpeed, 
+            uint speedMutationAmplitude,
+            double minEnergy,
+            double maxEnergy,
+            int sense)
         {
             Name = name;
             Location = location;
@@ -33,20 +34,22 @@ namespace Evolution.Domain.Events
             SpeedMutationAmplitude = speedMutationAmplitude;
             MinEnergy = minEnergy;
             MaxEnergy = maxEnergy;
+            Sense = sense;
         }
 
         public string Name { get; }
         public Location Location { get; }
         public Guid ParentId { get; }
-        public int Speed { get; }
+        public double Speed { get; }
         public int FoodStorageCapacity { get; }
-        public int Energy { get; }
+        public double Energy { get; }
         public int OneFoodToEnergy { get; }
         public int AdulthoodAge { get; }
-        public int MinSpeed { get; }
-        public int MaxSpeed { get; }
+        public double MinSpeed { get; }
+        public double MaxSpeed { get; }
         public uint SpeedMutationAmplitude { get; }
-        public int MinEnergy { get; }
-        public int MaxEnergy { get; }
+        public double MinEnergy { get; }
+        public double MaxEnergy { get; }
+        public int Sense { get; set; }
     }
 }

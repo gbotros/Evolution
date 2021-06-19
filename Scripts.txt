@@ -1,3 +1,3 @@
 # db scripts
-Add-Migration -StartupProject Evolution.Apis "init"
-Update-Database -StartupProject Evolution.Apis
+Add-Migration -Project Evolution.Data -StartupProject Evolution.Apis "init"
+Update-Database -Project Evolution.Data -StartupProject Evolution.Apis

@@ -17,12 +17,12 @@ namespace Evolution.Apis
         public static void AddApplicationServices(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddSingleton<IGameCalender, GameCalender>();
+            services.AddSingleton<ILocationService, LocationService>();
 
             services.AddScoped<IPlantsService, PlantsService>();
             services.AddScoped<IPlantsFactory, PlantsFactory>();
             services.AddScoped<IAnimalsService, AnimalsService>();
             services.AddScoped<IAnimalsFactory, AnimalsFactory>();
-            services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IGameSettingsService, GameSettingsService>();
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");

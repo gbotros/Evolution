@@ -1,17 +1,20 @@
-﻿namespace Evolution.Dtos
+﻿using Microsoft.Win32.SafeHandles;
+
+namespace Evolution.Dtos
 {
     public class AnimalDefaultsDto
     {
-        public int MinSpeed { get; set; } = 1;
-        public int MaxSpeed { get; set; } = 3_600 * 5;
-        public int Speed { get; set; } = 3_600;
-        public int MinEnergy { get; set; } = 1;
-        public int MaxEnergy { get; set; } = 720_000;
-        public int Energy { get; set; } = 360_000;
-        public int FoodStorageCapacity { get; set; } = 5;
-        public int OneFoodToEnergy { get; set; } = 72_000;
-        public uint SpeedMutationAmplitude { get; set; } = 5;
+        public double MinSpeed { get; set; } = 0.1; // 1 action every 10 seconds
+        public double MaxSpeed { get; set; } = 10; // 10 actions per sec
+        public double Speed { get; set; } = 1; // 1 action per sec
+        public double MinEnergy { get; set; } = 1; 
+        public double MaxEnergy { get; set; } = 100; // 50 action
+        public double Energy { get; set; } = 100; // 50 action
+        public int FoodStorageCapacity { get; set; } = 3;
+        public int OneFoodToEnergy { get; set; } = 20; // 1 food = 20 energy = 10 actions
+        public uint SpeedMutationAmplitude { get; set; } = 1;
         public int AdulthoodAge { get; set; } = 30;
+        public int Sense { get; set; } = 1; // animal can see locations around him
 
     }
 }

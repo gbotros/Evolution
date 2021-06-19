@@ -5,10 +5,10 @@ using Evolution.Domain.GameSettingsAggregate;
 
 namespace Evolution.Domain.PlantAggregate
 {
-    public class Plant : AggregateRoot, IPlantFood
+    public class Plant : AggregateRoot, IFood
     {
 
-        private int DefaultGrowthAmount = 10;
+        private int DefaultGrowthAmount = 5;
 
         public Plant(Guid id,
             string name,

@@ -1,78 +1,103 @@
-﻿
-@using Radzen.Blazor;
-
-
-<div class="flex flex-row">
-    <div> World Width </div>
-    <div> <input @bind=@S.WorldSize.Width type="number" step="1" min="1" max="10" class="@Css.Input"> </div>
-</div>
-
-<div class="flex flex-row">
-    <div> World Height </div>
-    <div> <input @bind=@S.WorldSize.Height type="number" step="1" min="1" max="10" class="@Css.Input"> </div>
-</div>
-
-
-<div class="flex flex-col">
+﻿@* World Size *@
+<div class="border rounded-md m-2 p-2">
     <div class="flex flex-row">
-        <div> Speed </div>
-        <div> <input @bind=@S.AnimalDefaults.Speed type="number" step="1" min="@S.AnimalDefaults.MinSpeed" max="@S.AnimalDefaults.MaxSpeed" class="@Css.Input"> </div>
+        <div>
+            <div> World Width </div>
+            <div> <input @bind=@S.WorldSize.Width type="number" step="1" min="1" max="100" class="@Css.Input"> </div>
+        </div>
+        <div>
+            <div> World Height </div>
+            <div> <input @bind=@S.WorldSize.Height type="number" step="1" min="1" max="100" class="@Css.Input"> </div>
+        </div>
     </div>
-    <div> @S.AnimalDefaults.Speed Actions per hour </div>
-    <div> @((double)S.AnimalDefaults.Speed/60/60) Actions per sec </div>
-    <div> Costs @(S.AnimalDefaults.Speed * 2) Energy unit per action </div>
 </div>
 
-<div class="flex flex-col">
+@* Speed *@
+<div class="border rounded-md m-2 p-2">
+    <div class="flex flex-row justify-between">
+        <div> Min Speed @S.AnimalDefaults.MinSpeed / Max Speed @S.AnimalDefaults.MaxSpeed</div>
+        <div class="flex flex-row">
+            <div> Speed </div>
+            <div> <input @bind=@S.AnimalDefaults.Speed type="number" step="0.1" min="@S.AnimalDefaults.MinSpeed" max="@S.AnimalDefaults.MaxSpeed" class="@Css.Input"> </div>
+        </div>
+        <div> @S.AnimalDefaults.Speed Actions per sec </div>
+        <div> Costs @(S.AnimalDefaults.Speed * 2) Energy unit per action </div>
+    </div>
+</div>
+
+@* Energy *@
+<div class="border rounded-md m-2 p-2">
+    <div class="flex flex-row justify-between">
+        <div class="flex flex-row">
+            <div> Min Energy </div>
+            <div> <input @bind=@S.AnimalDefaults.MinEnergy type="number" step="1" min="1" class="@Css.Input"> </div>
+        </div>
+
+        <div class="flex flex-row">
+            <div> Energy </div>
+            <div> <input @bind=@S.AnimalDefaults.Energy type="number" step="1" min="@S.AnimalDefaults.MinEnergy" max="@S.AnimalDefaults.MaxEnergy " class="@Css.Input"> </div>
+            <div> Enough for @(S.AnimalDefaults.Energy / (S.AnimalDefaults.Speed*2)) Actions </div>
+        </div>
+
+        <div class="flex flex-row">
+            <div> Max Energy </div>
+            <div> <input @bind=@S.AnimalDefaults.MaxEnergy type="number" step="1" min="1" class="@Css.Input"> </div>
+        </div>
+    </div>
+</div>
+
+@*Food*@
+<div class="border rounded-md m-2 p-2">
+    <div class="flex flex-row justify-between">
+        <div class="flex flex-row">
+            <div> FoodStorageCapacity </div>
+            <div> <input @bind=@S.AnimalDefaults.FoodStorageCapacity type="number" step="1" min="0" max="100" class="@Css.Input"> </div>
+        </div>
+        <div>
+            Equal to @(S.AnimalDefaults.FoodStorageCapacity * S.AnimalDefaults.OneFoodToEnergy) Energy  /
+            @((S.AnimalDefaults.FoodStorageCapacity * S.AnimalDefaults.OneFoodToEnergy) / (S.AnimalDefaults.Speed * 2) ) Actions
+        </div>
+    </div>
+
     <div class="flex flex-row">
-        <div> Energy </div>
-        <div> <input @bind=@S.AnimalDefaults.Energy type="number" step="1" min="@S.AnimalDefaults.MinEnergy" max="@S.AnimalDefaults.MaxEnergy" class="@Css.Input"> </div>
+        <div class="flex flex-row justify-between">
+            <div> OneFoodToEnergy  </div>
+            <div> <input @bind=@S.AnimalDefaults.OneFoodToEnergy type="number" step="1" min="1" max="2_00_000" class="@Css.Input"> </div>
+        </div>
+        <div> @(S.AnimalDefaults.OneFoodToEnergy /(S.AnimalDefaults.Speed*2)) Actions per one food unit </div>
     </div>
-    <div> @S.AnimalDefaults.Energy Energy unit </div>
-    <div> Enough to @(S.AnimalDefaults.Energy / (S.AnimalDefaults.Speed*2)) Actions </div>
 </div>
 
-<div class="flex flex-col">
-    <div class="flex flex-row">
-        <div> FoodStorageCapacity </div>
-        <div> <input @bind=@S.AnimalDefaults.FoodStorageCapacity type="number" step="1" min="0" max="100" class="@Css.Input"> </div>
-    </div>
-    <div> @S.AnimalDefaults.FoodStorageCapacity Food </div>
-    <div> Equal to @(S.AnimalDefaults.FoodStorageCapacity * S.AnimalDefaults.OneFoodToEnergy) Energy </div>
-    <div> Enough to @((S.AnimalDefaults.FoodStorageCapacity * S.AnimalDefaults.OneFoodToEnergy) / (S.AnimalDefaults.Speed * 2) ) Actions </div>
-</div>
+@*other*@
+<div class="border rounded-md m-2 p-2">
 
-<div class="flex flex-col">
-    <div class="flex flex-row">
-        <div> OneFoodToEnergy  </div>
-        <div> <input @bind=@S.AnimalDefaults.OneFoodToEnergy type="number" step="1" min="1" max="2_00_000" class="@Css.Input"> </div>
-    </div>
-    <div> @S.AnimalDefaults.OneFoodToEnergy Energy uint per one food unit </div>
-    <div> @(S.AnimalDefaults.OneFoodToEnergy /(S.AnimalDefaults.Speed*2)) Actions per one food unit </div>
-</div>
-
-<div class="flex flex-col">
     <div class="flex flex-row">
         <div> SpeedMutationAmplitude </div>
         <div> <input @bind=@S.AnimalDefaults.SpeedMutationAmplitude type="number" step="1" min="0" max="1000" class="@Css.Input"> </div>
+
+        <div> Up to +-@S.AnimalDefaults.SpeedMutationAmplitude speed mutation could happen on reproduction </div>
     </div>
-    <div> Up to +-@S.AnimalDefaults.SpeedMutationAmplitude speed mutation could happen on reproduction </div>
 
 
-</div>
 
-<div class="flex flex-col">
     <div class="flex flex-row">
         <div> AdulthoodAge</div>
         <div> <input @bind=@S.AnimalDefaults.AdulthoodAge type="number" step="1" min="1" max="100" class="@Css.Input"> </div>
+        <div> Sec</div>
     </div>
-    <div> @S.AnimalDefaults.AdulthoodAge Sec</div>
+
+    <div class="flex flex-row">
+        <div> Sense</div>
+        <div> <input @bind=@S.AnimalDefaults.Sense type="number" step="1" min="0" max="100" class="@Css.Input"> </div>
+  
+    </div>
+
 </div>
 
-<Button @onclick="@(e => ResetTheWorld())"
-        class="@Css.Button">
-    Reset The World
-</Button>
-
-
+<div class="border rounded-md m-2 p-2">
+    <Button @onclick="@(e => ResetTheWorld())"
+            class="@Css.Button">
+        Reset The World
+    </Button>
+</div>
 

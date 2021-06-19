@@ -107,6 +107,7 @@ namespace Evolution.Services
                 LastAction = animal.LastAction,
                 NextAction = animal.NextAction,
                 LastChildAt = animal.LastChildAt,
+                Sense = animal.Sense,
                 Location = new LocationDto()
                 {
                     Column = animal.Location.Column,
@@ -124,10 +125,19 @@ namespace Evolution.Services
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (animal == null) return null;
+
+            var rowMinFilter = animal.Location.Row - animal.Sense;
+            var rowMaxFilter = animal.Location.Row + animal.Sense;
+            var colMinFilter = animal.Location.Column - animal.Sense;
+            var colMaxFilter = animal.Location.Column + animal.Sense;
             var food = Context.Plants.Where(p =>
                 p.IsAlive
-                && p.Location.Row == animal.Location.Row
-                && p.Location.Column == animal.Location.Column).ToList();
+                && p.Weight > 0
+                && p.Location.Row >= rowMinFilter 
+                && p.Location.Row <= rowMaxFilter
+                && p.Location.Column >= colMinFilter 
+                && p.Location.Column <= colMaxFilter
+                ).ToList();
             AnimalsFactory.Initialize(animal, food);
 
             return animal;

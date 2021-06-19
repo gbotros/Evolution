@@ -22,8 +22,11 @@ namespace Evolution.Services
 
         public async Task UpdateOrInsert(GameSettingsDto dto)
         {
-            var size = new WorldSize(dto.WorldSize.Width, dto.WorldSize.Height);
-            var defaults = new AnimalDefaults()
+            var orgSettings = await Context.GameSettings.FirstOrDefaultAsync();
+            var settings = orgSettings ?? new GameSettings(Guid.NewGuid());
+
+            settings.WorldSize = new WorldSize(dto.WorldSize.Width, dto.WorldSize.Height);
+            settings.AnimalDefaults = new AnimalDefaults()
             {
                 Speed = dto.AnimalDefaults.Speed,
                 Energy = dto.AnimalDefaults.Energy,
@@ -34,19 +37,11 @@ namespace Evolution.Services
                 MinEnergy = dto.AnimalDefaults.MinEnergy,
                 MinSpeed = dto.AnimalDefaults.MinSpeed,
                 OneFoodToEnergy = dto.AnimalDefaults.OneFoodToEnergy,
-                SpeedMutationAmplitude = dto.AnimalDefaults.SpeedMutationAmplitude
+                SpeedMutationAmplitude = dto.AnimalDefaults.SpeedMutationAmplitude,
+                Sense = dto.AnimalDefaults.Sense
             };
 
-            var orgSettings = await Context.GameSettings.FirstOrDefaultAsync();
-            var exist = orgSettings != null;
-            var id = exist ? orgSettings.Id : Guid.NewGuid();
-            var settings = new GameSettings(id, size, defaults);
-
-            if (exist)
-            {
-                Context.GameSettings.Attach(settings);
-            }
-            else
+            if (orgSettings == null)
             {
                 await Context.GameSettings.AddAsync(settings);
             }
@@ -77,7 +72,8 @@ namespace Evolution.Services
                         MinEnergy = settings.AnimalDefaults.MinEnergy,
                         MaxSpeed = settings.AnimalDefaults.MaxSpeed,
                         MinSpeed = settings.AnimalDefaults.MinSpeed,
-                        SpeedMutationAmplitude = settings.AnimalDefaults.SpeedMutationAmplitude
+                        SpeedMutationAmplitude = settings.AnimalDefaults.SpeedMutationAmplitude,
+                        Sense = settings.AnimalDefaults.Sense
                     }
                 };
             }

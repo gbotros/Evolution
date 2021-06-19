@@ -14,8 +14,7 @@
             new Plant
         </Button>
     </div>
-
-    @*<Button @onclick="@(e => AutoPlay())" class="@Css.Button"> AutoPlay switch </Button>*@
+    
     <div>
         <div>
             Count: @WorldStore.GetAnimalsCount();
@@ -40,8 +39,8 @@
                 @for (var c = 0; c < WorldStore.GameSettingsDto.WorldSize.Width; c++)
                 {
                     <div name="col-@c" class="flex items-center">
-                        <div name="cell-@r-@c" class="flex flex-wrap border-2 border-gray-50 rounded-sm @(!WorldStore.GetAnimalsAt(r, c).Any() ? "bg-gray-100" : "")" style="width: 100px; height: 100px;">
-                            ( @r , @c )
+                        <div name="cell-@r-@c" class="flex flex-wrap border-2 border-gray-50 rounded-sm @(!WorldStore.GetAnimalsAt(r, c).Any() ? "bg-gray-100" : "")" style="width: 32px; height: 32px;">
+                            @*( @r , @c )*@
 
                             @foreach (var plant in WorldStore.GetPlantsAt(r, c))
                             {

@@ -35,7 +35,7 @@ namespace Evolution.Web.Shared
             await OnActed.InvokeAsync(Animal);
         }
 
-        private int GetEnergyPercentage()
+        private double GetEnergyPercentage()
         {
             return Animal.Energy * 100 / Animal.MaxEnergy;
         }

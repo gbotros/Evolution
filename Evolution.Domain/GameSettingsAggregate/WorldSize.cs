@@ -5,7 +5,10 @@ namespace Evolution.Domain.GameSettingsAggregate
 {
     public class WorldSize : ValueObject<WorldSize>
     {
-        protected WorldSize()
+        private int width;
+        private int height;
+
+        public WorldSize()
         {
         }
 
@@ -17,8 +20,31 @@ namespace Evolution.Domain.GameSettingsAggregate
             Height = height;
         }
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public int Width
+        {
+            get
+            {
+                return width;
+            }
+            set
+            {
+                if (value <= 0) throw new ApplicationException("World cannot be smaller than one cell");
+                width = value;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return height;
+            }
+            set
+            {
+                if (value <= 0) throw new ApplicationException("World cannot be smaller than one cell");
+                height = value;
+            }
+        }
 
         protected override bool EqualsCore(WorldSize other)
         {
