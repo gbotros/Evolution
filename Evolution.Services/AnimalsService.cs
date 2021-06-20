@@ -116,6 +116,7 @@ namespace Evolution.Services
                 NextAction = animal.NextAction,
                 LastChildAt = animal.LastChildAt,
                 Sense = animal.Sense,
+                Direction = animal.Direction.ToString(),
                 Location = new LocationDto()
                 {
                     Column = animal.Location.Column,
@@ -138,14 +139,14 @@ namespace Evolution.Services
             var rowMaxFilter = animal.Location.Row + animal.Sense;
             var colMinFilter = animal.Location.Column - animal.Sense;
             var colMaxFilter = animal.Location.Column + animal.Sense;
-            var food = Context.Plants
+            var food = await Context.Plants
                 .Where(p => p.IsAlive)
                 .Where(p => p.Weight > 0)
                 .Where(p => p.Location.Row >= rowMinFilter)
                 .Where(p => p.Location.Row <= rowMaxFilter)
                 .Where(p => p.Location.Column >= colMinFilter)
                 .Where(p => p.Location.Column <= colMaxFilter)
-                .ToList();
+                .ToListAsync();
 
             if (food.Any(f => f.Weight == 0))
             {

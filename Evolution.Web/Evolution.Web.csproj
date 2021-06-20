@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Assets\Fox_Dead.png" />
+    <None Include="wwwroot\Assets\Fox_Down.png" />
+    <None Include="wwwroot\Assets\Fox_Left.png" />
+    <None Include="wwwroot\Assets\Fox_Right.png" />
+    <None Include="wwwroot\Assets\Fox_Up.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />

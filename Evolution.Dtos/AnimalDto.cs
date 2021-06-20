@@ -32,5 +32,6 @@ namespace Evolution.Dtos
 
         public DateTime LastChildAt { get; set; }
         public int Sense { get; set; }
+        public string Direction { get; set; }
     }
 }

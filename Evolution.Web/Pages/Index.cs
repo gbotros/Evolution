@@ -27,7 +27,6 @@ namespace Evolution.Web.Pages
             Init();
             WorldStore.IsLoading = true;
             WorldStore.GameSettingsDto = await GameSettingsService.Get();
-
             WorldStore.IsLoading = false;
         }
 
@@ -40,8 +39,7 @@ namespace Evolution.Web.Pages
                     await ReloadAnimals();
                     await ReloadPlants();
                     StateHasChanged();
-                    //await InvokeAsync(StateHasChanged);
-                    await Task.Delay(1000);
+                    await Task.Delay(100);
                 }
             });
         }
@@ -51,7 +49,7 @@ namespace Evolution.Web.Pages
             var after = WorldStore.LastActionTime;
             var animals = await AnimalsService.GetAll(after);
             WorldStore.SetAnimals(animals);
-            Animals = animals;
+            Animals = WorldStore.GetAnimals();
         }
 
 

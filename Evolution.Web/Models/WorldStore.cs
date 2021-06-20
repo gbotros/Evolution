@@ -24,11 +24,11 @@ namespace Evolution.Web.Models
                 UpdateLastActionTime(animal.LastAction);
                 var existed = AnimalsStore.ContainsKey(animal.Id);
 
-                if (!animal.IsAlive)
-                {
-                    AnimalsStore.Remove(animal.Id);
-                    continue;
-                }
+                //if (!animal.IsAlive)
+                //{
+                //    AnimalsStore.Remove(animal.Id);
+                //    continue;
+                //}
                 
                 if (existed)
                 {
@@ -69,6 +69,11 @@ namespace Evolution.Web.Models
                     PlantsStore[key] = new List<PlantDto> { plant };
                 }
             }
+        }
+
+        public List<AnimalDto> GetAnimals()
+        {
+            return AnimalsStore.Values.ToList();
         }
 
         public List<AnimalDto> GetAnimalsAt(int row, int column)

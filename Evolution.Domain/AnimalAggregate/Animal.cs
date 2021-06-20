@@ -113,8 +113,10 @@ namespace Evolution.Domain.AnimalAggregate
 
         public int AdulthoodAge { get; private set; }
         public DateTime LastChildAt { get; private set; }
-
+         
         public int Sense { get; private set; }
+
+        public Direction Direction { get; set; }
 
         public GameSettings Settings { get; private set; }
 
@@ -162,6 +164,7 @@ namespace Evolution.Domain.AnimalAggregate
         public void Die()
         {
             IsAlive = false;
+            Direction = Direction.Dead;
             DeathTime = DateTime.UtcNow;
         }
 
@@ -300,6 +303,11 @@ namespace Evolution.Domain.AnimalAggregate
             
             newLocation ??= GetRandomNeighbor();
 
+            if (newLocation.Row > Location.Row) Direction = Direction.Down;
+            else if (newLocation.Row < Location.Row) Direction = Direction.Up;
+            else if (newLocation.Column > Location.Column) Direction = Direction.Right;
+            else if (newLocation.Column < Location.Column) Direction = Direction.Left;
+            
             Location = newLocation;
             Steps++;
             Energy -= StepCost;
