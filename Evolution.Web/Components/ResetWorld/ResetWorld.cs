@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Evolution.Dtos;
 using Evolution.Web.Models;
 using Evolution.Web.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace Evolution.Web.Shared
+namespace Evolution.Web.Components.ResetWorld
 {
     public partial class ResetWorld
     {
@@ -24,6 +23,8 @@ namespace Evolution.Web.Shared
         private async Task ResetTheWorld()
         {
             await ResetAnimalsDefaults();
+            WorldStore.SetAnimals(new());
+            WorldStore.SetPlants(new());
             StateHasChanged();
 
             NavigationManager.NavigateTo("/");

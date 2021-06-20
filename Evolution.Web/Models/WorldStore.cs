@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Evolution.Dtos;
 
@@ -6,32 +7,47 @@ namespace Evolution.Web.Models
 {
     public class WorldStore
     {
-        private Dictionary<string, List<AnimalDto>> AnimalsStore { get; } = new();
+        private Dictionary<Guid, AnimalDto> AnimalsStore { get; } = new();
         private Dictionary<string, List<PlantDto>> PlantsStore { get; } = new();
+        public DateTime LastActionTime { get; private set; }
 
         public GameSettingsDto GameSettingsDto { get; set; } = new GameSettingsDto();
+
         public bool IsLoading { get; set; } = false;
 
         public void SetAnimals(List<AnimalDto> animals)
         {
-            AnimalsStore.Clear();
-
+            Console.WriteLine($"SetAnimals: {animals.Count}");
             foreach (var animal in animals)
             {
-                if (!animal.IsAlive) continue;
+                Console.WriteLine($"A: {animal.Name} | R:{animal.Location.Row} | C:{animal.Location.Column} | {animal.IsAlive}");
+                UpdateLastActionTime(animal.LastAction);
+                var existed = AnimalsStore.ContainsKey(animal.Id);
 
-                var key = GenerateLocationStoreKey(animal.Location);
-
-                if (AnimalsStore.ContainsKey(key))
+                if (!animal.IsAlive)
                 {
-                    AnimalsStore[key].Add(animal);
+                    AnimalsStore.Remove(animal.Id);
+                    continue;
+                }
+                
+                if (existed)
+                {
+                    AnimalsStore[animal.Id] = animal;
                 }
                 else
                 {
-                    AnimalsStore[key] = new List<AnimalDto> { animal };
+                    AnimalsStore.Add(animal.Id, animal);
                 }
             }
 
+        }
+
+        private void UpdateLastActionTime(DateTime t)
+        {
+            if (LastActionTime < t)
+            {
+                LastActionTime = t;
+            }
         }
 
         public void SetPlants(List<PlantDto> plants)
@@ -57,18 +73,7 @@ namespace Evolution.Web.Models
 
         public List<AnimalDto> GetAnimalsAt(int row, int column)
         {
-            var key = GenerateLocationStoreKey(row, column);
-            return AnimalsStore.ContainsKey(key) ? AnimalsStore[key] : new List<AnimalDto>();
-        }
-
-        public List<AnimalDto> GetAllLiveAnimals()
-        {
-            return AnimalsStore.Values.SelectMany(l => l).Where(a => a.IsAlive).ToList();
-        }
-
-        public List<PlantDto> GetAllLivePlants()
-        {
-            return PlantsStore.Values.SelectMany(l => l).Where(a => a.IsAlive).ToList();
+            return AnimalsStore.Values.Where(a => a.Location.Row == row && a.Location.Column == column).ToList();
         }
 
         public List<PlantDto> GetPlantsAt(int row, int column)
@@ -79,15 +84,13 @@ namespace Evolution.Web.Models
 
         public int GetAnimalsCount()
         {
-            return AnimalsStore.Values.Select(l => l.Count).Sum();
+            return AnimalsStore.Values.Count;
         }
 
         public double GetAnimalsAvgSpeed()
         {
-            var animals = AnimalsStore.Values.SelectMany(l => l).ToList();
-            if (!animals.Any()) return 0;
-
-            return animals.Average(a => a.Speed);
+            if (!AnimalsStore.Values.Any()) return 0;
+            return AnimalsStore.Values.Average(a => a.Speed);
         }
 
         public int GetAvailableFood()
@@ -109,9 +112,7 @@ namespace Evolution.Web.Models
 
         }
 
+
     }
-
-
-
 
 }

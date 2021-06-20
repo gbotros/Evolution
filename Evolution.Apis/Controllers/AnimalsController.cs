@@ -19,11 +19,12 @@ namespace Evolution.Apis.Controllers
         }
 
         [HttpGet]
-        public async Task<IList<AnimalDto>> Get() => await Service.Get();
+        [Route("{after}")]
+        public async Task<IList<AnimalDto>> Get(DateTime after) => await Service.Get(after);
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<AnimalDto> Get(Guid id) => await Service.Get(id);
+        //[HttpGet]
+        //[Route("{id}")]
+        //public async Task<AnimalDto> Get(Guid id) => await Service.Get(id);
 
         [HttpPost]
         public async Task Post([FromBody] string name) => await Service.CreateNew(name);

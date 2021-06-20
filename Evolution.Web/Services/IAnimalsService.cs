@@ -10,6 +10,6 @@ namespace Evolution.Web.Services
         Task CreateNew(string newAnimalName);
         Task Kill(Guid id);
         Task Act(Guid id);
-        Task<List<AnimalDto>> GetAll();
+        Task<List<AnimalDto>> GetAll(DateTime after);
     }
 }

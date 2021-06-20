@@ -7,7 +7,7 @@ namespace Evolution.Services
 {
     public interface IAnimalsService
     {
-        Task<IList<AnimalDto>> Get();
+        Task<IList<AnimalDto>> Get(DateTime after);
         Task<AnimalDto> Get(Guid id);
         Task Act(Guid id);
         Task<string> Act();

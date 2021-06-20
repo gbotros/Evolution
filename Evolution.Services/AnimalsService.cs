@@ -70,9 +70,18 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
-        public async Task<IList<AnimalDto>> Get()
+        public async Task<IList<AnimalDto>> Get(DateTime after)
         {
-            var animals = await Context.Animals.ToListAsync();
+            var animals = await Context
+                .Animals
+                .Where(a => a.LastAction >= after)
+                .ToListAsync();
+
+            //var newLast = animals.Max(a => a.LastAction);
+            //var count = animals.Count();
+
+            //Console.WriteLine($"after:{after} | new:{newLast} | Count:{count}");
+
             return animals.Select(MapToDto).ToList();
         }
 
@@ -129,14 +138,20 @@ namespace Evolution.Services
             var rowMaxFilter = animal.Location.Row + animal.Sense;
             var colMinFilter = animal.Location.Column - animal.Sense;
             var colMaxFilter = animal.Location.Column + animal.Sense;
-            var food = Context.Plants.Where(p =>
-                p.IsAlive
-                && p.Weight > 0
-                && p.Location.Row >= rowMinFilter 
-                && p.Location.Row <= rowMaxFilter
-                && p.Location.Column >= colMinFilter 
-                && p.Location.Column <= colMaxFilter
-                ).ToList();
+            var food = Context.Plants
+                .Where(p => p.IsAlive)
+                .Where(p => p.Weight > 0)
+                .Where(p => p.Location.Row >= rowMinFilter)
+                .Where(p => p.Location.Row <= rowMaxFilter)
+                .Where(p => p.Location.Column >= colMinFilter)
+                .Where(p => p.Location.Column <= colMaxFilter)
+                .ToList();
+
+            if (food.Any(f => f.Weight == 0))
+            {
+                ;
+            }
+
             AnimalsFactory.Initialize(animal, food);
 
             return animal;

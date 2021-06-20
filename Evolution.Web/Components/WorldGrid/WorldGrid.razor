@@ -42,14 +42,14 @@
                         <div name="cell-@r-@c" class="flex flex-wrap border-2 border-gray-50 rounded-sm @(!WorldStore.GetAnimalsAt(r, c).Any() ? "bg-gray-100" : "")" style="width: 32px; height: 32px;">
                             @*( @r , @c )*@
 
-                            @foreach (var plant in WorldStore.GetPlantsAt(r, c))
+                            @foreach (var plant in GetPlantsAt(r, c))
                             {
-                                <PlantComponent Plant="@plant" OnActed="@ReloadPlants"></PlantComponent>
+                                <PlantComponent Plant="@plant"></PlantComponent>
                             }
 
-                            @foreach (var animal in WorldStore.GetAnimalsAt(r, c))
+                            @foreach (var animal in GetAnimalsAt(r, c))
                             {
-                                <AnimalComponent Animal="@animal" OnActed="@ReloadAnimals"></AnimalComponent>
+                                <AnimalComponent Animal="@animal"></AnimalComponent>
                             }
 
                         </div>

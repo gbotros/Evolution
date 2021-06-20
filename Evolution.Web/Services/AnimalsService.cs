@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Web;
 using Evolution.Dtos;
 
 namespace Evolution.Web.Services
@@ -32,9 +33,11 @@ namespace Evolution.Web.Services
             await Client.PutAsJsonAsync($"{animalsUrl}/{id}", "");
         }
 
-        public async Task<List<AnimalDto>> GetAll()
+        public async Task<List<AnimalDto>> GetAll(DateTime after)
         {
-            return await Client.GetFromJsonAsync<List<AnimalDto>>(animalsUrl);
+            var afterFormatted = after.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
+            var encoded = HttpUtility.UrlEncode($"{afterFormatted}");
+            return await Client.GetFromJsonAsync<List<AnimalDto>>($"{animalsUrl}/{encoded}");
         }
 
     }

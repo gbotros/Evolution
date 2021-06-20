@@ -5,7 +5,7 @@ using Evolution.Web.Models;
 using Evolution.Web.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace Evolution.Web.Shared
+namespace Evolution.Web.Components.Animal
 {
     public partial class AnimalComponent : ComponentBase
     {

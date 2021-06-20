@@ -13,4 +13,5 @@ group by speed
 order by count(id)
 
 
-select crea from animals where IsAlive = 1
+select Name, Cast ( Energy as INT ) as E ,   speed, StoredFood, LastAction  from animals where IsAlive = 1
+order by Speed  
