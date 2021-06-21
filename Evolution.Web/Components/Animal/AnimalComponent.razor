@@ -12,7 +12,7 @@
             <div class="rounded-sm border border-gray-300 @((i <= Animal.StoredFood) ? "bg-green-500" : "border-gray-500")" style="width: 5px; height: 5px"></div>
         }
     </div>
-    <img style="width: 32px; height: 32px;" class="opacity-75" src="Assets/Fox_@(Animal.Direction).png"> 
+    <img style="width: 32px; height: 32px;" class="@(Animal.IsAlive ? "opacity-75": "opacity-25")" src="Assets/Fox_@(Animal.Direction).png"> 
 
 </div>
 

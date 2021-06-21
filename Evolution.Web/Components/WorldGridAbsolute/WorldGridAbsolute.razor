@@ -40,14 +40,14 @@
         <div class="bg-blue-100" style="width: 1200px; height: 700px;position: relative">
             @foreach (var a in Animals)
             {
-                <div id="animal-@a.Id" style="left: @(a.Location.Column*100)px; top: @(a.Location.Row*100)px; position: absolute; width: 100px; height: 100px; transition:all @(1/a.Speed)s linear;">
+                <div id="animal-@a.Id" style="left: @(a.Location.Column*32)px; top: @(a.Location.Row*32)px; position: absolute; width: 32px; height: 32px; transition:all @(1/a.Speed)s linear;">
                     <AnimalComponent Animal="a"></AnimalComponent>
                 </div>
             }
 
             @foreach (var p in Plants)
             {
-                <div id="plant-@p.Id" style="left: @(p.Location.Column*100)px;top: @(p.Location.Row*100)px;position: absolute;width: 100px;height: 100px;">
+                <div id="plant-@p.Id" style="left: @(p.Location.Column*32)px;top: @(p.Location.Row*32)px;position: absolute;width: 32px;height: 32px;">
                     <PlantComponent Plant="p"></PlantComponent>
                 </div>
             }

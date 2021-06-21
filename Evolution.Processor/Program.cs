@@ -47,7 +47,7 @@ namespace Evolution.Processor
                     services.AddScoped<ILocationService, LocationService>();
                     services.AddScoped<IGameCalender, GameCalender>();
                     var connectionString = hb.Configuration.GetConnectionString("DefaultConnection");
-                    services.AddSingleton(new EvolutionContextOptions(connectionString, false));
+                    services.AddSingleton(new EvolutionContextOptions(connectionString, true));
                     services.AddScoped<IEvolutionContext, EvolutionContext>();
                     services.AddMediatR(typeof(AnimalBornEventHandler).GetTypeInfo().Assembly);
                     services.AddSingleton(new AnimalDefaults());
