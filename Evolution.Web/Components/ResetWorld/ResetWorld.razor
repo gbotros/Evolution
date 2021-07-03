@@ -23,6 +23,13 @@
         <div> @S.AnimalDefaults.Speed Actions per sec </div>
         <div> Costs @(S.AnimalDefaults.Speed * 2) Energy unit per action </div>
     </div>
+    <div class="flex flex-row">
+        <div> SpeedMutationAmplitude </div>
+        <div> <input @bind=@S.AnimalDefaults.SpeedMutationAmplitude type="number" step="1" min="0" max="1000" class="@Css.Input"> </div>
+
+        <div> Up to +-@S.AnimalDefaults.SpeedMutationAmplitude speed mutation could happen on reproduction </div>
+    </div>
+
 </div>
 
 @* Energy *@
@@ -70,15 +77,13 @@
 
 @*other*@
 <div class="border rounded-md m-2 p-2">
-
+    
     <div class="flex flex-row">
-        <div> SpeedMutationAmplitude </div>
-        <div> <input @bind=@S.AnimalDefaults.SpeedMutationAmplitude type="number" step="1" min="0" max="1000" class="@Css.Input"> </div>
+        <div> SenseMutationAmplitude </div>
+        <div> <input @bind=@S.AnimalDefaults.SenseMutationAmplitude type="number" step="1" min="0" max="1000" class="@Css.Input"> </div>
 
-        <div> Up to +-@S.AnimalDefaults.SpeedMutationAmplitude speed mutation could happen on reproduction </div>
+        <div> Up to +-@S.AnimalDefaults.SenseMutationAmplitude sense mutation could happen on reproduction </div>
     </div>
-
-
 
     <div class="flex flex-row">
         <div> AdulthoodAge</div>

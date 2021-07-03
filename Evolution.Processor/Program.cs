@@ -39,7 +39,6 @@ namespace Evolution.Processor
                 })
                 .ConfigureServices((hb, services) =>
                 {
-                    services.AddSingleton(CreateWorldSize(hb.Configuration));
                     services.AddScoped<IPlantsService, PlantsService>();
                     services.AddScoped<IPlantsFactory, PlantsFactory>();
                     services.AddScoped<IAnimalsService, AnimalsService>();
@@ -50,28 +49,15 @@ namespace Evolution.Processor
                     services.AddSingleton(new EvolutionContextOptions(connectionString, true));
                     services.AddScoped<IEvolutionContext, EvolutionContext>();
                     services.AddMediatR(typeof(AnimalBornEventHandler).GetTypeInfo().Assembly);
-                    services.AddSingleton(new AnimalDefaults());
+               
                 })
                 .Build();
             
-            //while (true)
-            //{
-            //    var exist = await service.Act();
-            //    if (!exist) await Task.Delay(100);
-            //}
-
             using (host)
             {
                 await host.RunAsync();
             }
         }
-
-        private static WorldSize CreateWorldSize(IConfiguration Configuration)
-        {
-            var width = Convert.ToInt32(Configuration["WorldSize:Width"]);
-            var height = Convert.ToInt32(Configuration["WorldSize:Height"]);
-            var worldSize = new WorldSize(width, height);
-            return worldSize;
-        }
+        
     }
 }

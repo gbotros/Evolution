@@ -27,7 +27,10 @@ namespace Evolution.Domain.AnimalAggregate
             int foodStorageCapacity,
             int oneFoodToEnergy,
             int adulthoodAge,
-            int sense
+            int sense,
+            int minSense,
+            int maxSense,
+            uint senseMutationAmplitude
         ) : base(id)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
@@ -57,11 +60,16 @@ namespace Evolution.Domain.AnimalAggregate
             NextAction = creationTime;
 
             Sense = sense;
+            MinSense = minSense;
+            MaxSense = maxSense;
+            SenseMutationAmplitude = senseMutationAmplitude;
+
+            Random = new ((int)DateTime.Now.Ticks);
         }
 
         protected Animal()
         {
-
+            Random = new ((int)DateTime.Now.Ticks);
         }
 
         public DateTime CreationTime { get; private set; }
@@ -110,12 +118,15 @@ namespace Evolution.Domain.AnimalAggregate
         public int OneFoodToEnergy { get; private set; }
 
         public uint SpeedMutationAmplitude { get; private set; }
+        public uint SenseMutationAmplitude { get; private set; }
 
         public int AdulthoodAge { get; private set; }
         public DateTime LastChildAt { get; private set; }
-         
-        public int Sense { get; private set; }
 
+        public int Sense { get; private set; }
+        public int MinSense { get; private set; }
+        public int MaxSense { get; private set; }
+        private Random Random { get; }
         public Direction Direction { get; set; }
 
         public GameSettings Settings { get; private set; }
@@ -234,10 +245,9 @@ namespace Evolution.Domain.AnimalAggregate
 
         private double GetMutatedSpeed()
         {
-            var rand = new Random((int)DateTime.Now.Ticks);
             var minMutation = -1 * (int)SpeedMutationAmplitude;
             var maxMutation = (int)SpeedMutationAmplitude;
-            var mutation = rand.NextDouble() * rand.Next(minMutation, maxMutation + 1);
+            var mutation = Random.NextDouble() * Random.Next(minMutation, maxMutation + 1);
 
             var mutantSpeed = Speed + mutation;
 
@@ -247,13 +257,27 @@ namespace Evolution.Domain.AnimalAggregate
             return mutantSpeed;
         }
 
+        private int GetMutatedSense()
+        {
+            var minMutation = -1 * (int)SenseMutationAmplitude;
+            var maxMutation = (int)SenseMutationAmplitude;
+            var mutation = Random.Next(minMutation, maxMutation + 1);
+
+            var mutantSense = Sense + mutation;
+
+            if (mutantSense < MinSense) mutantSense = MinSense;
+            if (mutantSense > MaxSense) mutantSense = MaxSense;
+
+            return mutantSense;
+        }
+
         private Location GetRandomNeighbor()
         {
             var neighbours = Location.GetNeighbours(Settings.WorldSize);
             var neighboursCount = neighbours.Count();
             if (neighboursCount == 0) return Location;
 
-            var newLocationIndex = new Random((int)DateTime.Now.Ticks).Next(0, neighboursCount);
+            var newLocationIndex = Random.Next(0, neighboursCount);
             var newLocation = neighbours.ElementAt(newLocationIndex);
 
             return newLocation;
@@ -300,14 +324,14 @@ namespace Evolution.Domain.AnimalAggregate
                 var food = GetClosestFood();
                 newLocation = StepInDirection(food?.Location);
             }
-            
+
             newLocation ??= GetRandomNeighbor();
 
             if (newLocation.Row > Location.Row) Direction = Direction.Down;
             else if (newLocation.Row < Location.Row) Direction = Direction.Up;
             else if (newLocation.Column > Location.Column) Direction = Direction.Right;
             else if (newLocation.Column < Location.Column) Direction = Direction.Left;
-            
+
             Location = newLocation;
             Steps++;
             Energy -= StepCost;
@@ -352,7 +376,11 @@ namespace Evolution.Domain.AnimalAggregate
                 Settings.AnimalDefaults.SpeedMutationAmplitude,
                 Settings.AnimalDefaults.MinEnergy,
                 Settings.AnimalDefaults.MaxEnergy,
-                Settings.AnimalDefaults.Sense);
+                GetMutatedSense(),
+                Settings.AnimalDefaults.MinSense,
+                Settings.AnimalDefaults.MaxSense,
+                Settings.AnimalDefaults.SenseMutationAmplitude
+                );
 
             RaiseEvent(sonBornEvent);
         }
@@ -377,5 +405,6 @@ namespace Evolution.Domain.AnimalAggregate
         {
             IsAdult = IsAdult || GetAge(now) >= AdulthoodAge;
         }
+
     }
 }

@@ -40,26 +40,32 @@ namespace Evolution.Domain.AnimalAggregate
                 settings.AnimalDefaults.FoodStorageCapacity,
                 settings.AnimalDefaults.OneFoodToEnergy,
                 settings.AnimalDefaults.AdulthoodAge,
-                settings.AnimalDefaults.Sense
-                );
+                settings.AnimalDefaults.Sense,
+                settings.AnimalDefaults.MinSense,
+                settings.AnimalDefaults.MaxSense,
+                settings.AnimalDefaults.SenseMutationAmplitude
+            );
         }
 
         public Animal CreateNew(
-            string name, 
-            Guid? parentId, 
+            string name,
+            Guid? parentId,
             Location location,
             GameSettings settings,
-            double energy, 
+            double energy,
             int foodStorageCapacity,
-            double speed, 
-            int oneFoodToEnergy, 
+            double speed,
+            int oneFoodToEnergy,
             int adulthoodAge,
             double minSpeed,
             double maxSpeed,
             uint speedMutationAmplitude,
             double minEnergy,
             double maxEnergy,
-            int sense)
+            int sense,
+            int minSense,
+            int maxSense,
+            uint senseMutationAmplitude)
         {
             var id = Guid.NewGuid();
             var now = GameCalender.Now;
@@ -82,7 +88,10 @@ namespace Evolution.Domain.AnimalAggregate
                 foodStorageCapacity,
                 oneFoodToEnergy,
                 adulthoodAge,
-                sense);
+                sense,
+                minSense,
+                maxSense,
+                senseMutationAmplitude);
         }
 
         public void Initialize(Animal animal, IReadOnlyCollection<IFood> food)

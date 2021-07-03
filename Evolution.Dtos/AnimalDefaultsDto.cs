@@ -14,5 +14,8 @@
         public int AdulthoodAge { get; set; } = 30;
         public int Sense { get; set; } = 1; // animal can see locations around him
 
+        public int MinSense { get; set; } = 0;
+        public int MaxSense { get; set; } = 1000;
+        public uint SenseMutationAmplitude { get; set; } = 1;
     }
 }

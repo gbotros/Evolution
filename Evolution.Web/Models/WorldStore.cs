@@ -98,6 +98,12 @@ namespace Evolution.Web.Models
             return AnimalsStore.Values.Average(a => a.Speed);
         }
 
+        public double GetAnimalsAvgSense()
+        {
+            if (!AnimalsStore.Values.Any()) return 0;
+            return AnimalsStore.Values.Average(a => a.Sense);
+        }
+
         public int GetAvailableFood()
         {
             return PlantsStore.Values.Sum(l => l.Sum(p => p.Weight));

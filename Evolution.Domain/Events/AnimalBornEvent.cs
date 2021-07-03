@@ -19,7 +19,10 @@ namespace Evolution.Domain.Events
             uint speedMutationAmplitude,
             double minEnergy,
             double maxEnergy,
-            int sense)
+            int sense,
+            int minSense, 
+            int maxSense,
+            uint senseMutationAmplitude)
         {
             Name = name;
             Location = location;
@@ -35,6 +38,9 @@ namespace Evolution.Domain.Events
             MinEnergy = minEnergy;
             MaxEnergy = maxEnergy;
             Sense = sense;
+            MinSense = minSense;
+            MaxSense = maxSense;
+            SenseMutationAmplitude = senseMutationAmplitude;
         }
 
         public string Name { get; }
@@ -50,6 +56,9 @@ namespace Evolution.Domain.Events
         public uint SpeedMutationAmplitude { get; }
         public double MinEnergy { get; }
         public double MaxEnergy { get; }
-        public int Sense { get; set; }
+        public int Sense { get; }
+        public int MinSense { get; }
+        public int MaxSense { get; }
+        public uint SenseMutationAmplitude { get; }
     }
 }

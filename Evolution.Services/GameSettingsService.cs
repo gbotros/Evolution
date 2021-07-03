@@ -33,7 +33,10 @@ namespace Evolution.Services
                 MinSpeed = dto.AnimalDefaults.MinSpeed,
                 OneFoodToEnergy = dto.AnimalDefaults.OneFoodToEnergy,
                 SpeedMutationAmplitude = dto.AnimalDefaults.SpeedMutationAmplitude,
-                Sense = dto.AnimalDefaults.Sense
+                Sense = dto.AnimalDefaults.Sense,
+                MinSense = dto.AnimalDefaults.MinSense,
+                MaxSense = dto.AnimalDefaults.MaxSense,
+                SenseMutationAmplitude = dto.AnimalDefaults.SenseMutationAmplitude,
             };
 
             if (orgSettings == null)
@@ -68,7 +71,10 @@ namespace Evolution.Services
                         MaxSpeed = settings.AnimalDefaults.MaxSpeed,
                         MinSpeed = settings.AnimalDefaults.MinSpeed,
                         SpeedMutationAmplitude = settings.AnimalDefaults.SpeedMutationAmplitude,
-                        Sense = settings.AnimalDefaults.Sense
+                        Sense = settings.AnimalDefaults.Sense,
+                        MinSense = settings.AnimalDefaults.MinSense,
+                        MaxSense = settings.AnimalDefaults.MaxSense,
+                        SenseMutationAmplitude = settings.AnimalDefaults.SenseMutationAmplitude
                     }
                 };
             }

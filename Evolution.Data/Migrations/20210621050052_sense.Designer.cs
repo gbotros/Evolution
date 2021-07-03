@@ -4,14 +4,16 @@ using Evolution.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Evolution.Data.Migrations
 {
     [DbContext(typeof(EvolutionContext))]
-    partial class EvolutionContextModelSnapshot : ModelSnapshot
+    [Migration("20210621050052_sense")]
+    partial class sense
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,9 +240,6 @@ namespace Evolution.Data.Migrations
 
                             b1.Property<int>("Sense")
                                 .HasColumnType("int");
-
-                            b1.Property<long>("SenseMutationAmplitude")
-                                .HasColumnType("bigint");
 
                             b1.Property<double>("Speed")
                                 .HasColumnType("float");

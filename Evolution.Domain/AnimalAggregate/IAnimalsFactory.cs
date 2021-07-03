@@ -25,7 +25,10 @@ namespace Evolution.Domain.AnimalAggregate
             uint speedMutationAmplitude,
             double minEnergy,
             double maxEnergy,
-            int sense);
+            int sense,
+            int minSense,
+            int maxSense,
+            uint senseMutationAmplitude);
 
     }
 }

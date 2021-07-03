@@ -21,6 +21,9 @@ namespace Evolution.Domain.GameSettingsAggregate
 
         public int AdulthoodAge { get; set; }
         public int Sense { get; set; }
+        public int MinSense { get; set; }
+        public int MaxSense { get; set; }
+        public uint SenseMutationAmplitude { get; set; }
 
         protected override bool EqualsCore(AnimalDefaults other)
         {
@@ -35,7 +38,11 @@ namespace Evolution.Domain.GameSettingsAggregate
                 && OneFoodToEnergy == other.OneFoodToEnergy
                 && SpeedMutationAmplitude == other.SpeedMutationAmplitude
                 && AdulthoodAge == other.AdulthoodAge
-                && Sense == other.Sense;
+                && Sense == other.Sense
+                && MinSense == other.MinSense
+                && MaxSense == other.MaxSense
+                && SenseMutationAmplitude == other.SenseMutationAmplitude
+                ;
         }
 
         protected override int GetHashCodeCore()

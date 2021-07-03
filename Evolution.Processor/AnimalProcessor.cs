@@ -18,15 +18,10 @@ namespace Evolution.Processor
         [FunctionName("AnimalAct")]
         public async Task Run([TimerTrigger("* * * * * *")] TimerInfo myTimer, ILogger log)
         {
-            //if (myTimer.IsPastDue) log.LogInformation("Timer is running late!");
-            //log.LogInformation($"Animal Act Timer triggered at: {DateTime.Now}");
-
             while (true)
             {
                 var actedAnimal = await Service.Act();
                 if (string.IsNullOrEmpty(actedAnimal)) break;
-
-                log.LogWarning($" {DateTime.Now} - {actedAnimal}");
             }
 
         }

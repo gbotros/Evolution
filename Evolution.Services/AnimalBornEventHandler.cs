@@ -37,7 +37,10 @@ namespace Evolution.Services
                 notification.SpeedMutationAmplitude,
                 notification.MinEnergy,
                 notification.MaxEnergy,
-                notification.Sense
+                notification.Sense,
+                notification.MinSense,
+                notification.MaxSense,
+                notification.SenseMutationAmplitude
             );
 
             await Context.Animals.AddAsync(newAnimal, cancellationToken);

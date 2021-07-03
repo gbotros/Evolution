@@ -24,6 +24,9 @@ namespace Evolution.Services
             Context = context;
             AnimalsFactory = animalsFactory;
             GameCalender = gameCalender;
+
+
+            Console.WriteLine("new AnimalsService");
         }
 
         public async Task Act(Guid id)
@@ -140,22 +143,24 @@ namespace Evolution.Services
             var colMinFilter = animal.Location.Column - animal.Sense;
             var colMaxFilter = animal.Location.Column + animal.Sense;
             var food = await Context.Plants
-                .Where(p => p.IsAlive)
-                .Where(p => p.Weight > 0)
-                .Where(p => p.Location.Row >= rowMinFilter)
-                .Where(p => p.Location.Row <= rowMaxFilter)
-                .Where(p => p.Location.Column >= colMinFilter)
-                .Where(p => p.Location.Column <= colMaxFilter)
+                .Where(p => p.IsAlive
+                            && p.Weight > 0
+                            && p.Location.Row >= rowMinFilter
+                            && p.Location.Row <= rowMaxFilter
+                            && p.Location.Column >= colMinFilter
+                            && p.Location.Column <= colMaxFilter)
                 .ToListAsync();
 
-            if (food.Any(f => f.Weight == 0))
+            // TODO: temp solution for a bug
+            if (food.Any(f => f.Weight <= 0))
             {
-                ;
+                food = food.Where(f => f.Weight > 0).ToList();
             }
 
             AnimalsFactory.Initialize(animal, food);
 
             return animal;
         }
+
     }
 }

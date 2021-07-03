@@ -49,6 +49,9 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1,
                 1,
                 60,
+                1,
+                1,
+                1,
                 1);
 
             // act
@@ -86,6 +89,9 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1,
                 1,
                 60,
+                1,
+                1,
+                1,
                 1);
 
             // act
@@ -125,6 +131,9 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1,
                 1,
                 60,
+                1,
+                1,
+                1,
                 1);
 
             // act
@@ -172,6 +181,9 @@ namespace Evolution.Domain.Tests.AnimalTests
                 10,
                 1,
                 60,
+                1,
+                1,
+                1,
                 1);
             var initialFoodAmount = food.Sum(f => f.Weight);
 

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Evolution.Domain.AnimalAggregate;
@@ -27,6 +28,8 @@ namespace Evolution.Data
         {
             Options = options;
             Mediator = mediator;
+
+            Console.WriteLine("new EvolutionContext");
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
