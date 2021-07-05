@@ -107,6 +107,8 @@ namespace Evolution.Services
                 MinEnergy = animal.MinEnergy,
                 MaxEnergy = animal.MaxEnergy,
                 Energy = animal.Energy,
+                MinFoodStorageCapacity = animal.MinFoodStorageCapacity,
+                MaxFoodStorageCapacity = animal.MaxFoodStorageCapacity,
                 FoodStorageCapacity = animal.FoodStorageCapacity,
                 Name = animal.Name,
                 ParentId = animal.ParentId,
@@ -118,8 +120,12 @@ namespace Evolution.Services
                 LastAction = animal.LastAction,
                 NextAction = animal.NextAction,
                 LastChildAt = animal.LastChildAt,
+                MinSense = animal.MinSense,
+                MaxSense = animal.MaxSense,
                 Sense = animal.Sense,
+                Age = animal.GetAge(GameCalender.Now),
                 Direction = animal.Direction.ToString(),
+                StepCost = animal.StepCost,
                 Location = new LocationDto()
                 {
                     Column = animal.Location.Column,

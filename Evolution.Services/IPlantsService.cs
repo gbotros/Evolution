@@ -7,11 +7,12 @@ namespace Evolution.Services
 {
     public interface IPlantsService
     {
-        Task<IList<PlantDto>> Get();
-        Task<PlantDto> Get(Guid plantId);
-        Task GrowAll();
-        Task Act(Guid plantId);
-        Task CreateNew();
+        Task<IList<PlantDto>> GetAllAlive();
+        //Task<PlantDto> Get(Guid plantId);
+        //Task GrowAll();
+        Task AddFoodAtRandomPlaces(int count);
+        //Task Act(Guid plantId);
+        //Task CreateNew();
         Task DeleteAll();
     }
 }

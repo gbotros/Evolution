@@ -1,43 +1,44 @@
 ﻿
-<div>
+<div @onmouseout="@OnMouseOut" @onmouseover="@OnMouseOver" @onclick="@OnClick">
 
-    <div class="bg-gray-50 rounded-sm ">
-        <div id="energyBar-@Animal.Id" class="rounded-sm text-xs @GetEnergyPercentageColor()" style="width: @GetEnergyPercentage()%; height: 5px;">
-            @*@GetEnergyPercentage()%*@
+    @if (Animal.IsAlive)
+    {
+        <div class="bg-gray-50 rounded-sm ">
+            <div id="energyBar-@Animal.Id" class="rounded-sm text-xs @GetEnergyPercentageColor()" style="width: @GetEnergyPercentage()%; height: 5px;">
+                @*@GetEnergyPercentage()%*@
+            </div>
         </div>
-    </div>
-    <div name="food" class="flex flex-wrap">
-        @for (int i = 1; i <= Animal.FoodStorageCapacity; i++)
-        {
-            <div class="rounded-sm border border-gray-300 @((i <= Animal.StoredFood) ? "bg-green-500" : "border-gray-500")" style="width: 5px; height: 5px"></div>
-        }
-    </div>
-    <img style="width: 32px; height: 32px;" class="@(Animal.IsAlive ? "opacity-75": "opacity-25")" src="Assets/Fox_@(Animal.Direction).png"> 
+        <div name="food" class="flex flex-wrap">
+            @for (int i = 1; i <= Animal.FoodStorageCapacity; i++)
+            {
+                <div class="rounded-sm border border-gray-300 @((i <= Animal.StoredFood) ? "bg-green-500" : "border-gray-500")" style="width: 5px; height: 5px"></div>
+            }
+        </div>
+    }
 
+
+    <img style="width: 32px; height: 32px;" class="@(Animal.IsAlive ? "opacity-75" : "opacity-10")" src="Assets/Fox_@(Animal.Direction).png">
+    <span class="text-red-600"> @CalculateActionDelay() </span>
 </div>
 
 
+@if (showStats)
+{
+    <div class="bg-yellow-50 rounded-md p-2 ring-4 ring-yellow-100" style="width: auto; position: absolute; white-space: nowrap;">
+        <div class="flex-col">
 
-@*<div>
-        <div class="@(Animal.IsAlive ? "" : "text-red-300")">
-            🐓
+            <div> Energy: @((int) @Animal.Energy) | StepCost: @((int)Animal.StepCost) | availableSteps: @((int)(@Animal.Energy/ Animal.StepCost))</div>
+            <div> Weight: @Animal.Weight | Steps: @Animal.Steps </div>
+            <div> Age: @((int) @Animal.Age) </div>
+            <div> Sense: @Animal.Sense </div>
+            <div> Food: @Animal.MinFoodStorageCapacity | @Animal.StoredFood:@Animal.FoodStorageCapacity | @Animal.MaxFoodStorageCapacity </div>
+            <div> Speed: @((int)Animal.Speed) | Delay: @CalculateActionDelay() </div>
+            <div> Sense: @Animal.MinSense | @Animal.Sense | @Animal.MaxSense </div>
+            <div> ChildrenCount: @Animal.ChildrenCount </div>
 
-            @Animal.Name
-
-            @if (Animal.IsAlive)
-            {
-                <span> @(Animal.Energy/1000)K</span>
-                <span> |S:@Animal.Steps|</span>
-            }
+            <button @onclick="CloseStats" class="@Css.Button">
+                Close
+            </button>
         </div>
-        @if (Animal.IsAlive)
-        {
-            <Button @onclick="@(e => Act(@Animal.Id))" class="hover:bg-blue-500 rounded">
-                ▶️
-            </Button>
-            <Button @onclick="@(e => Kill(@Animal.Id))" class="hover:bg-blue-500 rounded">
-                💀
-            </Button>
-        }
-
-    </div>*@
+    </div>
+}

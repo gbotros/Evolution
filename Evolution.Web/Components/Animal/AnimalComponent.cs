@@ -4,6 +4,7 @@ using Evolution.Dtos;
 using Evolution.Web.Models;
 using Evolution.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Evolution.Web.Components.Animal
 {
@@ -20,6 +21,11 @@ namespace Evolution.Web.Components.Animal
 
         [Parameter]
         public EventCallback<AnimalDto> OnActed { get; set; }
+
+        private bool statsOpen { get; set; } = false;
+        private bool hovering { get; set; } = false;
+
+        private bool showStats => hovering || statsOpen;
 
         public async Task Act(Guid id)
         {
@@ -44,6 +50,48 @@ namespace Evolution.Web.Components.Animal
             if (percentage > 30) return "bg-green-300";
             if (percentage > 10) return "bg-yellow-300";
             return "bg-red-300";
+        }
+
+        private string CalculateActionDelay()
+        {
+            if (!Animal.IsAlive)
+            {
+                return "";
+            }
+
+            var now = DateTime.UtcNow;
+            var velocity = 1d / Animal.Speed;
+            var timeSpan = TimeSpan.FromSeconds(velocity);
+            var expectedLastAction = now - timeSpan;
+            var delay = expectedLastAction - Animal.LastAction;
+            var delayInSec = (int)delay.TotalSeconds;
+
+            if (delayInSec <= 0)
+            {
+                return "";
+            }
+
+            return delayInSec.ToString();
+        }
+
+        private void OnMouseOut(MouseEventArgs obj)
+        {
+            hovering = false;
+        }
+
+        private void OnMouseOver(MouseEventArgs obj)
+        {
+            hovering = true;
+        }
+        
+        private void CloseStats(MouseEventArgs obj)
+        {
+            statsOpen = false;
+        }
+
+        private void OnClick(MouseEventArgs obj)
+        {
+            statsOpen = true;
         }
     }
 }

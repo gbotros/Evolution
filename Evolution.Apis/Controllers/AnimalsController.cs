@@ -24,21 +24,21 @@ namespace Evolution.Apis.Controllers
 
         //[HttpGet]
         //[Route("{id}")]
-        //public async Task<AnimalDto> Get(Guid id) => await Service.Get(id);
+        //public async Task<AnimalDto> GetAllAlive(Guid id) => await Service.GetAllAlive(id);
 
         [HttpPost]
         public async Task Post([FromBody] string name) => await Service.CreateNew(name);
 
-        [HttpPut]
-        public async Task Put() => await Service.Act();
+        //[HttpPut]
+        //public async Task Put() => await Service.Act();
 
-        [HttpPut]
-        [Route("{id}")]
-        public async Task Put([FromRoute] Guid id) => await Service.Act(id);
+        //[HttpPut]
+        //[Route("{id}")]
+        //public async Task Put([FromRoute] Guid id) => await Service.Act(id);
 
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task Delete([FromRoute] Guid id) => await Service.Kill(id);
+        //[HttpDelete]
+        //[Route("{id}")]
+        //public async Task Delete([FromRoute] Guid id) => await Service.Kill(id);
 
     }
 }

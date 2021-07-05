@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evolution.Data.Migrations
 {
     [DbContext(typeof(EvolutionContext))]
-    [Migration("20210619070812_init")]
+    [Migration("20210703213740_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,9 @@ namespace Evolution.Data.Migrations
                     b.Property<DateTime?>("DeathTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Direction")
+                        .HasColumnType("int");
+
                     b.Property<double>("Energy")
                         .HasColumnType("float");
 
@@ -60,11 +63,23 @@ namespace Evolution.Data.Migrations
                     b.Property<double>("MaxEnergy")
                         .HasColumnType("float");
 
+                    b.Property<int>("MaxFoodStorageCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxSense")
+                        .HasColumnType("int");
+
                     b.Property<double>("MaxSpeed")
                         .HasColumnType("float");
 
                     b.Property<double>("MinEnergy")
                         .HasColumnType("float");
+
+                    b.Property<int>("MinFoodStorageCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinSense")
+                        .HasColumnType("int");
 
                     b.Property<double>("MinSpeed")
                         .HasColumnType("float");
@@ -83,6 +98,9 @@ namespace Evolution.Data.Migrations
 
                     b.Property<int>("Sense")
                         .HasColumnType("int");
+
+                    b.Property<long>("SenseMutationAmplitude")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid?>("SettingsId")
                         .HasColumnType("uniqueidentifier");
@@ -208,11 +226,23 @@ namespace Evolution.Data.Migrations
                             b1.Property<double>("MaxEnergy")
                                 .HasColumnType("float");
 
+                            b1.Property<int>("MaxFoodStorageCapacity")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("MaxSense")
+                                .HasColumnType("int");
+
                             b1.Property<double>("MaxSpeed")
                                 .HasColumnType("float");
 
                             b1.Property<double>("MinEnergy")
                                 .HasColumnType("float");
+
+                            b1.Property<int>("MinFoodStorageCapacity")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("MinSense")
+                                .HasColumnType("int");
 
                             b1.Property<double>("MinSpeed")
                                 .HasColumnType("float");
@@ -222,6 +252,9 @@ namespace Evolution.Data.Migrations
 
                             b1.Property<int>("Sense")
                                 .HasColumnType("int");
+
+                            b1.Property<long>("SenseMutationAmplitude")
+                                .HasColumnType("bigint");
 
                             b1.Property<double>("Speed")
                                 .HasColumnType("float");

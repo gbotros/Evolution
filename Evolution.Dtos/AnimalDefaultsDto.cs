@@ -8,6 +8,8 @@
         public double MinEnergy { get; set; } = 1; 
         public double MaxEnergy { get; set; } = 100; // 50 action
         public double Energy { get; set; } = 100; // 50 action
+        public int MinFoodStorageCapacity { get; set; } = 1;
+        public int MaxFoodStorageCapacity { get; set; } = 100;
         public int FoodStorageCapacity { get; set; } = 3;
         public int OneFoodToEnergy { get; set; } = 20; // 1 food = 20 energy = 10 actions
         public uint SpeedMutationAmplitude { get; set; } = 1;

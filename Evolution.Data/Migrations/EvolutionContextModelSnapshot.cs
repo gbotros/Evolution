@@ -61,6 +61,9 @@ namespace Evolution.Data.Migrations
                     b.Property<double>("MaxEnergy")
                         .HasColumnType("float");
 
+                    b.Property<int>("MaxFoodStorageCapacity")
+                        .HasColumnType("int");
+
                     b.Property<int>("MaxSense")
                         .HasColumnType("int");
 
@@ -69,6 +72,9 @@ namespace Evolution.Data.Migrations
 
                     b.Property<double>("MinEnergy")
                         .HasColumnType("float");
+
+                    b.Property<int>("MinFoodStorageCapacity")
+                        .HasColumnType("int");
 
                     b.Property<int>("MinSense")
                         .HasColumnType("int");
@@ -218,6 +224,9 @@ namespace Evolution.Data.Migrations
                             b1.Property<double>("MaxEnergy")
                                 .HasColumnType("float");
 
+                            b1.Property<int>("MaxFoodStorageCapacity")
+                                .HasColumnType("int");
+
                             b1.Property<int>("MaxSense")
                                 .HasColumnType("int");
 
@@ -226,6 +235,9 @@ namespace Evolution.Data.Migrations
 
                             b1.Property<double>("MinEnergy")
                                 .HasColumnType("float");
+
+                            b1.Property<int>("MinFoodStorageCapacity")
+                                .HasColumnType("int");
 
                             b1.Property<int>("MinSense")
                                 .HasColumnType("int");

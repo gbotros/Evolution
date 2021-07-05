@@ -22,6 +22,8 @@ namespace Evolution.Dtos
         public int Steps { get; set; }
 
         public int StoredFood { get; set; }
+        public int MinFoodStorageCapacity { get; set; }
+        public int MaxFoodStorageCapacity { get; set; }
         public int FoodStorageCapacity { get; set; }
 
         public double MinEnergy { get; set; }
@@ -31,7 +33,11 @@ namespace Evolution.Dtos
         public DateTime NextAction { get; set; }
 
         public DateTime LastChildAt { get; set; }
+        public int MinSense { get; set; }
+        public int MaxSense { get; set; }
         public int Sense { get; set; }
         public string Direction { get; set; }
+        public double Age { get; set; }
+        public double StepCost { get; set; }
     }
 }

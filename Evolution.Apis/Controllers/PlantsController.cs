@@ -19,18 +19,18 @@ namespace Evolution.Apis.Controllers
         }
 
         [HttpGet]
-        public async Task<IList<PlantDto>> Get() => await Service.Get();
+        public async Task<IList<PlantDto>> Get() => await Service.GetAllAlive();
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<PlantDto> Get(Guid id) => await Service.Get(id);
+        //[HttpGet]
+        //[Route("{id}")]
+        //public async Task<PlantDto> Get(Guid id) => await Service.Get(id);
 
-        [HttpPost]
-        public async Task Post() => await Service.CreateNew();
+        //[HttpPost]
+        //public async Task Post() => await Service.CreateNew();
 
-        [HttpPut]
-        [Route("{id}")]
-        public async Task Put([FromRoute] Guid id) => await Service.Act(id);
+        //[HttpPut]
+        //[Route("{id}")]
+        //public async Task Put([FromRoute] Guid id) => await Service.Act(id);
 
     }
 }

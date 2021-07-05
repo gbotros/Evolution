@@ -25,6 +25,8 @@ namespace Evolution.Services
             {
                 Speed = dto.AnimalDefaults.Speed,
                 Energy = dto.AnimalDefaults.Energy,
+                MinFoodStorageCapacity = dto.AnimalDefaults.MinFoodStorageCapacity,
+                MaxFoodStorageCapacity = dto.AnimalDefaults.MaxFoodStorageCapacity,
                 FoodStorageCapacity = dto.AnimalDefaults.FoodStorageCapacity,
                 AdulthoodAge = dto.AnimalDefaults.AdulthoodAge,
                 MaxEnergy = dto.AnimalDefaults.MaxEnergy,
@@ -63,6 +65,8 @@ namespace Evolution.Services
                     {
                         Speed = settings.AnimalDefaults.Speed,
                         Energy = settings.AnimalDefaults.Energy,
+                        MinFoodStorageCapacity = settings.AnimalDefaults.MinFoodStorageCapacity,
+                        MaxFoodStorageCapacity = settings.AnimalDefaults.MaxFoodStorageCapacity,
                         FoodStorageCapacity = settings.AnimalDefaults.FoodStorageCapacity,
                         OneFoodToEnergy = settings.AnimalDefaults.OneFoodToEnergy,
                         AdulthoodAge = settings.AnimalDefaults.AdulthoodAge,

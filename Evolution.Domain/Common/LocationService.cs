@@ -9,7 +9,7 @@ namespace Evolution.Domain.Common
         
         public LocationService()
         {
-            random = new Random();
+            random = new ();
         }
 
         public Location GetRandom(WorldSize worldSize)

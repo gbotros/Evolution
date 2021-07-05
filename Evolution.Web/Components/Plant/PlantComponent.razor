@@ -1,6 +1,7 @@
 ﻿<div>
     <div class="@(Plant.IsAlive ? "text-green-500" : "text-red-300")">
-        🌳 @Plant.Weight
+        🌳 
+        @*@Plant.Weight*@
     </div>
     @*@if (Plant.IsAlive)
     {

@@ -16,9 +16,9 @@ namespace Evolution.Processor
         }
 
         [FunctionName("PlantAct")]
-        public async Task Run([TimerTrigger("0/10 * * * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0/5 * * * * *")] TimerInfo myTimer, ILogger log)
         {
-            await Service.GrowAll();
+            await Service.AddFoodAtRandomPlaces(1);
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Evolution.Domain.AnimalAggregate
             double minEnergy,
             double maxEnergy,
             double energy,
+            int minFoodStorageCapacity,
+            int maxFoodStorageCapacity,
             int foodStorageCapacity,
             int oneFoodToEnergy,
             int adulthoodAge,
@@ -34,7 +36,7 @@ namespace Evolution.Domain.AnimalAggregate
         ) : base(id)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ApplicationException("Name can't be empty");
-            if (speed <= 0) throw new ApplicationException("Speed can not be less than one action per game hour");
+            if (speed <= 0) throw new ApplicationException("Speed can not be less than zero");
 
             Id = id;
             ParentId = parentId;
@@ -53,6 +55,8 @@ namespace Evolution.Domain.AnimalAggregate
             MaxEnergy = maxEnergy;
             Energy = energy;
 
+            MinFoodStorageCapacity = minFoodStorageCapacity;
+            MaxFoodStorageCapacity = maxFoodStorageCapacity;
             FoodStorageCapacity = foodStorageCapacity;
             OneFoodToEnergy = oneFoodToEnergy;
             AdulthoodAge = adulthoodAge;
@@ -93,6 +97,8 @@ namespace Evolution.Domain.AnimalAggregate
         public int Steps { get; private set; }
 
         public int StoredFood { get; private set; }
+        public int MinFoodStorageCapacity { get; private set; }
+        public int MaxFoodStorageCapacity { get; private set; }
         public int FoodStorageCapacity { get; private set; }
 
         private double energy;
@@ -131,7 +137,7 @@ namespace Evolution.Domain.AnimalAggregate
 
         public GameSettings Settings { get; private set; }
 
-        private double StepCost => Speed * 2; // Energy unit
+        public double StepCost => (Speed * 2) + Sense + FoodStorageCapacity; // Energy unit
 
         public void Act(DateTime now)
         {
@@ -150,7 +156,12 @@ namespace Evolution.Domain.AnimalAggregate
 
         public double GetAge(DateTime now)
         {
-            return (now - CreationTime).TotalSeconds;
+            if(IsAlive)
+            {
+                return (now - CreationTime).TotalSeconds;
+            }
+
+            return (DeathTime.GetValueOrDefault() - CreationTime).TotalSeconds;
         }
 
         // TODO: Unit tests
@@ -237,10 +248,12 @@ namespace Evolution.Domain.AnimalAggregate
 
         private List<IFood> GetAvailableFoodOnMyLocation()
         {
-            return Food.Where(f =>
+            if (Food == null) return new List<IFood>();
+
+            return Food?.Where(f =>
                 f.Location.Row == Location.Row
                 && f.Location.Column == Location.Column
-                ).ToList();
+            ).ToList();
         }
 
         private double GetMutatedSpeed()
@@ -271,6 +284,20 @@ namespace Evolution.Domain.AnimalAggregate
             return mutantSense;
         }
 
+        private int GetMutatedFoodStorageCapacity()
+        {
+            var minMutation = -1 ;
+            var maxMutation = 1;
+            var mutation = Random.Next(minMutation, maxMutation + 1);
+
+            var mutantCapacity = FoodStorageCapacity + mutation;
+
+            if (mutantCapacity < MinSense) mutantCapacity = MinFoodStorageCapacity;
+            if (mutantCapacity > MaxSense) mutantCapacity = MaxFoodStorageCapacity;
+
+            return mutantCapacity;
+        }
+
         private Location GetRandomNeighbor()
         {
             var neighbours = Location.GetNeighbours(Settings.WorldSize);
@@ -285,6 +312,8 @@ namespace Evolution.Domain.AnimalAggregate
 
         private IFood GetClosestFood()
         {
+            if (Food == null) return null;
+
             IFood closestFood = null;
             var closestDistance = int.MaxValue;
             foreach (var f in Food)
@@ -368,7 +397,9 @@ namespace Evolution.Domain.AnimalAggregate
                 new Location(Location.Row, Location.Column),
                 Energy,
                 GetMutatedSpeed(),
-                FoodStorageCapacity,
+                MinFoodStorageCapacity,
+                MaxFoodStorageCapacity,
+                GetMutatedFoodStorageCapacity(),
                 OneFoodToEnergy,
                 AdulthoodAge,
                 Settings.AnimalDefaults.MinSpeed,

@@ -19,13 +19,16 @@
 
         <div>
             <div>
-                Count: @WorldStore.GetAnimalsCount();
+                Alive: @WorldStore.GetAliveAnimalsCount(); | Dead: @WorldStore.GetDeadAnimalsCount();
             </div>
             <div>
                 Avg Speed: @WorldStore.GetAnimalsAvgSpeed();
             </div>
             <div>
                 Avg Sense: @WorldStore.GetAnimalsAvgSense();
+            </div>
+            <div>
+                Avg Food Storage Capacity: @WorldStore.GetAnimalsAvgFoodStorageCapacity();
             </div>
             <div>
                 Food: @WorldStore.GetAvailableFood();

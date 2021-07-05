@@ -20,11 +20,16 @@ namespace Evolution.Data.Migrations
                     AnimalDefaults_MinEnergy = table.Column<double>(type: "float", nullable: true),
                     AnimalDefaults_MaxEnergy = table.Column<double>(type: "float", nullable: true),
                     AnimalDefaults_Energy = table.Column<double>(type: "float", nullable: true),
+                    AnimalDefaults_MinFoodStorageCapacity = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_MaxFoodStorageCapacity = table.Column<int>(type: "int", nullable: true),
                     AnimalDefaults_FoodStorageCapacity = table.Column<int>(type: "int", nullable: true),
                     AnimalDefaults_OneFoodToEnergy = table.Column<int>(type: "int", nullable: true),
                     AnimalDefaults_SpeedMutationAmplitude = table.Column<long>(type: "bigint", nullable: true),
                     AnimalDefaults_AdulthoodAge = table.Column<int>(type: "int", nullable: true),
-                    AnimalDefaults_Sense = table.Column<int>(type: "int", nullable: true)
+                    AnimalDefaults_Sense = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_MinSense = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_MaxSense = table.Column<int>(type: "int", nullable: true),
+                    AnimalDefaults_SenseMutationAmplitude = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -50,6 +55,8 @@ namespace Evolution.Data.Migrations
                     MaxSpeed = table.Column<double>(type: "float", nullable: false),
                     Steps = table.Column<int>(type: "int", nullable: false),
                     StoredFood = table.Column<int>(type: "int", nullable: false),
+                    MinFoodStorageCapacity = table.Column<int>(type: "int", nullable: false),
+                    MaxFoodStorageCapacity = table.Column<int>(type: "int", nullable: false),
                     FoodStorageCapacity = table.Column<int>(type: "int", nullable: false),
                     Energy = table.Column<double>(type: "float", nullable: false),
                     MinEnergy = table.Column<double>(type: "float", nullable: false),
@@ -59,9 +66,13 @@ namespace Evolution.Data.Migrations
                     IsAdult = table.Column<bool>(type: "bit", nullable: false),
                     OneFoodToEnergy = table.Column<int>(type: "int", nullable: false),
                     SpeedMutationAmplitude = table.Column<long>(type: "bigint", nullable: false),
+                    SenseMutationAmplitude = table.Column<long>(type: "bigint", nullable: false),
                     AdulthoodAge = table.Column<int>(type: "int", nullable: false),
                     LastChildAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Sense = table.Column<int>(type: "int", nullable: false),
+                    MinSense = table.Column<int>(type: "int", nullable: false),
+                    MaxSense = table.Column<int>(type: "int", nullable: false),
+                    Direction = table.Column<int>(type: "int", nullable: false),
                     SettingsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>

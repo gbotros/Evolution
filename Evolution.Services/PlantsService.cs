@@ -19,27 +19,36 @@ namespace Evolution.Services
             Context = context;
             PlantsFactory = plantsFactory;
         }
-        public async Task GrowAll()
+
+        //public async Task GrowAll()
+        //{
+        //    await Context.GrowAll();
+        //}
+
+        public async Task AddFoodAtRandomPlaces(int count)
         {
-            await Context.GrowAll();
+            for (int i = 0; i < count; i++)
+            {
+                await CreateNew();
+                await Context.SaveChangesAsync();
+            }
         }
 
-        public async Task Act(Guid plantId)
-        {
-            var plant = await Context.Plants.FindAsync(plantId);
-            if (plant == null) return;
+        //public async Task Act(Guid plantId)
+        //{
+        //    var plant = await Context.Plants.FindAsync(plantId);
+        //    if (plant == null) return;
 
-            plant.Act();
+        //    plant.Act();
 
-            await Context.SaveChangesAsync();
-        }
+        //    await Context.SaveChangesAsync();
+        //}
 
         public async Task CreateNew()
         {
             var settings = Context.GameSettings.First();
             var newPlant = PlantsFactory.CreateNew(settings);
             await Context.Plants.AddAsync(newPlant);
-            await Context.SaveChangesAsync();
         }
 
         public async Task DeleteAll()
@@ -48,17 +57,17 @@ namespace Evolution.Services
             await Context.SaveChangesAsync();
         }
 
-        public async Task<IList<PlantDto>> Get()
+        public async Task<IList<PlantDto>> GetAllAlive()
         {
-            var plants = await Context.Plants.ToListAsync();
+            var plants = await Context.Plants.Where(p => p.IsAlive).ToListAsync();
             return plants.Select(MapToDto).ToList();
         }
 
-        public async Task<PlantDto> Get(Guid plantId)
-        {
-            var plant = await Context.Plants.FindAsync(plantId);
-            return MapToDto(plant);
-        }
+        //public async Task<PlantDto> Get(Guid plantId)
+        //{
+        //    var plant = await Context.Plants.FindAsync(plantId);
+        //    return MapToDto(plant);
+        //}
 
         private PlantDto MapToDto(Plant plant)
         {

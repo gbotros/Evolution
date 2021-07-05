@@ -11,6 +11,8 @@ namespace Evolution.Domain.Events
             Location location,
             double energy,
             double speed,
+            int minFoodStorageCapacity,
+            int maxFoodStorageCapacity,
             int foodStorageCapacity,
             int oneFoodToEnergy,
             int adulthoodAge,
@@ -29,6 +31,8 @@ namespace Evolution.Domain.Events
             ParentId = parentId;
             Energy = energy;
             Speed = speed;
+            MinFoodStorageCapacity = minFoodStorageCapacity;
+            MaxFoodStorageCapacity = maxFoodStorageCapacity;
             FoodStorageCapacity = foodStorageCapacity;
             OneFoodToEnergy = oneFoodToEnergy;
             AdulthoodAge = adulthoodAge;
@@ -47,6 +51,8 @@ namespace Evolution.Domain.Events
         public Location Location { get; }
         public Guid ParentId { get; }
         public double Speed { get; }
+        public int MinFoodStorageCapacity { get; set; }
+        public int MaxFoodStorageCapacity { get; set; }
         public int FoodStorageCapacity { get; }
         public double Energy { get; }
         public int OneFoodToEnergy { get; }

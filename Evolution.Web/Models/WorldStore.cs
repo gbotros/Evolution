@@ -87,21 +87,36 @@ namespace Evolution.Web.Models
             return PlantsStore.ContainsKey(key) ? PlantsStore[key] : new List<PlantDto>();
         }
 
-        public int GetAnimalsCount()
+        public int GetAliveAnimalsCount()
         {
-            return AnimalsStore.Values.Count;
+            return AnimalsStore.Values.Count(a => a.IsAlive);
+        }
+        public int GetDeadAnimalsCount()
+        {
+            return AnimalsStore.Values.Count(a=> !a.IsAlive);
         }
 
         public double GetAnimalsAvgSpeed()
         {
-            if (!AnimalsStore.Values.Any()) return 0;
-            return AnimalsStore.Values.Average(a => a.Speed);
+            if (!GetAlive().Any()) return 0;
+            return GetAlive().Average(a => a.Speed);
         }
 
         public double GetAnimalsAvgSense()
         {
-            if (!AnimalsStore.Values.Any()) return 0;
-            return AnimalsStore.Values.Average(a => a.Sense);
+            if (!GetAlive().Any()) return 0;
+            return GetAlive().Average(a => a.Sense);
+        }
+
+        public double GetAnimalsAvgFoodStorageCapacity()
+        {
+            if (!GetAlive().Any()) return 0;
+            return GetAlive().Average(a => a.FoodStorageCapacity);
+        }
+
+        private List<AnimalDto> GetAlive()
+        {
+            return AnimalsStore.Values.Where(a => a.IsAlive).ToList();
         }
 
         public int GetAvailableFood()

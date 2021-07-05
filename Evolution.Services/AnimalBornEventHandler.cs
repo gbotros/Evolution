@@ -28,6 +28,8 @@ namespace Evolution.Services
                 notification.Location,
                 settings,
                 notification.Energy,
+                notification.MinFoodStorageCapacity,
+                notification.MaxFoodStorageCapacity,
                 notification.FoodStorageCapacity,
                 notification.Speed,
                 notification.OneFoodToEnergy,

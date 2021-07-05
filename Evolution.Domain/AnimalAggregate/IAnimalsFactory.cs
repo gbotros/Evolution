@@ -16,6 +16,8 @@ namespace Evolution.Domain.AnimalAggregate
             Location location,
             GameSettings settings,
             double energy,
+            int minFoodStorageCapacity,
+            int maxFoodStorageCapacity,
             int foodStorageCapacity,
             double speed,
             int oneFoodToEnergy,

@@ -31,7 +31,7 @@ namespace Evolution.Domain.Tests.AnimalTests
             settings = new GameSettings(Guid.NewGuid(), worldSize, new AnimalDefaults());
             var location = new Location(0, 0);
             var location2 = new Location(0, 1);
-            var initialEnergy = 1000;
+            var initialEnergy = 10_000;
             var animal = new Animal(Guid.NewGuid(),
                 null,
                 "1st Animal",
@@ -46,6 +46,8 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1,
                 10_000,
                 initialEnergy,
+                1,
+                1,
                 1,
                 1,
                 60,
@@ -86,6 +88,8 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1,
                 1000,
                 initialEnergy,
+                1, 
+                1,
                 1,
                 1,
                 60,
@@ -100,7 +104,7 @@ namespace Evolution.Domain.Tests.AnimalTests
             // assert
             Assert.True(animal.Location == location);
             Assert.True(animal.Energy < initialEnergy);
-            Assert.Equal(0, animal.Steps);
+            Assert.Equal(1, animal.Steps);
         }
 
         [Fact]
@@ -128,6 +132,8 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1,
                 1000,
                 initialEnergy,
+                1, 
+                1, 
                 1,
                 1,
                 60,
@@ -178,8 +184,10 @@ namespace Evolution.Domain.Tests.AnimalTests
                 1,
                 1000,
                 1000,
-                10,
                 1,
+                1,
+                1, 
+                10,
                 60,
                 1,
                 1,
